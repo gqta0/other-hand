@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 35: Đại Thử Thách - Trận phỏng vấn cuối cùng với Sư Phụ Cao Nhân, tổng hợp kiến thức từ Arc 1 đến Arc 7 và kết thúc hành trình nhập môn">
+    <title>Chapter 35: Đại Thử Thách | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 7: Thử Thách Cuối</span>
+                <h1 class="chapter-title">Chapter 35: Đại Thử Thách</h1>
+                <div class="chapter-meta">
+                    <span>📖 Final Interview</span>
+                    <span>⏱️ 40 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Nhìn Lại Hành Trình <span class="section-duration">(5 phút)</span>
+                    </h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn leo lên đỉnh núi Spring, nơi mây trắng bao phủ.
+                            Sư Phụ Cao Nhân đang ngồi thưởng trà, bên cạnh là một cuốn thư tịch cổ đã ghi chép toàn bộ
+                            hành trình của Lâm Tuấn.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Chúc mừng con đã đến được đây.
+                            Từ một kẻ phàm trần mới nhập môn, con đã học được:
+                            1. Khí tụ đan điền: <span class="emphasis">IoC & DI</span>.
+                            2. Giao tiếp giang hồ: <span class="emphasis">Spring MVC</span>.
+                            3. Phòng hộ thân thể: <span class="emphasis">Spring Security</span>.
+                            4. Khai thác kho tàng: <span class="emphasis">MyBatis</span>.
+                            5. Giữ chữ tín: <span class="emphasis">Transaction</span>.
+                            6. Phân thân chi thuật: <span class="emphasis">AOP</span>.
+                            7. Tự kiểm điểm: <span class="emphasis">Testing</span>.
+
+                            Giờ là lúc ta kiểm tra xem con đã thực sự ngộ đạo chưa, hay chỉ học vẹt.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: Phản Biện Thiết Kế (System Design Question) <span
+                            class="section-duration">(15 phút)</span></h2>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            <span class="emphasis">Câu hỏi 1:</span> Giả sử con phải xây dựng một hệ thống "Mua Vé Tàu
+                            Tết" chịu tải cực cao (High Concurrency). Hàng triệu người cùng bấm nút "Mua" trong 1 giây.
+                            Con sẽ dùng những vũ khí nào trong những thứ đã học?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            (Hít sâu) Thưa sư phụ:
+                            1. Tầng Web: Dùng `DispatcherServlet` (Async) để hứng request nhanh nhất có thể.
+                            2. Tầng Security: Dùng `JWT` (Stateless) để không tốn bộ nhớ lưu Session cho hàng triệu
+                            user.
+                            3. Tầng Transaction: Giảm thiểu tối đa scope của `@Transactional`. Chỉ lock những gì cần
+                            thiết. Dùng `Optimistic Locking` (version) để tránh Lock Database quá lâu (Pessimistic).
+                            4. Tầng MyBatis: Dùng `Batch Update` để trừ vé hàng loạt.
+                            5. Tầng Cache (Mở rộng): Có lẽ con cần dùng Redis (dù chưa học sâu) để chặn bớt request
+                            trước khi xuống DB.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Khá lắm. Con đã biết nhìn bức tranh tổng thể chứ không chỉ cắm đầu vào code hàm.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: Xử Lý Sự Cố (Troubleshooting) <span class="section-duration">(12
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            <span class="emphasis">Câu hỏi 2:</span> Một ngày nọ, hệ thống bỗng nhiên chậm rì. CPU
+                            server tăng vọt 100%. Con sẽ làm gì?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Con sẽ dùng pháp thuật AOP (`@LogExecutionTime`) đã cài sẵn để xem hàm nào chạy chậm nhất.
+                            Nếu thấy SQL chậm -> Kiểm tra Index DB hoặc tối ưu MyBatis XML.
+                            Nếu thấy Java chậm -> Có thể do vòng lặp vô tận hoặc tạo quá nhiều Object thừa (GC
+                            thrashing).
+                            Con sẽ dùng Unit Test để tái hiện (Reproduce) lỗi đó trong môi trường cô lập để sửa.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Chính xác. Bình tĩnh, Khoanh vùng, Tái hiện, và Sửa chữa. Đó là đạo lý của người Debug.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: Lời Kết & Hạ Sơn <span class="section-duration">(8 phút)</span>
+                    </h2>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn, con đã vượt qua thử thách.
+                            Spring Boot không phải là đích đến. Nó chỉ là một chiếc thuyền để con vượt qua bể khổ của
+                            việc lập trình Enterprise.
+                            Phía trước con còn là Microservices, Cloud, Kubernetes, AI...
+                            Nhưng với nền tảng vững chắc này, con có thể đi bất cứ đâu.
+                            Hãy cầm lấy chiếc Laptop này và hạ sơn hành hiệp trượng nghĩa!
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn cúi đầu bái biệt sư phụ.
+                            Anh ngoảnh lại nhìn Spring Tông lần cuối. Nơi đây đã biến anh từ một kẻ không biết gì về
+                            Bean thành một Senior Developer thực thụ.
+                            Hành trình Spring Boot Tu Tiên đến đây là hết.
+                            Nhưng sự nghiệp của bạn thì mới chỉ bắt đầu.
+                            <span class="emphasis">Happy Coding!</span>
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Tổng Kết Toàn Bộ Khóa Học</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">Spring Core</span>
+                        <span class="term-description">Nền móng (IoC, DI) quản lý object lifecycle.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Spring MVC</span>
+                        <span class="term-description">Xương sống (Web Layer) xử lý HTTP request/response.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Spring Security</span>
+                        <span class="term-description">Lá chắn (Authentication/Authorization) bảo vệ ứng dụng.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">MyBatis</span>
+                        <span class="term-description">Cánh tay (Persistence Layer) thao tác dữ liệu linh hoạt.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Testing (Junit/Mockito)</span>
+                        <span class="term-description">Lưới an toàn đảm bảo chất lượng phần mềm.</span>
+                    </li>
+                </ul>
+
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🎉 THE END</h3>
+                <p class="cliffhanger-text">
+                    Cảm ơn bạn đã đồng hành cùng Lâm Tuấn suốt 35 chương truyện. Hy vọng kiến thức Spring Boot đã thấm
+                    vào bạn một cách tự nhiên nhất.
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="../index.html">Quay về Trang Chủ →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="chapter-34.html" class="chapter-nav-link prev">
+                    <span class="label">← Chapter trước</span>
+                    <span class="title">Thử Nghiệm Tích Hợp</span>
+                </a>
+                <a href="../index.html" class="chapter-nav-link next">
+                    <span class="label">Trang chủ →</span>
+                    <span class="title">Mục Lục</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>

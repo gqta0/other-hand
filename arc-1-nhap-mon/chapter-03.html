@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 3: Lâm Tuấn học về Vòng Đời Linh Đan - Bean Lifecycle, từ lúc sinh ra đến khi hủy diệt">
+    <title>Chapter 03: Vòng Đời Linh Đan | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 1: Nhập Môn</span>
+                <h1 class="chapter-title">Chapter 03: Vòng Đời Linh Đan</h1>
+                <div class="chapter-meta">
+                    <span>📖 Bean Lifecycle</span>
+                    <span>⏱️ 25 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Lò Luyện Đan Huyền Bí <span class="section-duration">(5
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Sau khi lĩnh hội được pháp môn Linh Lực Quán Nhập, Lâm Tuấn cảm thấy như được khai sáng. Tuy
+                            nhiên, hành trình vạn dặm mới chỉ bắt đầu. Hôm nay, Sư Phụ Cao Nhân dẫn anh đến một mật thất
+                            nằm sâu dưới lòng hồ Linh Khí Tụ. Đó là Lò Luyện Đan - nơi ẩn chứa bí mật về sự sinh tử của
+                            các Bean.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Căn phòng nóng hầm hập, ở giữa là một chiếc lò khổng lồ bằng đồng đang rung chuyển nhè nhẹ.
+                            Trên thân lò khắc chằng chịt những phù văn cổ ngữ, thỉnh thoảng lại lóe sáng khi một quá
+                            trình chuyển hóa diễn ra bên trong.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Sư Phụ, đây là nơi tạo ra các Linh Đan (Bean) sao? Nhưng đệ tử tưởng rằng chỉ cần dùng
+                            @Component là chúng tự nhiên xuất hiện?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Ha ha, "tự nhiên xuất hiện" chỉ là cái nhìn của kẻ ngoại đạo. Đối với một Architect, sự ra
+                            đời của một Bean là cả một quy trình nghiêm ngặt gọi là <span class="emphasis">Bean
+                                Lifecycle</span> - Vòng Đời Linh Đan. Nếu không hiểu rõ vòng đời này, ngươi sẽ không bao
+                            giờ kiểm soát được sức mạnh thực sự của Spring.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Tuấn nhi, hãy nhớ kỹ: Một viên Linh Đan không chỉ đơn giản là được "tạo ra" (Instantiated).
+                            Nó còn phải được "khai mở" (Initialized) và cuối cùng là "hóa giải" (Destroyed). Giữa các
+                            giai đoạn đó là vô số bước chuyển hóa vi tế.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: Thất Bộ Luyện Đan (7 Bước Sinh Tử) <span
+                            class="section-duration">(10 phút)</span></h2>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Hãy quan sát kỹ! Ta sắp thi triển thuật khởi tạo một Bean.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Sư Phụ vung tay, một luồng khí từ hồ bay vào lò luyện. Chiếc lò bắt đầu rung chuyển mạnh
+                            hơn.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Bước 1: <span class="emphasis">Instantiation</span> (Kết Tinh Hình Hài).
+                            Đây là lúc Container tìm thấy class của ngươi (qua @Component) và gọi Constructor. Lúc này,
+                            Bean mới chỉ là cái vỏ rỗng, chưa có linh lực.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Bước 2: <span class="emphasis">Populate Properties</span> (Bồi Bổ Linh Lực).
+                            Đây chính là lúc Linh Lực Quán Nhập (Dependency Injection) diễn ra. Container sẽ bơm các
+                            dependency vào qua Setter hoặc Field (nếu ngươi dùng field injection).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Vậy nếu dùng Constructor Injection thì Bước 1 và Bước 2 gộp làm một phải không ạ?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Thông minh lắm! Chính xác là như vậy. Nhưng đó chưa phải là tất cả.
+                            <br>
+                            Bước 3: <span class="emphasis">Aware Interfaces</span> (Giác Ngộ Bản Thân).
+                            Nếu Bean thực thi các giao diện như BeanNameAware hay ApplicationContextAware, Container sẽ
+                            "thì thầm" vào tai Bean, cho nó biết tên của nó là gì, nó đang sống ở đâu. Giống như việc
+                            ngươi nhận thức được bản ngã của mình vậy.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Bước 4: <span class="emphasis">BeanPostProcessor - Before Initialization</span> (Tiền Chỉnh
+                            Hóa).
+                            Đây là cơ hội để các đại cao thủ (các class BeanPostProcessor) can thiệp vào chỉnh sửa Bean
+                            trước khi nó thực sự hoạt động.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Bước 5: <span class="emphasis">Initialization</span> (Khai Mở Nhãn Quan).
+                            Đây là bước cực kỳ quan trọng! Bean sẽ thực chạy các phương thức khởi tạo logic.
+                            Ta thường dùng Phù Chú <span class="emphasis">@PostConstruct</span> ở đây. Ví dụ: mở kết nối
+                            database, kiểm tra file cấu hình.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Cẩn thận Sư Phụ! Đệ tử thấy nhiều người viết code khởi tạo trong Constructor thay vì
+                            @PostConstruct.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            <span class="warning-tone">Sai lầm chết người!</span> Trong Constructor, Bean chưa được
+                            inject xong dependency. Nếu gọi phương thức của dependency lúc đó, ngươi sẽ gặp
+                            NullPointerException. Hãy luôn dùng @PostConstruct cho logic khởi tạo!
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Bước 6: <span class="emphasis">BeanPostProcessor - After Initialization</span> (Hậu Chỉnh
+                            Hóa).
+                            Đây là lúc phép thuật AOP (Khía Cạnh Pháp) được áp dụng. Nếu Bean cần được bảo vệ bởi
+                            Transaction hoặc Security, Spring sẽ tạo ra một bản sao (Proxy) bao bọc lấy nó ở bước này.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Viên Linh Đan trong lò bỗng tỏa sáng rực rỡ, bay vút lên không trung, gia nhập vào hàng vạn
+                            viên đan khác trong hồ Linh Khí Tụ. Nó đã hoàn thành quá trình sinh ra và sẵn sàng phục vụ
+                            (Ready to Use).
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: Hóa Giải và Tái Sinh <span class="section-duration">(6
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Có sinh ắt có diệt. Khi ứng dụng tắt (ApplicationContext closes), các Bean sẽ bước vào giai
+                            đoạn cuối.
+                            Bước 7: <span class="emphasis">Destruction</span> (Hóa Giải).
+                            Trước khi tan biến, Bean có cơ hội thực hiện di nguyện cuối cùng qua Phù Chú <span
+                                class="emphasis">@PreDestroy</span>.
+                            Đây là lúc đóng kết nối, giải phóng tài nguyên, ghi log tạm biệt.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Sư Phụ, nếu Bean nào cũng sống từ đầu đến cuối như vậy thì có tốn chỗ không ạ?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Câu hỏi hay! Đó là vấn đề về <span class="emphasis">Bean Scope</span> - Phạm Vi Tồn Tại.
+                            Mặc định là <span class="emphasis">Singleton</span> (Độc Nhất Vô Nhị). Chỉ một viên duy nhất
+                            cho cả môn phái dùng chung. Tiết kiệm, hiệu quả, nhưng phải cẩn thận không lưu trạng thái
+                            riêng tư (Stateless).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Loại thứ hai là <span class="emphasis">Prototype</span> (Vạn Ảnh Phân Thân). Ai cần thì tạo
+                            một viên mới. Dùng xong thì vứt (Spring không quản lý vòng đời hủy của Prototype).
+                            Ngoài ra còn có Request Scope, Session Scope cho Web App...
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử hiểu rồi. Singleton giống như việc dùng chung thư viện, còn Prototype giống như mỗi
+                            người một cuốn sách nháp riêng.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Chính xác. Nhưng hãy cẩn trận: Nếu tiêm một Prototype vào một Singleton, thì Prototype đó sẽ
+                            chỉ được tạo một lần duy nhất lúc Singleton khởi tạo. Nó sẽ mất đi tính chất "mới mẻ" của
+                            mình. Đó là bẫy mà nhiều đệ tử mới mắc phải!
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: Tổng Kết <span class="section-duration">(4 phút)</span></h2>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Hôm nay ta đã truyền thụ cho ngươi bí mật về Vòng Đời Linh Đan. Hãy nhớ kỹ 7 bước và 2 Phù
+                            Chú quan trọng: @PostConstruct và @PreDestroy.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử cảm tạ Sư Phụ! Kiến thức này thật sự thâm sâu. Đệ tử sẽ về nghiền ngẫm thêm.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn rời khỏi mật thất. Trong đầu anh giờ đây không chỉ có những dòng code vô tri, mà là
+                            cả một hệ sinh thái sống động, nơi các Bean sinh ra, trưởng thành và cống hiến. Anh đã sẵn
+                            sàng để tìm hiểu về các vai trò cụ thể của chúng trong Arc tiếp theo.
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Thuật Ngữ Chương Này</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">Bean Lifecycle</span>
+                        <span class="term-description">Vòng Đời Linh Đan - 7 bước từ Instantiation đến
+                            Destruction.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">@PostConstruct</span>
+                        <span class="term-description">Phù Chú Khai Mở - Phương thức chạy sau khi DI hoàn tất.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">@PreDestroy</span>
+                        <span class="term-description">Phù Chú Hóa Giải - Phương thức chạy trước khi Bean bị hủy.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Singleton Scope</span>
+                        <span class="term-description">Phạm vi Độc Nhất - Một instance duy nhất cho toàn bộ ứng
+                            dụng.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Prototype Scope</span>
+                        <span class="term-description">Phạm vi Phân Thân - Tạo mới mỗi khi được yêu cầu.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">BeanPostProcessor</span>
+                        <span class="term-description">Cao thủ chỉnh sửa Bean - Can thiệp vào trước và sau khi khởi
+                            tạo.</span>
+                    </li>
+                </ul>
+
+                <div class="interview-questions">
+                    <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn</h4>
+                    <ol class="question-list">
+                        <li>Mô tả chi tiết vòng đời của một Spring Bean?</li>
+                        <li>Tại sao nên dùng @PostConstruct thay vì logic trong Constructor?</li>
+                        <li>Sự khác biệt giữa BeanFactory và ApplicationContext là gì?</li>
+                        <li>Vấn đề khi Inject Prototype Bean vào Singleton Bean là gì? Cách giải quyết?</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🔮 Tiếp Theo</h3>
+                <p class="cliffhanger-text">
+                    Chúng ta đã biết cách tạo Bean, nhưng Bean có nhiều loại. Tại sao lại phân chia thành @Component,
+                    @Service, @Repository, @Controller? Sự khác biệt thực sự là gì?
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="chapter-04.html">Chapter 04: Các Loại Phù Chú →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="chapter-02.html" class="chapter-nav-link prev">
+                    <span class="label">← Chapter trước</span>
+                    <span class="title">Linh Lực Quán Nhập</span>
+                </a>
+                <a href="chapter-04.html" class="chapter-nav-link next">
+                    <span class="label">Chapter tiếp theo →</span>
+                    <span class="title">Các Loại Phù Chú</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>

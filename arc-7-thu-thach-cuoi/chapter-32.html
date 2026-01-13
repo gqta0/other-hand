@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 32: Thử Nghiệm Đơn Vị - Học cách sử dụng Mockito để tạo giả dependencies, @Mock, @InjectMocks và viết Unit Test cho Service Layer">
+    <title>Chapter 32: Thử Nghiệm Đơn Vị | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 7: Thử Thách Cuối</span>
+                <h1 class="chapter-title">Chapter 32: Thử Nghiệm Đơn Vị</h1>
+                <div class="chapter-meta">
+                    <span>📖 Unit Testing dengan Mockito</span>
+                    <span>⏱️ 28 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Nghệ Thuật Giả Lập (Mocking) <span class="section-duration">(5
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-testing">
+                        <span class="voice-label">Sư Đệ Minh</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn, khi huynh muốn luyện kiếm, huynh đâu cần phải chém vào người thật? Huynh dùng
+                            "Người Rơm" (Dummy/Mock) đúng không?
+                            Trong code cũng vậy. Khi test `UserService`, ta không quan tâm `UserRepository` hoạt động
+                            thế nào. Ta chỉ cần "giả vờ" là nó hoạt động đúng.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Nhưng `UserService` gọi hàm `repo.findById()`. Nếu không có Database thật thì nó sẽ ném lỗi
+                            `NullPointerException` ngay.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-testing">
+                        <span class="voice-label">Sư Đệ Minh</span>
+                        <p class="dialogue-content">
+                            Chính vì thế ta dùng tuyệt kỹ <span class="emphasis">Mockito</span>.
+                            Ta sẽ tạo ra một `UserRepository` giả. Và ta ra lệnh cho nó: "Hễ ai gọi hàm `findById(1)`,
+                            hãy trả về User tên là Lâm Tuấn ngay lập tức!".
+                            Đây gọi là <span class="emphasis">Stubbing</span>.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: Thiết Lập Trận Đồ (@Mock & @InjectMocks) <span
+                            class="section-duration">(10 phút)</span></h2>
+
+                    <div class="dialogue-block voice-testing">
+                        <span class="voice-label">Sư Đệ Minh</span>
+                        <p class="dialogue-content">
+                            Để bắt đầu, huynh hãy dùng 2 lá bùa này trong class Test:
+                            1. <span class="emphasis">@Mock</span> `UserRepository userRepository`: Tạo ra kẻ hình nhân.
+                            2. <span class="emphasis">@InjectMocks</span> `UserService userService`: Tạo ra nhân vật
+                            chính, và tự động tiêm (Inject) cái hình nhân kia vào bên trong.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Thật kỳ diệu! Đệ tử không cần constructor injection bằng tay nữa ư?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-testing">
+                        <span class="voice-label">Sư Đệ Minh</span>
+                        <p class="dialogue-content">
+                            Đúng vậy. Sau đó, trong `@Test`, huynh viết kịch bản (Scenario):
+                            `when(userRepository.findById(1L)).thenReturn(Optional.of(new User("Tuan")));`
+                            Đây là câu thần chú điều khiển hình nhân.
+                            Sau đó huynh gọi `userService.getUser(1L)`.
+                            Và cuối cùng `verify(userRepository).findById(1L)` để chắc chắn rằng Service đã thực sự gọi
+                            hàm đó.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: Cô Lập Hoàn Toàn (Pure Unit Test) <span
+                            class="section-duration">(8 phút)</span></h2>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Khoan đã, lúc chạy Test này, Spring có cần khởi động không ạ?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-testing">
+                        <span class="voice-label">Sư Đệ Minh</span>
+                        <p class="dialogue-content">
+                            Tuyệt đối KHÔNG! Đây là <span class="emphasis">Unit Test</span>. Nó chạy nhanh như gió (vài
+                            mili giây).
+                            Chúng ta chỉ test Logic của Java, không dính dáng gì đến Spring Context cả.
+                            Huynh chỉ cần thêm `@ExtendWith(MockitoExtension.class)` để kích hoạt Mockito là đủ.
+                            Đừng bao giờ dùng `@SpringBootTest` ở đây, nó sẽ làm chậm cả hệ thống.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử hiểu rồi! Test nhanh thì đệ tử mới chịu chạy thường xuyên. Nếu test mà mất 5 phút thì
+                            đệ tử sẽ lười ngay.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: Tổng Kết <span class="section-duration">(5 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn say sưa viết test cho Service. Anh giả lập đủ các tình huống: Tìm thấy User, không
+                            tìm thấy (return Empty), Database bị lỗi (Mockito throw Exception)...
+                            Hệ thống phòng thủ của anh ngày càng kiên cố.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-testing">
+                        <span class="voice-label">Sư Đệ Minh</span>
+                        <p class="dialogue-content">
+                            Huynh đã làm chủ được Unit Test. Nhưng có một thứ mà Mockito không thể test được.
+                            Đó là những lá bùa của Spring như `@Transactional`, `@Autowired`, hay các câu SQL trong
+                            Repository.
+                            Vì Mockito chỉ test Java, nó không hiểu SQL hay Spring Context.
+                            Muốn test những thứ đó, chúng ta phải dùng <span class="emphasis">Integration Test</span>
+                            (Thử Nghiệm Tích Hợp).
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Thuật Ngữ Chương Này</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">Mockito</span>
+                        <span class="term-description">Framework phổ biến nhất để Mocking (tạo giả) trong Java Unit
+                            Testing.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">@Mock</span>
+                        <span class="term-description">Tạo ra một đối tượng giả. Mọi method gọi vào đây đều trả về
+                            null/default trừ khi được cấu hình (stub).</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">@InjectMocks</span>
+                        <span class="term-description">Tạo ra đối tượng thật, và tự động tiêm các @Mock vào trong đối
+                            tượng đó. Dùng cho class cần test (SUT).</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Stubbing</span>
+                        <span class="term-description">Hành động định nghĩa hành vi cho Mock object. Ví dụ:
+                            when(call).thenReturn(value).</span>
+                    </li>
+                </ul>
+
+                <div class="interview-questions">
+                    <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn</h4>
+                    <ol class="question-list">
+                        <li>Tại sao không nên dùng @SpringBootTest cho Unit Test? (Vì nó khởi động cả ApplicationContext
+                            -> Chậm và Integration Test chứ không phải Unit).</li>
+                        <li>Sự khác nhau giữa @Mock và @InjectMocks? (@Mock tạo dependency giả. @InjectMocks tạo service
+                            thật và nhét dependency giả vào).</li>
+                        <li>Làm sao để mock một phương thức trả về void? (Dùng doNothing().when(...) hoặc
+                            <code>doThrow().when(...)</code>).</li>
+                        <li>Verify() trong Mockito dùng để làm gì? (Để kiểm tra xem một method của Mock object có thực
+                            sự được gọi hay không, và gọi bao nhiêu lần).</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🔮 Tiếp Theo</h3>
+                <p class="cliffhanger-text">
+                    Unit Test rất nhanh nhưng đôi khi "hàng thật" lại chạy sai dù "hàng giả" chạy đúng. Đã đến lúc Lâm
+                    Tuấn phải khởi động Spring Container thực thụ để kiểm tra sự kết hợp giữa các tầng. Nhưng có cách
+                    nào làm việc đó mà không cần DB thật?
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="chapter-33.html">Chapter 33: Huyễn Thuật Giả Lập - Spring Boot Test & @MockBean →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="chapter-31.html" class="chapter-nav-link prev">
+                    <span class="label">← Chapter trước</span>
+                    <span class="title">Thử Nghiệm Pháp Trận</span>
+                </a>
+                <a href="chapter-33.html" class="chapter-nav-link next">
+                    <span class="label">Chapter tiếp theo →</span>
+                    <span class="title">Huyễn Thuật Giả Lập</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>

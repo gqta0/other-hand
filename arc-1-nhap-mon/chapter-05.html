@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 5: Đại Quan Nhập Môn - Thử thách xây dựng ứng dụng Spring Boot đầu tiên quản lý đệ tử">
+    <title>Chapter 05: Đại Quan Nhập Môn | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 1: Nhập Môn</span>
+                <h1 class="chapter-title">Chapter 05: Đại Quan Nhập Môn</h1>
+                <div class="chapter-meta">
+                    <span>📖 Practice Arc 1</span>
+                    <span>⏱️ 25 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Bài Toán Quản Lý Đệ Tử <span class="section-duration">(5
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Sau bốn ngày tu luyện lý thuyết, hôm nay Sư Phụ Cao Nhân đưa Lâm Tuấn đến Thư Các - nơi lưu
+                            trữ danh sách đệ tử của môn phái.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Tuấn nhi, môn phái ta ngày càng đông người. Việc quản lý sổ sách thủ công đã quá lỗi thời.
+                            Hôm nay, nhiệm vụ của ngươi là xây dựng một hệ thống quản lý đệ tử đơn giản bằng Spring
+                            Boot. Đây là Đại Quan Nhập Môn - bài thi cuối cùng của Arc này.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử đã sẵn sàng! Nhưng đệ tử phải bắt đầu từ đâu?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Hãy nhớ lại nguyên lý: Separation of Concerns.
+                            1. Đầu tiên, ngươi cần một mô hình dữ liệu (Model).
+                            2. Sau đó, ngươi cần một kho chứa (Repository).
+                            3. Tiếp theo, ngươi cần một người xử lý nghiệp vụ (Service).
+                            4. Cuối cùng, kết nối tất cả lại trong Main.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: Xây Dựng Cốt Lõi (Model & Repository) <span
+                            class="section-duration">(7 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn lấy giấy bút ra, bắt đầu phác thảo. Đầu tiên là tạo hình hài cho Đệ Tử.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử tạo class `Disciple`. Nó sẽ có các thuộc tính: `id` (mã số), `name` (tên), và `level`
+                            (cảnh giới). Đây là một POJO (Plain Old Java Object) bình thường.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Tốt. Bây giờ đến Kho Tàng. Ta chưa kết nối Database thật, nên hãy tạo một kho tàng giả lập.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử tạo interface `DiscipleRepository`. Sau đó tạo class `DiscipleRepositoryImpl`
+                            implements interface đó.
+                            Đệ tử dùng <span class="emphasis">@Repository</span> đánh dấu lên class đó.
+                            Bên trong, đệ tử dùng một cái `List` để lưu danh sách đệ tử trong bộ nhớ.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Rất chuẩn xác! Việc dùng Interface giúp ta dễ dàng đổi sang Database thật sau này mà không
+                            ảnh hưởng đến code bên trên (Loose Coupling).
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: Xây Dựng Nghiệp Vụ (Service) <span class="section-duration">(8
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Bây giờ là phần quan trọng nhất: Service. Ta muốn ngươi thêm một quy tắc: Chỉ nhận đệ tử có
+                            tên dài hơn 3 ký tự.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử tạo class `DiscipleService` và đánh dấu <span class="emphasis">@Service</span>.
+                            Bây giờ đệ tử cần gọi đến `DiscipleRepository` để lưu. Đệ tử sẽ dùng...
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Dùng gì?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Dùng <span class="emphasis">Constructor Injection</span>!
+                            `private final DiscipleRepository repository;`
+                            Và tạo Constructor nhận repository vào.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Tuyệt vời! Ngươi đã nhớ bài rất kỹ.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Trong hàm `register(Disciple d)`, đệ tử sẽ kiểm tra `d.getName().length()`. Nếu nhỏ hơn 3,
+                            đệ tử ném Exception. Nếu đủ, đệ tử gọi `repository.save(d)`.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: Khởi Động Trận Pháp (Main) <span class="section-duration">(5
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Mọi linh kiện đã sẵn sàng. Giờ là lúc kích hoạt trận pháp Spring Boot.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Trong hàm `main`, đệ tử dùng `SpringApplication.run(SpringTuyenApp.class, args)`.
+                            Lệnh này sẽ khởi động IoC Container (ApplicationContext).
+                            Sau đó, đệ tử lấy Bean Service ra bằng cách: `context.getBean(DiscipleService.class)`.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Hãy thử chạy xem!
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn hồi hộp kích hoạt. Một dòng chữ xanh hiện lên console: "Started SpringTuyenApp in
+                            1.2 seconds".
+                            Anh gõ lệnh đăng ký một đệ tử tên "An". Hệ thống báo lỗi: "Tên quá ngắn".
+                            Anh gõ lại tên "Lâm Tuấn". Hệ thống báo: "Đăng ký thành công!".
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Chúc mừng ngươi! Ngươi đã hoàn thành Arc 1: Nhập Môn.
+                            Ngươi đã hiểu về IoC, DI, Bean Lifecycle và Component Stereotypes.
+                            Nhưng... đây mới chỉ là ứng dụng chạy trên màn hình đen (Console). Thế giới ngoài kia họ
+                            dùng Web.
+                            ARC 2 sẽ đưa ngươi đến với thế giới của <span class="emphasis">Spring Web MVC</span>.
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Tổng Kết Arc 1</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">IoC Container</span>
+                        <span class="term-description">Quản lý vòng đời và sự phụ thuộc của Bean.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Dependency Injection</span>
+                        <span class="term-description">Inject dependency qua Constructor (Best practice), Setter,
+                            Field.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Bean Lifecycle</span>
+                        <span class="term-description">7 bước: Instantiate -> Populate -> Aware -> PostProcessor -> Init
+                            -> Active -> Destroy.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">ApplicationContext</span>
+                        <span class="term-description">Interface chính đại diện cho IoC Container.</span>
+                    </li>
+                </ul>
+
+                <div class="interview-questions">
+                    <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn Tổng Hợp</h4>
+                    <ol class="question-list">
+                        <li>Tại sao Interface lại quan trọng trong DI (Loose Coupling)?</li>
+                        <li>Bean mặc định trong Spring là Singleton hay Prototype? Nó có Thread-safe không?</li>
+                        <li>Làm sao để lấy một Bean ra khỏi ApplicationContext thủ công?</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🔮 Tiếp Theo: ARC 2</h3>
+                <p class="cliffhanger-text">
+                    Lâm Tuấn rời Spring Tông để xuống núi, bắt đầu hành trình "Giao Tiếp Giang Hồ". Anh sẽ gặp gỡ một
+                    nhân vật quyền lực kiểm soát mọi cánh cổng ra vào thế giới Web.
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="../arc-2-giao-tiep-giang-ho/chapter-06.html">Chapter 06: Truyền Tống Linh Đồng -
+                        DispatcherServlet →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="chapter-04.html" class="chapter-nav-link prev">
+                    <span class="label">← Chapter trước</span>
+                    <span class="title">Các Loại Phù Chú</span>
+                </a>
+                <a href="../arc-2-giao-tiep-giang-ho/chapter-06.html" class="chapter-nav-link next">
+                    <span class="label">Chapter tiếp theo →</span>
+                    <span class="title">Truyền Tống Linh Đồng</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>

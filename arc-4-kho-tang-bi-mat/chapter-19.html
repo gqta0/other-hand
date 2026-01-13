@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 19: Kiếm Pháp Biến Hình - Làm chủ Dynamic SQL với thẻ if, choose, where, set, foreach trong MyBatis XML">
+    <title>Chapter 19: Kiếm Pháp Biến Hình | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 4: Kho Tàng Bí Mật</span>
+                <h1 class="chapter-title">Chapter 19: Kiếm Pháp Biến Hình</h1>
+                <div class="chapter-meta">
+                    <span>📖 XML Dynamic SQL</span>
+                    <span>⏱️ 30 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Sự Bất Lực Của Tĩnh Pháp <span class="section-duration">(5
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn đang hì hục viết hàng chục câu lệnh `@Select` trong Java Interface.
+                            `findByName(String name)`
+                            `findByAge(Integer age)`
+                            `findByNameAndAge(String name, Integer age)`
+                            ...
+                            Mồ hôi vã ra như tắm. Sư Tỷ Linh đi ngang qua, lắc đầu ngao ngán.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Sư đệ, nếu ta thêm một tiêu chí lọc nữa là `level`, ngươi sẽ phải viết thêm bao nhiêu hàm
+                            nữa? Cấp số nhân đấy!
+                            Đã đến lúc ngươi bỏ tấm bản đồ tĩnh (Annotation) xuống và cầm lấy cuộn giấy da cổ xưa (XML
+                            Mapper).
+                            Ở đó, ta có thể tri triển <span class="emphasis">Dynamic SQL</span> - Kiếm pháp biến hình.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            XML ư? Nhưng nó dài dòng lắm!
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Dài nhưng "chất". Chỉ một câu lệnh XML có thể thay thế cho cả trăm hàm Java của ngươi. Hãy
+                            xem đây!
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: Thẻ IF và WHERE (Quyết Định Luồng Kiếm) <span
+                            class="section-duration">(10 phút)</span></h2>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Trong file XML, ta định nghĩa một câu lệnh `select` với id là `searchDisciples`.
+                            `&lt;select id="searchDisciples" resultType="Disciple"&gt;`
+                            ` SELECT * FROM disciples`
+                            ` &lt;where&gt;`
+                            ` &lt;if test="name != null"&gt; AND name like #{name} &lt;/if&gt;`
+                            ` &lt;if test="age != null"&gt; AND age = #{age} &lt;/if&gt;`
+                            ` &lt;/where&gt;`
+                            `&lt;/select&gt;`
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Ồ! Nếu `name` truyền vào là null, đoạn SQL `AND name like` sẽ biến mất?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Chính xác. Và cái thẻ `<where>` cực kỳ thông minh. Nếu bên trong nó không có điều kiện nào
+                                (cả name và age đều null), nó sẽ không sinh ra chữ `WHERE`.
+                                Nếu chỉ có `age`, nó sẽ tự động cắt bỏ chữ `AND` thừa ở đầu câu.
+                                Nó giúp ngươi tránh lỗi cú pháp SQL ngớ ngẩn kiểu `WHERE AND age = 10`.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Thật vi diệu! Như vậy đệ tử chỉ cần một hàm duy nhất: `List<Disciple>
+                                searchDisciples(DiscipleSearchCriteria criteria);`
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: Thẻ CHOOSE, SET và FOREACH (Biến Hóa Khôn Lường) <span
+                            class="section-duration">(10 phút)</span></h2>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Chưa hết đâu. Đôi khi ngươi muốn dùng logic "Nếu... thì... Nếu không thì..." (Switch-Case).
+                            Hãy dùng `<choose>`, `<when>`, `<otherwise>`.
+                                        Ví dụ: Nếu có `id` thì tìm theo id. Nếu không có id mà có `name` thì tìm theo
+                                        name. Nếu không có cả hai thì tìm những kẻ đang active.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Còn khi Update thì sao ạ? Đệ tử chỉ muốn update những trường nào khác null thôi (Dynamic
+                            Update).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Dùng thẻ `<set>`.
+                                `UPDATE disciples`
+                                `&lt;set&gt;`
+                                ` &lt;if test="name != null"&gt; name = #{name}, &lt;/if&gt;`
+                                ` &lt;if test="age != null"&gt; age = #{age}, &lt;/if&gt;`
+                                `&lt;/set&gt;`
+                                `WHERE id = #{id}`
+                                Thẻ `<set>` sẽ tự động xóa dấu phẩy thừa ở cuối.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            (Xuất hiện) Sư Tỷ nói đúng, nhưng còn một chiêu thức quan trọng nhất: <span
+                                class="emphasis">Bulk Operation</span>.
+                            Làm sao để xóa 1000 đệ tử cùng lúc? Đừng gọi hàm delete 1000 lần!
+                            Hãy dùng thẻ `<foreach>`.
+                                `DELETE FROM disciples WHERE id IN`
+                                `&lt;foreach item="id" collection="listIds" open="(" separator="," close=")"&gt;`
+                                ` #{id}`
+                                `&lt;/foreach&gt;`
+                                Nó sẽ sinh ra câu lệnh: `IN (1, 2, 3, 4...)`. Nhanh hơn gấp bội phần.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: Tổng Kết <span class="section-duration">(5 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn ngẩn người thán phục. Dynamic SQL giống như nước, có thể len lỏi vào mọi ngóc ngách
+                            của yêu cầu nghiệp vụ.
+                            Với file XML Mapper, code Java trở nên sạch sẽ vô cùng, chỉ còn Interfaces. Mọi sự phức tạp
+                            của SQL được giấu kín bên trong hang động XML.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Hành trang đã đủ. Ngươi đã có bản đồ (Mapper), biết câu thần chú (SQL Basics), biết ghép nối
+                            dữ liệu (ResultMap), và biết biến hóa chiêu thức (Dynamic SQL).
+                            Ngày mai, Sư Phụ sẽ đưa ngươi vào trận địa thực tế cuối cùng của Arc này: Xây dựng hệ thống
+                            "Quản Lý Nhiệm Vụ Đệ Tử" hoàn chỉnh, kết hợp tất cả những gì đã học.
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Thuật Ngữ Chương Này</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">Dynamic SQL</span>
+                        <span class="term-description">Khả năng tạo ra câu lệnh SQL thay đổi động dựa trên tham số đầu
+                            vào (ví dụ: null check).</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">&lt;where&gt;</span>
+                        <span class="term-description">Thẻ thông minh tự động thêm/xóa từ khóa WHERE và AND/OR thừa ở
+                            đầu.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">&lt;set&gt;</span>
+                        <span class="term-description">Thẻ thông minh cho câu UPDATE, tự động xóa dấu phẩy thừa ở
+                            cuối.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">&lt;foreach&gt;</span>
+                        <span class="term-description">Thẻ lặp dùng cho các toán tử IN (...) hoặc Batch Insert.</span>
+                    </li>
+                </ul>
+
+                <div class="interview-questions">
+                    <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn</h4>
+                    <ol class="question-list">
+                        <li>Dynamic SQL giúp giải quyết vấn đề gì? (Tránh cộng chuỗi thủ công, xử lý optional
+                            parameters).</li>
+                        <li>Sự khác biệt giữa &lt;if&gt; và &lt;choose&gt;? (if là check độc lập, choose là if-else độc
+                            quyền).</li>
+                        <li>Thẻ &lt;where&gt; xử lý các từ khóa AND/OR như thế nào? (Tự động loại bỏ AND/OR nếu nó nằm ở
+                            đầu nội dung bên trong).</li>
+                        <li>Làm sao để thực hiện Bulk Insert với MyBatis? (Dùng &lt;foreach&gt; trong câu INSERT
+                            VALUES).</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🔮 Tiếp Theo</h3>
+                <p class="cliffhanger-text">
+                    Lâm Tuấn tự tin bước vào thử thách. Nhưng anh chợt nhận ra: Dữ liệu không chỉ cần lấy ra, mà còn cần
+                    được đảm bảo an toàn tuyệt đối khi giao dịch. Nếu đang chuyển tiền mà mất điện thì sao?
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="chapter-20.html">Chapter 20: Thử Thách Kho Tàng - Database Practice →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="chapter-18.html" class="chapter-nav-link prev">
+                    <span class="label">← Chapter trước</span>
+                    <span class="title">Bản Đồ Chi Tiết</span>
+                </a>
+                <a href="chapter-20.html" class="chapter-nav-link next">
+                    <span class="label">Chapter tiếp theo →</span>
+                    <span class="title">Thử Thách Kho Tàng</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>

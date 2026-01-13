@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 13: Linh Bài Thông Hành - Học về JWT (JSON Web Token), cấu trúc, cách ký và xác thực Stateless">
+    <title>Chapter 13: Linh Bài Thông Hành | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 3: Phòng Hộ Sơn Môn</span>
+                <h1 class="chapter-title">Chapter 13: Linh Bài Thông Hành</h1>
+                <div class="chapter-meta">
+                    <span>📖 JWT (JSON Web Token)</span>
+                    <span>⏱️ 30 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Gánh Nặng Ký Ức (Stateful vs Stateless) <span
+                            class="section-duration">(6 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Tại Sảnh An Ninh, Lâm Tuấn thấy Sư Huynh Đại đang vất vả ghi chép vào một cuốn sổ cái dày
+                            cộm. Mỗi khi có đệ tử ra vào, ông ta lại phải lật sổ ra tra cứu xem "thẻ bài" (Session ID)
+                            của người đó có khớp với bản ghi hay không.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Sư Huynh, cuốn sổ đó sắp đầy rồi. Nếu môn phái ta có một triệu đệ tử cùng đăng nhập, làm sao
+                            Sư Huynh nhớ hết (lưu trong RAM)? Và nếu Sư Huynh có việc bận, người thay thế (Load
+                            Balancer) sẽ không có cuốn sổ này, làm sao xác thực được?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-security">
+                        <span class="voice-label">Sư Huynh Đại</span>
+                        <p class="dialogue-content">
+                            Ngươi nói trúng tim đen của ta rồi! Đây chính là nhược điểm của <span
+                                class="emphasis">Stateful Authentication</span> (Dùng Session). Server phải nhớ trạng
+                            thái của người dùng. Nó tốn bộ nhớ và khó mở rộng (Scale).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-security">
+                        <span class="voice-label">Sư Huynh Đại</span>
+                        <p class="dialogue-content">
+                            Vì vậy, đối với các ứng dụng hiện đại (như Mobile App, SPA), ta chuyển sang dùng <span
+                                class="emphasis">Stateless Authentication</span>.
+                            Thay vì ta nhớ ngươi, ta sẽ cấp cho ngươi một tấm lệnh bài đặc biệt. Ngươi tự giữ nó. Mỗi
+                            lần ngươi đến, ngươi đưa lệnh bài ra. Ta chỉ cần kiểm tra lệnh bài là thật hay giả, không
+                            cần tra sổ sách nữa.
+                            Lệnh bài đó gọi là <span class="emphasis">JWT - JSON Web Token</span>.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: Cấu Trúc Tam Phần (Header - Payload - Signature) <span
+                            class="section-duration">(10 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Sư Huynh Đại rút ra một tấm thẻ bài trong suốt, bên trong có ba luồng khí xoay vần: Đỏ, Tím
+                            và Xanh Dương.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-security">
+                        <span class="voice-label">Sư Huynh Đại</span>
+                        <p class="dialogue-content">
+                            Một JWT có cấu trúc `Header.Payload.Signature`.
+                            Phần đầu (Header) màu Đỏ: Cho biết loại thẻ (JWT) và thuật toán ký (ví dụ: HS256).
+                            Phần thân (Payload) màu Tím: Chứa thông tin của ngươi (Claims). Ví dụ: `sub` (Subject - Tên
+                            ngươi), `iat` (Issued At - Ngày cấp), `exp` (Expiration - Ngày hết hạn), và cả `roles`
+                            (Quyền hạn).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Nhưng nếu đệ tử tự sửa lại phần Payload, đổi quyền từ User thành Admin thì sao?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-security">
+                        <span class="voice-label">Sư Huynh Đại</span>
+                        <p class="dialogue-content">
+                            Ha ha! Ngươi không làm được đâu. Đó là nhờ phần thứ ba: <span
+                                class="emphasis">Signature</span> (Chữ Ký) màu Xanh Dương.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-security">
+                        <span class="voice-label">Sư Huynh Đại</span>
+                        <p class="dialogue-content">
+                            Ta dùng Header + Payload, kết hợp với một "Bí Mật Môn Phái" (Secret Key) chỉ mình ta biết,
+                            sau đó dùng thuật toán băm (HMACSHA256) để tạo ra Signature.
+                            Nếu ngươi sửa dù chỉ một dấu chấm trong Payload, Signature mới sẽ không khớp với Signature
+                            cũ. Ta sẽ biết ngay là lệnh bài giả mạo.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử hiểu rồi! Thông tin thì ai cũng đọc được (vì chỉ mã hóa Base64), nhưng sự toàn vẹn thì
+                            được bảo đảm bởi Chữ Ký.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: Quy Trình Cấp và Kiểm Tra <span class="section-duration">(8
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Vậy quy trình sẽ diễn ra như thế nào ạ?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-security">
+                        <span class="voice-label">Sư Huynh Đại</span>
+                        <p class="dialogue-content">
+                            Bước 1: Ngươi gửi Username/Password lên (Login).
+                            Bước 2: Ta xác thực (như Chapter 11). Nếu đúng, ta tạo ra JWT (dùng thư viện `jjwt` hoặc
+                            `nimbus`).
+                            Bước 3: Ta gửi JWT về cho ngươi.
+                            Bước 4: Ngươi lưu JWT đó (vào LocalStorage hoặc Cookie).
+                            Bước 5: Mỗi lần ngươi gọi API, ngươi phải đính kèm JWT vào <span
+                                class="emphasis">Authorization Header</span> theo dạng `Bearer <token>`.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Và phía Server, chúng ta sẽ cần một cái phễu lọc đặc biệt để chặn mọi Request, lấy Token ra,
+                            kiểm tra chữ ký, và nếu hợp lệ thì tự động thiết lập SecurityContext cho ngươi.
+                            Cái phễu đó gọi là <span class="emphasis">JWT Authentication Filter</span>.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Nhưng có một vấn đề... Nếu lệnh bài bị đánh cắp, kẻ trộm có thể dùng nó cho đến khi hết hạn
+                            (Expiration). Làm sao ta thu hồi lệnh bài đã phát ra?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-security">
+                        <span class="voice-label">Sư Huynh Đại</span>
+                        <p class="dialogue-content">
+                            Đó là cái giá phải trả của Stateless. Ta không thể thu hồi dễ dàng như xóa Session.
+                            Cách khắc phục là giữ thời hạn (TTL) của Token thật ngắn (ví dụ 15 phút), và dùng cơ chế
+                            <span class="emphasis">Refresh Token</span> để cấp mới. Hoặc ta phải chấp nhận lưu Blacklist
+                            (lại quay về Stateful một chút) cho những token bị báo mất.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: Tổng Kết <span class="section-duration">(6 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn cầm tấm lệnh bài JWT trên tay. Nó nhẹ nhàng, chứa đủ thông tin, và quan trọng nhất
+                            là "vô tư" (không phụ thuộc vào bộ nhớ Server).
+                            Đây chính là chìa khóa để xây dựng các hệ thống Modern Web và Microservices sau này.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Lý thuyết đã xong. Nhưng làm sao để gắn cái "phễu lọc JWT" kia vào đúng vị trí trong hệ
+                            thống phòng thủ?
+                            Spring Security hoạt động dựa trên một chuỗi xích các bộ lọc (Filter Chain). Nếu gắn sai
+                            chỗ, hệ thống sẽ sụp đổ.
+                            Ngày mai, ta sẽ dạy ngươi cách thao túng <span class="emphasis">Security Filter
+                                Chain</span>.
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Thuật Ngữ Chương Này</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">JWT (JSON Web Token)</span>
+                        <span class="term-description">Chuẩn Token chứa thông tin (Claims) được ký số, dùng cho xác thực
+                            Stateless.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Stateless Authentication</span>
+                        <span class="term-description">Xác thực phi trạng thái. Server không lưu Session. Client tự giữ
+                            Token.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Signature</span>
+                        <span class="term-description">Chữ ký số tạo bởi Header + Payload + Secret Key. Đảm bảo tính
+                            toàn vẹn dữ liệu.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Bearer Token</span>
+                        <span class="term-description">Loại Token mà "người cầm nó là người sở hữu nó". Gửi trong
+                            Header: Authorization: Bearer ...</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Claims</span>
+                        <span class="term-description">Các thông tin được tuyên bố trong Payload (như username, exp,
+                            role).</span>
+                    </li>
+                </ul>
+
+                <div class="interview-questions">
+                    <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn</h4>
+                    <ol class="question-list">
+                        <li>Tại sao JWT lại tốt cho Microservices? (Stateless, không cần đồng bộ Session).</li>
+                        <li>Làm thế nào để Logout khi dùng JWT? (Xóa ở Client, hoặc dùng Blacklist ở Server với thời
+                            gian ngắn).</li>
+                        <li>Thông tin trong JWT có được bảo mật (giấu kín) không? (Không, chỉ được Encode Base64, ai
+                            cũng decode được. Đừng để mật khẩu vào Payload!).</li>
+                        <li>Refresh Token là gì và tại sao cần nó?</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🔮 Tiếp Theo</h3>
+                <p class="cliffhanger-text">
+                    Lâm Tuấn đã có tấm khiên JWT, nhưng anh không biết phải đứng ở đâu trong hàng ngũ phòng thủ. Lắp sai
+                    vị trí, kẻ địch sẽ lọt qua trước khi anh kịp rút khiên.
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="chapter-14.html">Chapter 14: Phòng Hộ Pháp Trận - Security Filter Chain →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="chapter-12.html" class="chapter-nav-link prev">
+                    <span class="label">← Chapter trước</span>
+                    <span class="title">Phân Quyền Hạn</span>
+                </a>
+                <a href="chapter-14.html" class="chapter-nav-link next">
+                    <span class="label">Chapter tiếp theo →</span>
+                    <span class="title">Phòng Hộ Pháp Trận</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>

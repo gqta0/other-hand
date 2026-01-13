@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 12: Phân Quyền Hạn - Lâm Tuấn học về Authorization, Role-based Access Control (RBAC) và Method Security">
+    <title>Chapter 12: Phân Quyền Hạn | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 3: Phòng Hộ Sơn Môn</span>
+                <h1 class="chapter-title">Chapter 12: Phân Quyền Hạn</h1>
+                <div class="chapter-meta">
+                    <span>📖 Authorization</span>
+                    <span>⏱️ 28 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Rào Cản Quyền Lực <span class="section-duration">(5 phút)</span>
+                    </h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Sau khi vượt qua cửa ải Xác Thực (Authentication), Lâm Tuấn hân hoan bước vào Tàng Kinh Các.
+                            Anh tiến thẳng đến kệ sách "Bí Kíp Senior" để tìm cuốn "Thiết Kế Hệ Thống".
+                            Nhưng khi tay anh vừa chạm vào bìa sách, một luồng điện xẹt qua khiến anh tê rần, cuốn sách
+                            tự động bay trở lại kệ.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Tại sao? Đệ tử đã đăng nhập rồi mà! Đệ tử là người của môn phái rồi mà!
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-security">
+                        <span class="voice-label">Sư Huynh Đại</span>
+                        <p class="dialogue-content">
+                            Ngươi đúng là người của môn phái, nhưng ngươi chỉ là "Sơ Nhập Đệ Tử" (JUNIOR).
+                            Khu vực này chỉ dành cho "Cao Thủ" (SENIOR) và "Kiến Trúc Sư" (ARCHITECT).
+                            Đây là quy tắc thứ hai của Spring Security: <span class="emphasis">Authorization</span> -
+                            Phân Quyền Hạn (hay còn gọi là Access Control).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-security">
+                        <span class="voice-label">Sư Huynh Đại</span>
+                        <p class="dialogue-content">
+                            <span class="emphasis">Authentication</span> trả lời câu hỏi "Ngươi là ai?".
+                            <span class="emphasis">Authorization</span> trả lời câu hỏi "Ngươi được phép làm gì?".
+                            Biết ngươi là ai không có nghĩa là ngươi muốn làm gì cũng được!
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: Vai Vò và Quyền Hạn (Role & Authority) <span
+                            class="section-duration">(8 phút)</span></h2>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Vậy làm thế nào để hệ thống biết đệ tử là Junior hay Senior?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-security">
+                        <span class="voice-label">Sư Huynh Đại</span>
+                        <p class="dialogue-content">
+                            Trong thẻ bài (Authentication) của ngươi, ngoài cái tên (Principal), còn có một danh sách
+                            các huy hiệu quyền lực gọi là <span class="emphasis">GrantedAuthority</span>.
+                            Thường thì ta gọi chúng là <span class="emphasis">ROLE</span> (Vai Trò).
+                            Ví dụ: `ROLE_USER`, `ROLE_ADMIN`, `ROLE_MANAGER`.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-security">
+                        <span class="voice-label">Sư Huynh Đại</span>
+                        <p class="dialogue-content">
+                            Khi cấu hình bảo vệ (SecurityConfig), ta sẽ thiết lập các chốt chặn URL.
+                            Ví dụ:
+                            `requestMatchers("/admin/**").hasRole("ADMIN")`
+                            `requestMatchers("/user/**").hasAnyRole("ADMIN", "USER")`
+                            `requestMatchers("/public/**").permitAll()`
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            À, giống như việc phân chia khu vực trong hoàng cung vậy. Khu vực này ai cũng vào được, khu
+                            vực kia chỉ có quan lại mới được vào.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-security">
+                        <span class="voice-label">Sư Huynh Đại</span>
+                        <p class="dialogue-content">
+                            Đúng vậy. Đây gọi là <span class="emphasis">URL-based Security</span>. Nó bảo vệ các "con
+                            đường" (Endpoint).
+                            Nếu ngươi cố tình đi vào con đường `/admin/delete-user` mà chỉ có huy hiệu `ROLE_USER`,
+                            ngươi sẽ bị đá ra ngay với thông báo lỗi <span class="emphasis">403 Forbidden</span> (Cấm
+                            Cửa).
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: Bảo Vệ Từng Chiêu Thức (Method Security) <span
+                            class="section-duration">(9 phút)</span></h2>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Nhưng Sư Huynh, URL chỉ là bề nổi. Nếu đệ tử dùng phép thuật gọi trực tiếp vào Service (bỏ
+                            qua Controller) thì sao?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-security">
+                        <span class="voice-label">Sư Huynh Đại</span>
+                        <p class="dialogue-content">
+                            Ngươi sắc sảo đấy! Bảo vệ URL chưa đủ an toàn. Ta cần bảo vệ tận gốc rễ: từng Hàm (Method).
+                            Chúng ta dùng <span class="emphasis">Method Security</span>.
+                            Đầu tiên, phải kích hoạt bằng `@EnableMethodSecurity`.
+                            Sau đó, dán phù chú trực tiếp lên hàm Service.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            (Xuất hiện thình lình) Có hai loại phù chú phổ biến nhất.
+                            Loại thứ nhất: <span class="emphasis">@Secured("ROLE_ADMIN")</span>.
+                            Loại này đơn giản, cổ điển. Chỉ cần có Role là được.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Loại thứ hai cao cấp hơn: <span class="emphasis">@PreAuthorize</span>.
+                            Nó dùng ngôn ngữ SpEL (Spring Expression Language) cực mạnh.
+                            Ví dụ: `@PreAuthorize("hasRole('ADMIN') or #username == authentication.name")`.
+                            Nó có thể kiểm tra logic phức tạp: "Chỉ cho phép xóa nếu là Admin HOẶC là chính chủ nhân tài
+                            khoản đó".
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Thật vi diệu! Như vậy ta có thể phân quyền chi tiết đến từng dữ liệu. Người dùng A chỉ được
+                            sửa bài viết của A, không được sửa của B.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-security">
+                        <span class="voice-label">Sư Huynh Đại</span>
+                        <p class="dialogue-content">
+                            Chính xác. Đó là đỉnh cao của Authorization. Kết hợp cả URL Security và Method Security, môn
+                            phái ta sẽ trở thành thành trì bất khả xâm phạm.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: Tổng Kết <span class="section-duration">(6 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn nhìn tấm thẻ bài Junior của mình. Bây giờ anh đã hiểu vì sao mình bị giật điện.
+                            Hệ thống phân quyền không dựa trên tình cảm ("Sư phụ ơi cho con xem tí"), mà dựa trên quy
+                            tắc cứng rắn ("Role của ngươi là gì?").
+                            Admin quản lý User. User quản lý Profile của mình. Không ai dẫm chân lên ai.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Sư Huynh, nhưng mỗi lần đệ tử đăng nhập lại phải chạy đến gặp Sư Huynh để xin thẻ bài
+                            Session.
+                            Nếu bây giờ đệ tử muốn đi giao du thiên hạ (Mobile App), thẻ bài Session này có vẻ cồng kềnh
+                            khó mang theo và khó xác thực khi ở xa (Stateless).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-security">
+                        <span class="voice-label">Sư Huynh Đại</span>
+                        <p class="dialogue-content">
+                            Ngươi nói đúng. Session là công nghệ cũ, dựa vào bộ nhớ (Stateful).
+                            Để phiêu bạt giang hồ, ngươi cần một loại lệnh bài hiện đại hơn, nhẹ nhàng hơn, tự chứa
+                            thông tin.
+                            Ta gọi nó là <span class="emphasis">JWT - JSON Web Token</span>.
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Thuật Ngữ Chương Này</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">Authorization</span>
+                        <span class="term-description">Phân quyền - Quy trình kiểm tra quyền hạn (Access
+                            Control).</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Role-Based Access Control (RBAC)</span>
+                        <span class="term-description">Mô hình phân quyền dựa trên Vai Trò (Admin, User...).</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">GrantedAuthority</span>
+                        <span class="term-description">Một quyền hạn cụ thể được cấp cho User (thường có prefix
+                            ROLE_).</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">@PreAuthorize</span>
+                        <span class="term-description">Phù Chú kiểm tra quyền trước khi chạy method. Hỗ trợ SpEL mạnh
+                            mẽ.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">403 Forbidden</span>
+                        <span class="term-description">Lỗi "Cấm Cửa" - Đã đăng nhập nhưng không đủ quyền. (Khác với 401
+                            Unauthorized - Chưa đăng nhập).</span>
+                    </li>
+                </ul>
+
+                <div class="interview-questions">
+                    <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn</h4>
+                    <ol class="question-list">
+                        <li>Phân biệt @Secured, @PreAuthorize và @PostAuthorize?</li>
+                        <li>Sự khác biệt giữa HTTP 401 (Unauthorized) và 403 (Forbidden)?</li>
+                        <li>Làm sao để thực hiện phân quyền động (ví dụ: User A chỉ xem được Document do mình tạo)?
+                            (Dùng SpEL trong @PreAuthorize).</li>
+                        <li>Tại sao nên dùng Method Security bên cạnh URL Security? (Defense in Depth).</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🔮 Tiếp Theo</h3>
+                <p class="cliffhanger-text">
+                    Session là gánh nặng của Server. Để giải phóng Server khỏi việc ghi nhớ, Sư Huynh Đại giới thiệu một
+                    loại lệnh bài ma thuật mang tên JWT. Nó chứa đựng mọi thông tin cần thiết và không thể bị làm giả.
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="chapter-13.html">Chapter 13: Linh Bài Thông Hành - JWT Token →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="chapter-11.html" class="chapter-nav-link prev">
+                    <span class="label">← Chapter trước</span>
+                    <span class="title">Xác Thực Thân Phận</span>
+                </a>
+                <a href="chapter-13.html" class="chapter-nav-link next">
+                    <span class="label">Chapter tiếp theo →</span>
+                    <span class="title">Linh Bài Thông Hành</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 25: Thử Thách Giao Dịch - Thực hành xây dựng Banking Service với Transaction, xử lý Deadlock và Race Condition">
+    <title>Chapter 25: Thử Thách Giao Dịch | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 5: Giao Dịch Công Bằng</span>
+                <h1 class="chapter-title">Chapter 25: Thử Thách Giao Dịch</h1>
+                <div class="chapter-meta">
+                    <span>📖 Transaction Practice</span>
+                    <span>⏱️ 35 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Bài Toán Ngân Hàng <span class="section-duration">(5 phút)</span>
+                    </h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Đường Chủ Transaction dẫn Lâm Tuấn đến "Ngân Khố Môn Phái".
+                            Tại đây, anh nhận được nhiệm vụ tối quan trọng: Xây dựng hệ thống `BankingService` để xử lý
+                            việc chuyển Linh Thạch (Points) giữa các đệ tử.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-transaction">
+                        <span class="voice-label">Đường Chủ Transaction</span>
+                        <p class="dialogue-content">
+                            Yêu cầu của ta rất đơn giản nhưng khắt khe:
+                            1. Hàm `transfer(fromId, toId, amount)` phải tuyệt đối an toàn (Atomic).
+                            2. Phải ghi lại lịch sử giao dịch vào bảng `AuditLog` dù thành công hay thất bại (Requires
+                            New).
+                            3. Phải xử lý trường hợp 2 người chuyển tiền cùng lúc (Concurrency).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử xin nhận thách thức!
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: Triển Khai Transaction <span class="section-duration">(10
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đầu tiên, đệ tử viết hàm log:
+                            `@Transactional(propagation = Propagation.REQUIRES_NEW)`
+                            `public void logTransaction(String message) { ... }`
+                            Để đảm bảo Log luôn được ghi lại bất chấp kết quả.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Tiếp theo là hàm chính `transfer`:
+                            `@Transactional(rollbackFor = Exception.class, timeout = 5)`
+                            `public void transfer(Long fromId, Long toId, BigDecimal amount) {`
+                            ` try {`
+                            ` // Logic trừ tiền, cộng tiền`
+                            ` auditService.logTransaction("Success");`
+                            ` } catch (Exception e) {`
+                            ` auditService.logTransaction("Failed: " + e.getMessage());`
+                            ` throw e; // Ném lại để kích hoạt Rollback`
+                            ` }`
+                            `}`
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-transaction">
+                        <span class="voice-label">Đường Chủ Transaction</span>
+                        <p class="dialogue-content">
+                            Khá lắm. Nhưng logic trừ tiền của ngươi thế nào? Có kiểm tra số dư không?
+                            Và quan trọng nhất, ngươi có dùng <span class="emphasis">Pessimistic Locking</span> không?
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: Đối Mặt Deadlock <span class="section-duration">(12 phút)</span>
+                    </h2>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Khoá bi quan (Pessimistic Lock)? Ý Đường Chủ là `SELECT ... FOR UPDATE`?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-transaction">
+                        <span class="voice-label">Đường Chủ Transaction</span>
+                        <p class="dialogue-content">
+                            Đúng. Nếu ngươi chỉ `findById`, rồi java check `balance > amout`, rồi `save`.
+                            Thì khi 2 thread chạy cùng lúc, chúng đều thấy số dư đủ, và đều trừ tiền. Kết quả là số dư
+                            bị âm (Lost Update).
+                            Ngươi phải dùng: `@Lock(LockModeType.PESSIMISTIC_WRITE)` trong Repository khi lấy thông tin
+                            người gửi.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-transaction">
+                        <span class="voice-label">Đường Chủ Transaction</span>
+                        <p class="dialogue-content">
+                            Nhưng coi chừng <span class="emphasis">Deadlock</span>.
+                            Tình huống: A chuyển cho B. B chuyển cho A. Cùng một lúc.
+                            Thread 1 khóa A, chờ khóa B.
+                            Thread 2 khóa B, chờ khóa A.
+                            Cả 2 chờ nhau đến thiên thu.
+                            Giải pháp là gì?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            (Suy nghĩ hồi lâu) Đệ tử nhớ rồi! Phải luôn khóa tài nguyên theo một thứ tự nhất định.
+                            Ví dụ: Luôn khóa ID nhỏ trước, ID lớn sau.
+                            `User first = fromId < toId ? fromUser : toUser;` `User second=fromId < toId ? toUser :
+                                fromUser;` Như vậy sẽ không bao giờ bị vòng tròn luẩn quẩn. </p>
+                    </div>
+
+                    <div class="dialogue-block voice-transaction">
+                        <span class="voice-label">Đường Chủ Transaction</span>
+                        <p class="dialogue-content">
+                            Xuất sắc! Ngươi đã ngộ ra chân lý của Concurrency Control.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: Tổng Kết Arc 5 <span class="section-duration">(8 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Hệ thống ngân hàng của Lâm Tuấn hoạt động trơn tru. Tiền bạc phân minh, sổ sách rõ ràng. Các
+                            đệ tử trong môn phái vô cùng tin tưởng vào uy tín của hệ thống.
+                            Lâm Tuấn thở phào nhẹ nhõm. Anh đã vượt qua được một trong những Arc khó nhằn nhất về mặt tư
+                            duy logic.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            (Vỗ vai Lâm Tuấn) Chúc mừng đệ tử.
+                            Nhưng ta thấy dạo này ngươi hay phải viết code lặp đi lặp lại ở nhiều nơi: Code Log, Code đo
+                            thời gian chạy, Code check quyền Security...
+                            Chúng cứ bám vào code nghiệp vụ (Business Logic) như dây leo ký sinh vậy. Nhìn rất rối mắt.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đúng là vậy ạ. Code `transferMoney` của đệ tử tuy an toàn nhưng đầy rẫy code `audit`, code
+                            `try-catch`.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Đã đến lúc ngươi cần học về <span class="emphasis">AOP - Aspect Oriented Programming</span>
+                            (Lập Trình Hướng Khía Cạnh).
+                            Một loại pháp thuật cho phép tàng hình, tách những thứ rườm rà đó ra khỏi code chính.
+                            Hãy đến gặp Trưởng Lão AOP ở Arc tiếp theo.
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Tổng Kết Arc 5</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">Pessimistic Locking</span>
+                        <span class="term-description">Cơ chế khóa bi quan. Khóa dữ liệu ngay khi đọc (SELECT ... FOR
+                            UPDATE) để ngăn người khác sửa. An toàn nhưng chậm.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Optimistic Locking</span>
+                        <span class="term-description">Cơ chế khóa lạc quan. Dùng cột version để check khi update. Nếu
+                            version lệch -> Ném lỗi. Nhanh hơn nhưng phải xử lý retry.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Deadlock (Khóa Chết)</span>
+                        <span class="term-description">Tình huống 2 process chờ nhau giải phóng tài nguyên mãi mãi. Giải
+                            quyết bằng thứ tự khóa đồng nhất (Consistent Ordering).</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Race Condition</span>
+                        <span class="term-description">Lỗi xảy ra khi kết quả phụ thuộc vào thứ tự thực thi không kiểm
+                            soát của các thread.</span>
+                    </li>
+                </ul>
+
+                <div class="interview-questions">
+                    <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn Tổng Hợp</h4>
+                    <ol class="question-list">
+                        <li>Làm thế nào để tránh Deadlock trong Database? (Access resources theo đúng 1 thứ tự, giữ
+                            transaction ngắn gọn).</li>
+                        <li>Optimistic vs Pessimistic Locking: Khi nào dùng cái nào? (Optimistic cho hệ thống đọc nhiều
+                            ghi ít. Pessimistic cho hệ thống ghi nhiều, xung đột cao như tài chính).</li>
+                        <li>Spring @Transactional có hoạt động với Private Method không? (Không, vì AOP Proxy chỉ chặn
+                            được Public Method gọi từ bên ngoài).</li>
+                        <li>Tại sao try-catch trong Transaction lại có thể làm hỏng cơ chế Rollback? (Vì nuốt mất
+                            Exception khiến Spring không biết có lỗi. Phải throw lại hoặc setRollbackOnly).</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🔮 Tiếp Theo: ARC 6</h3>
+                <p class="cliffhanger-text">
+                    Một làn khói tím huyền ảo bao phủ đỉnh núi phía Đông. Đó là nơi ở của Trưởng Lão AOP - người nắm giữ
+                    bí thuật "Cắt Lớp Thời Không". Nghe đồn ông ta có thể chèn code vào quá khứ và tương lai của một hàm
+                    mà không cần sửa hàm đó.
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="../arc-6-khia-canh-huyen-bi/chapter-26.html">Chapter 26: Khía Cạnh Huyền Bí - AOP Intro
+                        →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="chapter-24.html" class="chapter-nav-link prev">
+                    <span class="label">← Chapter trước</span>
+                    <span class="title">Truyền Dẫn Pháp Tắc</span>
+                </a>
+                <a href="../arc-6-khia-canh-huyen-bi/chapter-26.html" class="chapter-nav-link next">
+                    <span class="label">Chapter tiếp theo →</span>
+                    <span class="title">Khía Cạnh Huyền Bí</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>

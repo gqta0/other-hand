@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 23: Phù Chú Giao Dịch - Hiểu sâu về @Transactional, Rollback Rules (Checked vs Unchecked Exceptions) và Read-Only optimization">
+    <title>Chapter 23: Phù Chú Giao Dịch | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 5: Giao Dịch Công Bằng</span>
+                <h1 class="chapter-title">Chapter 23: Phù Chú Giao Dịch</h1>
+                <div class="chapter-meta">
+                    <span>📖 @Transactional Deep Dive</span>
+                    <span>⏱️ 30 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Sự Ngó Lơ Của Thần Linh (Rollback Rules) <span
+                            class="section-duration">(10 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn chạy đến gặp Đường Chủ Transaction với vẻ mặt hốt hoảng.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đường Chủ! Có chuyện lạ lắm. Đệ tử đã dán bùa `@Transactional` lên hàm `transferMoney`.
+                            Trong hàm đó, đệ tử ném ra một ngoại lệ `IOExeption` (đọc file thất bại).
+                            Đệ tử cứ đinh ninh là giao dịch sẽ Rollback tiền về. Nhưng không! Tiền vẫn bị trừ, Database
+                            vẫn bị thay đổi (Commit), dù lỗi đã xảy ra.
+                            Tại sao thần linh lại làm ngơ trước đau khổ của chúng sinh như vậy?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-transaction">
+                        <span class="voice-label">Đường Chủ Transaction</span>
+                        <p class="dialogue-content">
+                            Bình tĩnh. Ngươi đã phạm phải sai lầm kinh điển của những kẻ mới nhập môn.
+                            Mặc định, Spring Transaction chỉ Rollback khi gặp <span class="emphasis">Unchecked
+                                Exception</span> (RuntimeException) hoặc <span class="emphasis">Error</span>.
+                            Còn với <span class="emphasis">Checked Exception</span> (như IOException, SQLException,
+                            Exception thường...), Spring coi đó là những "tai nạn dự tính được" và sẽ <span
+                                class="emphasis">KHÔNG Rollback</span> trừ khi ngươi yêu cầu.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Trời đất! Đệ tử cứ tưởng hễ cứ có lỗi là Rollback hết.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-transaction">
+                        <span class="voice-label">Đường Chủ Transaction</span>
+                        <p class="dialogue-content">
+                            Để sửa sai, ngươi phải cấu hình rõ ràng trong bùa chú:
+                            `@Transactional(rollbackFor = Exception.class)`
+                            Câu này có nghĩa: "Hễ gặp bất kỳ Exception nào, dù là Checked hay Unchecked, cũng hãy
+                            Rollback cho ta".
+                            Đây là Best Practice mà ngươi nên nhớ kỹ.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: Miễn Tử Kim Bài (noRollbackFor) <span class="section-duration">(5
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-transaction">
+                        <span class="voice-label">Đường Chủ Transaction</span>
+                        <p class="dialogue-content">
+                            Ngược lại, đôi khi có những lỗi mà ngươi không muốn Rollback.
+                            Ví dụ: Trong một giao dịch lớn, ngươi gửi email thông báo cho khách. Việc gửi email bị lỗi.
+                            Ngươi có muốn Rollback cả đơn hàng chỉ vì cái email không gửi được không? Chắc chắn là
+                            không.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-transaction">
+                        <span class="voice-label">Đường Chủ Transaction</span>
+                        <p class="dialogue-content">
+                            Khi đó, hãy dùng:
+                            `@Transactional(noRollbackFor = MailSendException.class)`
+                            Đây giống như "Miễn Tử Kim Bài". Gặp lỗi này, Spring sẽ bỏ qua và vẫn Commit những thay đổi
+                            Database trước đó.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: Chế Độ Chỉ Đọc (Read-Only Optimization) <span
+                            class="section-duration">(8 phút)</span></h2>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Thưa Đường Chủ, vậy với những hàm chỉ lấy dữ liệu (SELECT) như `getDiscipleDetails` thì có
+                            cần `@Transactional` không ạ?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-transaction">
+                        <span class="voice-label">Đường Chủ Transaction</span>
+                        <p class="dialogue-content">
+                            Rất nên! Nhưng hãy thêm thuộc tính:
+                            `@Transactional(readOnly = true)`
+                            Khi ngươi tuyên bố "Ta chỉ đọc thôi, không sửa gì đâu", Spring và Database sẽ có những tối
+                            ưu đặc biệt.
+                            1. Hibernate sẽ không cần kiểm tra sự thay đổi của Entity (Dirty Checking) -> Tăng tốc độ.
+                            2. Database (nếu hỗ trợ) sẽ dùng cơ chế Snapshot để đọc nhanh hơn mà không cần Lock nặng nề.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-transaction">
+                        <span class="voice-label">Đường Chủ Transaction</span>
+                        <p class="dialogue-content">
+                            Tuy nhiên, nếu ngươi đã thề là `readOnly = true` mà bên trong cố tình gọi lệnh `save()` hoặc
+                            `update`, ngươi sẽ bị trừng phạt (Exception).
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: Tổng Kết <span class="section-duration">(7 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn cẩn thận ghi chép lại vào cuốn bí kíp:
+                            1. Mặc định chỉ Rollback RuntimeException.
+                            2. Muốn an toàn, luôn dùng `rollbackFor = Exception.class` hoặc tự handle Exception.
+                            3. Với hàm SELECT, luôn dùng `readOnly = true`.
+                            4. Đừng quên `timeout` nếu sợ giao dịch bị treo quá lâu.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-transaction">
+                        <span class="voice-label">Đường Chủ Transaction</span>
+                        <p class="dialogue-content">
+                            Ngươi đã nắm được cách điều khiển hành vi của một giao dịch đơn lẻ.
+                            Nhưng giang hồ hiểm ác, các hàm thường gọi lẫn nhau.
+                            Hàm A gọi Hàm B. Hàm A có Transaction, Hàm B cũng muốn có Transaction.
+                            Liệu Hàm B sẽ dùng chung Transaction của A, hay tự tạo Transaction mới?
+                            Đó là bài toán về <span class="emphasis">Propagation (Sự Truyền Dẫn)</span>. Nó còn phức tạp
+                            gấp vạn lần bài hôm nay.
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Thuật Ngữ Chương Này</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">rollbackFor</span>
+                        <span class="term-description">Thuộc tính chỉ định các class Exception sẽ kích hoạt
+                            Rollback.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Checked Exception</span>
+                        <span class="term-description">Các Exception bắt buộc phải try-catch (kế thừa từ Exception).
+                            Spring mặc định KHÔNG rollback.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Unchecked Exception</span>
+                        <span class="term-description">Các Exception không bắt buộc try-catch (kế thừa từ
+                            RuntimeException). Spring mặc định CÓ rollback.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">readOnly = true</span>
+                        <span class="term-description">Tối ưu hóa cho các transaction chỉ đọc dữ liệu, giúp tăng hiệu
+                            năng (tắt Dirty Checking).</span>
+                    </li>
+                </ul>
+
+                <div class="interview-questions">
+                    <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn</h4>
+                    <ol class="question-list">
+                        <li>Mặc định @Transactional rollback khi nào? (RuntimeException và Error).</li>
+                        <li>Làm sao để rollback khi gặp IOException? (rollbackFor = IOException.class).</li>
+                        <li>readOnly=true giúp tối ưu gì trong Hibernate/JPA? (Bỏ qua Dirty Checking, giảm bộ nhớ và
+                            CPU).</li>
+                        <li>Có nên đặt @Transactional ở cấp Class không? (Được, nó sẽ áp dụng cho tất cả public method,
+                            nhưng nên cấu hình chi tiết từng method để tối ưu readOnly).</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🔮 Tiếp Theo</h3>
+                <p class="cliffhanger-text">
+                    Chuyện gì xảy ra khi "Lửa gặp Lửa"? Một Transaction đang chạy lại gọi một Transaction khác. Chúng sẽ
+                    hòa vào làm một, hay tách ra riêng biệt? Câu trả lời nằm ở Propagation Levels.
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="chapter-24.html">Chapter 24: Truyền Dẫn Pháp Tắc - Propagation →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="chapter-22.html" class="chapter-nav-link prev">
+                    <span class="label">← Chapter trước</span>
+                    <span class="title">Tứ Đại Quy Tắc</span>
+                </a>
+                <a href="chapter-24.html" class="chapter-nav-link next">
+                    <span class="label">Chapter tiếp theo →</span>
+                    <span class="title">Truyền Dẫn Pháp Tắc</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>

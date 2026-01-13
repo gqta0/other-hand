@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 18: Bản Đồ Chi Tiết - Học về ResultMap, One-to-One (@One) và One-to-Many (@Many) trong MyBatis">
+    <title>Chapter 18: Bản Đồ Chi Tiết | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 4: Kho Tàng Bí Mật</span>
+                <h1 class="chapter-title">Chapter 18: Bản Đồ Chi Tiết</h1>
+                <div class="chapter-meta">
+                    <span>📖 ResultMap & Associations</span>
+                    <span>⏱️ 32 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Mối Liên Kết Bí Ẩn <span class="section-duration">(5 phút)</span>
+                    </h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Sư Tỷ Linh dẫn Lâm Tuấn đi sâu hơn vào hang động. Tại đây, các rương báu không còn nằm riêng
+                            lẻ nữa mà bị xích lại với nhau.
+                            Một cái rương lớn (Disciple) nối với một thanh kiếm (Weapon).
+                            Và cái rương đó lại nối với một tá túi càn khôn (Inventory Items).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Thực tế dữ liệu luôn phức tạp hơn những gì ngươi thấy ở Chapter 17.
+                            Trong Java, ta thể hiện mối quan hệ bằng Object Reference.
+                            `class Disciple { Weapon weapon; List<Item> items; }`
+                                Nhưng trong Database, chúng chỉ là các khóa ngoại (Foreign Key) buồn tẻ.
+                                Làm sao để khi ngươi dùng `@Select`, MyBatis biết tự động lôi cả thanh kiếm và túi đồ đi
+                                kèm theo đệ tử?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Nếu dùng JDBC, đệ tử phải SELECT 2 lần, hoặc dùng JOIN rồi tự tay tách dữ liệu. Rất mệt mỏi.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Với MyBatis, ta dùng một tấm bản đồ chi tiết hơn, gọi là <span class="emphasis">Result
+                                Map</span>.
+                            Và trong Annotation, ta dùng <span class="emphasis">@Results</span> kết hợp với <span
+                                class="emphasis">@One</span> và <span class="emphasis">@Many</span>.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: Một Đối Một (One-to-One) <span class="section-duration">(10
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Hãy bắt đầu với quan hệ 1-1: Mỗi Đệ Tử có một Thanh Kiếm Chính (Main Weapon).
+                            Trong bảng `disciples` có cột `weapon_id`.
+                            Đầu tiên, ngươi cần một Mapper cho Weapon: `WeaponMapper.findById(id)`.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đã xong!
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Bây giờ, trong `DiscipleMapper`, khi select Disciple, ngươi dùng `@Results`:
+                            `@Select("SELECT * FROM disciples WHERE id = #{id}")`
+                            `@Results({`
+                            ` @Result(property = "weapon", column = "weapon_id",`
+                            ` one = @One(select = "com.springsect.mapper.WeaponMapper.findById"))`
+                            `})`
+                            `Disciple findById(Long id);`
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Tuyệt diệu! Nghĩa là khi MyBatis lấy được `weapon_id` từ bảng, nó sẽ tự động chạy sang
+                            `WeaponMapper`, gọi hàm `findById`, lấy kết quả và nhét vào thuộc tính `weapon` của
+                            `Disciple`?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Chính xác. Đó là cách <span class="emphasis">Nested Select</span> (Select lồng nhau). Nó đơn
+                            giản nhưng coi chừng bài toán N+1 Selects nếu ngươi lấy danh sách 1000 đệ tử.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: Một Đối Nhiều (One-to-Many) <span class="section-duration">(10
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Vậy còn danh sách vật phẩm (Items)? Một đệ tử có nhiều Items.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Tương tự thôi, nhưng dùng <span class="emphasis">@Many</span> và trỏ tới List.
+                            `@Result(property = "items", column = "id",`
+                            ` many = @Many(select = "com.springsect.mapper.ItemMapper.findByDiscipleId"))`
+                            Lưu ý cột truyền vào là `id` của đệ tử, để bên kia tìm những item nào thuộc về đệ tử này.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn thử nghiệm. Ngay lập tức, một Disciple hoàn chỉnh với đầy đủ vũ khí và túi đồ hiện
+                            ra. Anh cảm thấy như mình đang lắp ghép Lego vậy.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Cảnh báo ngươi một điều: Cách dùng Annotation này khá dài dòng và khó đọc nếu Class quá phức
+                            tạp.
+                            Trong thực tế, cao thủ thường dùng <span class="emphasis">XML Mapper</span> để định nghĩa `
+                            <resultMap>`. Nó trực quan và mạnh mẽ hơn, hỗ trợ cả kế thừa map.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: Tổng Kết <span class="section-duration">(7 phút)</span></h2>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Hôm nay ngươi đã học được cách kết nối các mảnh dữ liệu rời rạc.
+                            ResultMap là trái tim của MyBatis. Hiểu nó, ngươi sẽ làm chủ được mọi loại dữ liệu đổ về từ
+                            SQL.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử đã hiểu. Nhưng Sư Tỷ, nãy giờ các câu SQL của đệ tử đều là tĩnh (Static string).
+                            Thực tế, đôi khi người dùng muốn tìm kiếm theo tên, đôi khi theo tuổi, đôi khi cả hai, đôi
+                            khi không tiêu chí nào cả.
+                            Chẳng lẽ đệ tử phải viết 10 cái hàm `findByName`, `findByAge`, `findByNameAndAge`...?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Câu hỏi rất hay! Đó là ác mộng của JDBC ngày xưa - "Cộng chuỗi SQL".
+                            Nhưng với MyBatis, ta có một vũ khí tối thượng gọi là <span class="emphasis">Dynamic
+                                SQL</span>. Nó cho phép SQL tự biến hình dựa trên tham số đầu vào.
+                            Ngày mai, ta sẽ dạy ngươi các chiêu thức `<if>`, `<choose>`, `<foreach>`.
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Thuật Ngữ Chương Này</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">ResultMap</span>
+                        <span class="term-description">Cấu trúc ánh xạ cột DB sang thuộc tính Object. Chìa khóa để xử lý
+                            mapping phức tạp.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">@One</span>
+                        <span class="term-description">Ánh xạ quan hệ 1-1 (Association). Dùng trong @Result.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">@Many</span>
+                        <span class="term-description">Ánh xạ quan hệ 1-N (Collection). Dùng trong @Result.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">N+1 Select Problem</span>
+                        <span class="term-description">Vấn đề hiểu năng khi thực hiện 1 câu query cha + N câu query con
+                            cho mỗi dòng. Cần dùng JOIN FETCH hoặc Lazy Loading để tối ưu.</span>
+                    </li>
+                </ul>
+
+                <div class="interview-questions">
+                    <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn</h4>
+                    <ol class="question-list">
+                        <li>Sự khác biệt giữa Association và Collection trong MyBatis? (1-1 vs 1-N).</li>
+                        <li>Làm thế nào để tránh vấn đề N+1 Select trong MyBatis? (Dùng Join query trong XML thay vì
+                            Nested Select, hoặc dùng Lazy Loading).</li>
+                        <li>Khi nào nên dùng Annotation @Results, khi nào nên dùng XML <resultMap>? (Annotation cho
+                                simple/quick queries, XML cho complex/reusable mappings).</li>
+                        <li>Lazy Loading trong MyBatis hoạt động như thế nào? (Chỉ load dữ liệu liên quan khi gọi
+                            getter).</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🔮 Tiếp Theo</h3>
+                <p class="cliffhanger-text">
+                    SQL tĩnh giống như thanh kiếm cứng nhắc. Gặp kẻ địch thiên biến vạn hóa (Search Criteria phức tạp),
+                    kiếm cứng sẽ gãy. Sư Tỷ Linh sẽ trao cho Lâm Tuấn một thanh "Nhu Kiếm" - Dynamic SQL, có thể uốn
+                    lượn tùy ý.
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="chapter-19.html">Chapter 19: Kiếm Pháp Biến Hình - Dynamic SQL →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="chapter-17.html" class="chapter-nav-link prev">
+                    <span class="label">← Chapter trước</span>
+                    <span class="title">Thần Chú Truy Vấn</span>
+                </a>
+                <a href="chapter-19.html" class="chapter-nav-link next">
+                    <span class="label">Chapter tiếp theo →</span>
+                    <span class="title">Kiếm Pháp Biến Hình</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>

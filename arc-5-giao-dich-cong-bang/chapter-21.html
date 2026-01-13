@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 21: Giao Dịch Công Bằng - Làm quen với khái niệm Transaction và tầm quan trọng của tính toàn vẹn dữ liệu">
+    <title>Chapter 21: Giao Dịch Công Bằng | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 5: Giao Dịch Công Bằng</span>
+                <h1 class="chapter-title">Chapter 21: Giao Dịch Công Bằng</h1>
+                <div class="chapter-meta">
+                    <span>📖 Transaction Basics</span>
+                    <span>⏱️ 25 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Sự Cố Tại Chợ Đen <span class="section-duration">(5 phút)</span>
+                    </h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Sau khi lĩnh hội tuyệt kỹ MyBatis, Lâm Tuấn ghé qua "Chợ Đen Spring" - nơi trao đổi tài
+                            nguyên giữa các Service.
+                            Tại quầy "Chuyển Tiền", anh chứng kiến một cảnh tượng hỗn loạn.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-unknown">
+                        <span class="voice-label">Đệ Tử A</span>
+                        <p class="dialogue-content">
+                            Tại sao tài khoản của ta đã bị trừ 1000 Linh Thạch, mà huynh đệ của ta vẫn chưa nhận được
+                            đồng nào?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-unknown">
+                        <span class="voice-label">Chủ Quầy</span>
+                        <p class="dialogue-content">
+                            Xin lỗi khách quan! Lúc ta vừa trừ tiền của ngài xong thì... trời đánh sập nguồn điện. Máy
+                            tính chưa kịp cộng tiền cho bên kia.
+                            Giờ tiền đó coi như mất vào hư vô rồi!
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            (Thì thầm) Thật nguy hiểm! Nếu hệ thống ngân hàng mà làm ăn kiểu này thì sập tiệm sớm.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-transaction">
+                        <span class="voice-label">Đường Chủ Transaction</span>
+                        <p class="dialogue-content">
+                            (Xuất hiện uy nghiêm) Đó là lý do ta có mặt ở đây.
+                            Chào mừng đến với Arc 5: <span class="emphasis">Transaction Management</span>. Tại đây,
+                            chúng ta tôn thờ sự công bằng tuyệt đối.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: Khái Niệm Transaction <span class="section-duration">(8
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-transaction">
+                        <span class="voice-label">Đường Chủ Transaction</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn, ngươi hiểu thế nào là một "Giao Dịch" (Transaction)?
+                            Nó không chỉ là việc mua bán. Nó là một <span class="emphasis">Chuỗi Hành Động Logic</span>
+                            không thể tách rời.
+                            Ví dụ: Chuyển tiền gồm 2 bước: 1. Trừ tiền A. 2. Cộng tiền B.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-transaction">
+                        <span class="voice-label">Đường Chủ Transaction</span>
+                        <p class="dialogue-content">
+                            Trong thế giới Database, Transaction đảm bảo rằng: Hoặc cả 2 bước đều thành công rực rỡ
+                            (Commit). Hoặc nếu có bất kỳ lỗi gì ở bước nào, tất cả phải quay về như chưa từng bắt đầu
+                            (Rollback).
+                            Tuyệt đối không có chuyện "làm được một nửa". Đó là trạng thái <span
+                                class="emphasis">Inconsistent</span> (Không Nhất Quán) đáng sợ nhất.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử hiểu! Giống như việc luyện đan. Nếu lỡ tay bỏ sai một vị thuốc ở bước cuối, thì cả lò
+                            đan coi như bỏ, phải đổ đi làm lại từ đầu, chứ không thể "vớt vát" viên đan được.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-transaction">
+                        <span class="voice-label">Đường Chủ Transaction</span>
+                        <p class="dialogue-content">
+                            Ví von hay lắm.
+                            Để quản lý việc này, Spring cung cấp một vị thần hộ mệnh tên là <span
+                                class="emphasis">PlatformTransactionManager</span>.
+                            Vị thần này sẽ đứng ra giám sát. Trước khi ngươi bắt đầu chuỗi hành động, ngài sẽ hô "Bắt
+                            đầu ghi chép!".
+                            Nếu suôn sẻ, ngài hô "Chốt sổ!" (Commit).
+                            Nếu có biến, ngài hô "Xé nháp!" (Rollback).
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: Programmatic vs Declarative <span class="section-duration">(7
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Vậy làm sao để đệ tử triệu hồi vị thần đó? Có phải đệ tử phải viết code:
+                            `transactionManager.begin();`
+                            `try { ... } catch (Exception e) { transactionManager.rollback(); }`
+                            như thời JDBC không ạ?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-transaction">
+                        <span class="voice-label">Đường Chủ Transaction</span>
+                        <p class="dialogue-content">
+                            Đó là cách <span class="emphasis">Programmatic Transaction</span> (Quản lý bằng Code). Cách
+                            đó linh hoạt nhưng rườm rà, làm bẩn code nghiệp vụ của ngươi.
+                            Tại Spring Tông, chúng ta ưu tiên dùng <span class="emphasis">Declarative Transaction</span>
+                            (Quản lý bằng Tuyên Bố).
+                            Chỉ cần dán một lá bùa duy nhất: <span class="emphasis">@Transactional</span>.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-transaction">
+                        <span class="voice-label">Đường Chủ Transaction</span>
+                        <p class="dialogue-content">
+                            Khi ngươi dán bùa này lên hàm `transferMoney()`, Spring sẽ tự động tạo ra một vòng bảo vệ
+                            (Aspect) bao quanh hàm đó.
+                            Mọi việc mở, đóng, rollback giao dịch sẽ do Spring lo. Ngươi chỉ cần tập trung vào nghiệp vụ
+                            chuyển tiền.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Thật tiện lợi! Vậy là đệ tử không bao giờ phải lo mất tiền oan nữa.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: Tổng Kết <span class="section-duration">(5 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn cảm thấy an tâm hơn hẳn. Thế giới dữ liệu không còn mong manh dễ vỡ nữa.
+                            Tuy nhiên, Đường Chủ Transaction nhìn anh với ánh mắt nghiêm nghị.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-transaction">
+                        <span class="voice-label">Đường Chủ Transaction</span>
+                        <p class="dialogue-content">
+                            Chớ vội mừng. Transaction là một con dao hai lưỡi.
+                            Nếu ngươi giữ Transaction quá lâu (Long Transaction), Database sẽ bị khóa (Lock), dẫn đến
+                            tắc nghẽn toàn hệ thống.
+                            Và để hiểu sâu về cách nó hoạt động, ngươi phải nắm vững 4 nguyên tắc vàng gọi là <span
+                                class="emphasis">ACID</span>.
+                            Ngày mai, ta sẽ giảng giải chi tiết về ACID.
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Thuật Ngữ Chương Này</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">Transaction (Giao Dịch)</span>
+                        <span class="term-description">Một đơn vị công việc logic, bao gồm một hoặc nhiều thao tác
+                            Database. Nguyên tắc: All or Nothing.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Commit</span>
+                        <span class="term-description">Lệnh xác nhận lưu vĩnh viễn các thay đổi vào Database sau khi
+                            Transaction thành công.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Rollback</span>
+                        <span class="term-description">Lệnh hoàn tác, khôi phục Database về trạng thái trước khi
+                            Transaction bắt đầu nếu có lỗi.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">PlatformTransactionManager</span>
+                        <span class="term-description">Interface cốt lõi của Spring để quản lý Transaction cho các nguồn
+                            dữ liệu khác nhau (JDBC, Hibernate, MyBatis...).</span>
+                    </li>
+                </ul>
+
+                <div class="interview-questions">
+                    <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn</h4>
+                    <ol class="question-list">
+                        <li>Tại sao cần Transaction? (Đảm bảo tính nhất quán dữ liệu).</li>
+                        <li>Programmatic Transaction vs Declarative Transaction: Khi nào dùng cái nào? (Declarative cho
+                            hầu hết trường hợp, Programmatic khi cần kiểm soát cực kỳ chi tiết scope transaction).</li>
+                        <li>@Transactional hoạt động dựa trên cơ chế nào của Spring? (Spring AOP Proxy).</li>
+                        <li>Điều gì xảy ra nếu Method A gọi Method B (cùng class), cả 2 đều có @Transactional? (Method B
+                            sẽ <b>không</b> kích hoạt transaction mới vì vấn đề "Self-invocation" của Proxy. Sẽ học kỹ ở
+                            Chapter 23).</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🔮 Tiếp Theo</h3>
+                <p class="cliffhanger-text">
+                    ACID - bốn chữ cái quyền lực nhất trong thế giới Database. Nó là nền tảng của niềm tin. Nhưng chữ
+                    cái "I" (Isolation - Cô Lập) lại ẩn chứa những cạm bẫy chết người như Dirty Read, Phantom Read.
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="chapter-22.html">Chapter 22: Tứ Đại Quy Tắc - ACID Properties →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="../arc-4-kho-tang-bi-mat/chapter-20.html" class="chapter-nav-link prev">
+                    <span class="label">← Chapter trước</span>
+                    <span class="title">Thử Thách Kho Tàng</span>
+                </a>
+                <a href="chapter-22.html" class="chapter-nav-link next">
+                    <span class="label">Chapter tiếp theo →</span>
+                    <span class="title">Tứ Đại Quy Tắc</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 30: Thử Thách AOP - Thực hành xây dựng hệ thống Logging & Monitoring bằng AOP, sử dụng custom annotation và đo hiệu năng">
+    <title>Chapter 30: Thử Thách AOP | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 6: Khía Cạnh Huyền Bí</span>
+                <h1 class="chapter-title">Chapter 30: Thử Thách AOP</h1>
+                <div class="chapter-meta">
+                    <span>📖 AOP Practice</span>
+                    <span>⏱️ 35 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Nhận Nhiệm Vụ <span class="section-duration">(5 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Trưởng Lão AOP triệu tập Lâm Tuấn lên đỉnh tháp. Trước mặt ông là một tấm bản đồ môn phái
+                            đang chớp tắt liên tục.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            Dạo này môn phái hoạt động rất chậm. Ta nghi ngờ có những Service đang ngốn tài nguyên
+                            (Performance Bottleneck).
+                            Nhiệm vụ của ngươi:
+                            1. Tạo một Annotation `@LogExecutionTime`.
+                            2. Bất kỳ hàm nào dán bùa này sẽ tự động ghi lại thời gian chạy (Start Time -> End Time).
+                            3. Nếu thời gian chạy > 2 giây, ghi log cảnh báo "SLOW QUERY".
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử hiểu rồi. Đây là bài toán Performance Monitoring kinh điển. Đệ tử sẽ dùng `@Around`.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: Chế Tạo Bùa Chú (@Annotation) <span class="section-duration">(8
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn bắt đầu bằng việc tạo Annotation.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            `@Target(ElementType.METHOD)` -> Chỉ dán lên hàm.
+                            `@Retention(RetentionPolicy.RUNTIME)` -> Tồn tại lúc chạy để AOP đọc được.
+                            `public @interface LogExecutionTime {}`
+                            Đơn giản như vậy thôi.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            Tốt. Giờ hãy viết Aspect để thổi hồn vào lá bùa vô tri đó.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: Triển Khai Aspect (@Around) <span class="section-duration">(15
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử tạo class `PerformanceAspect` và đánh dấu `@Aspect`, `@Component`.
+                            Viết hàm `logTime(ProceedingJoinPoint joinPoint)` với annotation:
+                            `@Around("@annotation(com.example.LogExecutionTime)")`.
+
+                            Logic bên trong:
+                            1. `long start = System.currentTimeMillis();`
+                            2. `Object result = joinPoint.proceed();` (Cho hàm thật chạy).
+                            3. `long end = System.currentTimeMillis();`
+                            4. `long duration = end - start;`
+                            5. `if (duration > 2000) logger.warn(...) else logger.info(...)`
+                            6. `return result;` (Trả kết quả về cho người gọi).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            Chuẩn xác. Nhưng lỡ hàm thật bị lỗi (Throw Exception) thì sao?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            À, đệ tử sẽ bọc `proceed()` trong `try-catch`.
+                            Trong `finally` vẫn tính thời gian chạy.
+                            Và quan trọng nhất, phải `throw` lại Exception đó ra ngoài để không làm sai lệch luồng
+                            nghiệp vụ (hoặc transaction rollback).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            Rất tỉnh táo! Nhiều kẻ mới nhập môn thường nuốt chửng Exception trong Aspect, khiến hệ thống
+                            chạy sai loạn xạ mà không ai biết tại sao.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: Tổng Kết Arc 6 <span class="section-duration">(7 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn dán bùa `@LogExecutionTime` lên các hàm nghi vấn.
+                            Ngay lập tức, Console hiện ra hàng loạt dòng Log. Anh phát hiện ra hàm `calculateSalary()`
+                            chạy mất 5 giây.
+                            Nhờ AOP, anh đã tìm ra thủ phạm mà không cần sửa một dòng code nào trong `calculateSalary`.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            Ngươi đã tốt nghiệp AOP. Code của ngươi giờ đây đã phân tách rõ ràng (Separation of
+                            Concerns).
+                            Nhưng... làm sao ngươi biết code của ngươi chạy ĐÚNG?
+                            Ngươi nói hàm Log chạy đúng, nhưng lỡ nó làm sai số liệu thì sao?
+                            Ngươi cần phải kiểm thử nó.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Kiểm thử? Ý ngài là chạy app lên rồi bấm thử ạ?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            Đó là cách của nông dân. Ta đang nói đến <span class="emphasis">Automated Testing</span>.
+                            Hãy đến Thử Nghiệm Pháp Trận gặp Sư Đệ Minh. Hắn sẽ dạy ngươi cách viết code để test code.
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Tổng Kết Arc 6</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">Performance Monitoring AOP</span>
+                        <span class="term-description">Sử dụng @Around để đo thời gian thực thi method (Execution Time)
+                            mà không xâm phạm logic chính.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Custom Annotation</span>
+                        <span class="term-description">Tự định nghĩa Annotation (@interface) để làm điểm đánh dấu
+                            (Marker) cho Pointcut.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">ProceedingJoinPoint.proceed()</span>
+                        <span class="term-description">Lệnh quan trọng nhất trong @Around để tiếp tục chuỗi xử lý. Quên
+                            gọi nó là chặn luôn method gốc.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Exception Propagation</span>
+                        <span class="term-description">Trong AOP, nếu bắt Exception để log, phải ném nó ra lại (throw)
+                            để các layer khác (như Transaction) biết mà xử lý.</span>
+                    </li>
+                </ul>
+
+                <div class="interview-questions">
+                    <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn Tổng Hợp</h4>
+                    <ol class="question-list">
+                        <li>Tại sao nên dùng Custom Annotation cho AOP thay vì execution expression? (Linh hoạt hơn,
+                            tường minh hơn, tránh bị apply nhầm khi refactor tên hàm).</li>
+                        <li>Trong @Around, làm sao để bắt Exception nhưng vẫn để Transaction Rollback? (Dùng
+                            try-catch-finally để log, sau đó throw lại exception đó trong catch block).</li>
+                        <li>AOP có ảnh hưởng hiệu năng không? (Có, nhưng không đáng kể với JDK/CGLIB modern proxy. Tuy
+                            nhiên tránh lạm dụng @Around quá phức tạp).</li>
+                        <li>Có thể apply nhiều Aspect lên cùng 1 method không? Thứ tự thế nào? (Có. Dùng @Order để định
+                            nghĩa thứ tự ưu tiên).</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🔮 Tiếp Theo: ARC 7</h3>
+                <p class="cliffhanger-text">
+                    Vùng đất cuối cùng hiện ra trước mắt: Sàn Đấu Thử Nghiệm. Không khí ở đây sặc mùi thuốc súng. Những
+                    con Bug lẩn khuất trong bóng tối đang chờ đợi để phá hủy thành quả tu luyện của Lâm Tuấn.
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="../arc-7-thu-thach-cuoi/chapter-31.html">Chapter 31: Thử Nghiệm Pháp Trận - JUnit 5 →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="chapter-29.html" class="chapter-nav-link prev">
+                    <span class="label">← Chapter trước</span>
+                    <span class="title">Điểm Giao Hội</span>
+                </a>
+                <a href="../arc-7-thu-thach-cuoi/chapter-31.html" class="chapter-nav-link next">
+                    <span class="label">Chapter tiếp theo →</span>
+                    <span class="title">Thử Nghiệm Pháp Trận</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>

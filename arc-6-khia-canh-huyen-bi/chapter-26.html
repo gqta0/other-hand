@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 26: Khía Cạnh Huyền Bí - Nhập môn AOP (Aspect Oriented Programming), Proxy Pattern và các khái niệm cơ bản">
+    <title>Chapter 26: Khía Cạnh Huyền Bí | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 6: Khía Cạnh Huyền Bí</span>
+                <h1 class="chapter-title">Chapter 26: Khía Cạnh Huyền Bí</h1>
+                <div class="chapter-meta">
+                    <span>📖 AOP Basics</span>
+                    <span>⏱️ 25 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Những Bóng Ma Ký Sinh (Cross-cutting Concerns) <span
+                            class="section-duration">(5 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn đi theo chỉ dẫn của Sư Phụ đến một tòa tháp ẩn hiện trong sương mù phía Đông - Tháp
+                            AOP.
+                            Vừa bước vào, anh gặp một lão giả râu tóc bạc phơ, đang ngồi thiền lơ lửng giữa không trung.
+                            Xung quanh ông ta là vô số những mảnh gương vỡ bay lượn.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            Chào người trẻ tuổi. Ta nghe nói ngươi đang phiền lòng vì code của mình bị "ô nhiễm"?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Dạ đúng thưa Trưởng Lão. Code nghiệp vụ (Business Logic) của con đang rất đẹp, nhưng cứ phải
+                            chèn thêm code Log, code Security, code đo thời gian... vào đầu và cuối mỗi hàm.
+                            Chúng giống như những dây leo ký sinh, làm rối tung mọi thứ.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            Chúng ta gọi những thứ đó là <span class="emphasis">Cross-cutting Concerns</span> (Những Mối
+                            Quan Tâm Cắt Ngang).
+                            Chúng xuất hiện rải rác ở khắp nơi, cắt ngang qua các tầng nghiệp vụ của ngươi.
+                            Nếu cứ viết code kiểu thủ công, ngươi đang vi phạm nguyên tắc "Single Responsibility" (Đơn
+                            Trách Nhiệm).
+                            Tại đây, ta dạy một pháp môn gọi là <span class="emphasis">Aspect Oriented Programming
+                                (AOP)</span> - Lập Trình Hướng Khía Cạnh.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: Ảo Ảnh Ủy Quyền (Proxy Pattern) <span class="section-duration">(8
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            Bí mật của AOP nằm ở <span class="emphasis">Proxy Pattern</span> (Mẫu Ủy Quyền).
+                            Ngươi có bao giờ tự hỏi, tại sao khi ngươi dán `@Transactional` lên đầu hàm, Spring lại biết
+                            tự động Rollback không?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Con cứ nghĩ Spring sửa code của con lúc chạy?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            Không hề. Spring không sửa Class gốc của ngươi.
+                            Thay vào đó, nó tạo ra một <span class="emphasis">Proxy Object</span> (Một hình nhân thế
+                            mạng) bao bọc lấy Class thật của ngươi.
+                            Khi ai đó gọi hàm `transferMoney()`, thực ra họ đang gọi vào Proxy.
+                            Proxy sẽ làm:
+                            1. Bật Transaction (Before).
+                            2. Gọi hàm thật `transferMoney()`.
+                            3. Nếu lỗi -> Rollback (After Throwing).
+                            4. Nếu OK -> Commit (After Returning).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Ra là vậy! Người dùng cứ tưởng đang nói chuyện với con, nhưng thực ra là đang nói chuyện với
+                            hình nhân.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: Các Khái Niệm Cốt Lõi <span class="section-duration">(7
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            Để tu luyện AOP, ngươi phải thuộc lòng bộ khẩu quyết này:
+                            1. <span class="emphasis">Aspect</span> (Khía Cạnh): Là Class chứa logic chung (Log,
+                            Security). Ngươi đánh dấu nó bằng `@Aspect`.
+                            2. <span class="emphasis">Advice</span> (Lời Khuyên): Là hành động cụ thể. (Ví dụ: "Hãy ghi
+                            Log"). Nó quy định *làm gì* và *khi nào* (Trước, Sau, hay Bao Quanh).
+                            3. <span class="emphasis">Pointcut</span> (Điểm Cắt): Là biểu thức quy định *ở đâu*. (Ví dụ:
+                            "Chỉ áp dụng cho các hàm trong UserService").
+                            4. <span class="emphasis">JoinPoint</span> (Điểm Giao Hội): Là điểm cụ thể trong luồng chạy
+                            code mà Aspect có thể can thiệp vào (thường là Method Execution).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Con hơi rối. Aspect là cái Class. Advice là cái Hàm bên trong. Pointcut là Điều Kiện kích
+                            hoạt. Đúng không ạ?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            Khá chính xác. Aspect giống như một "Vệ Sĩ".
+                            Advice là "Kỹ năng đánh hộc máu".
+                            Pointcut là "Lệnh bảo vệ ai".
+                            JoinPoint là "Lúc kẻ địch tấn công".
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: Tổng Kết <span class="section-duration">(5 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn bắt đầu hình dung ra sức mạnh của AOP.
+                            Thay vì sửa 100 hàm để thêm Log, anh chỉ cần viết 1 Aspect duy nhất.
+                            Code sẽ trở nên sạch bóng (Clean Code), chỉ còn lại nghiệp vụ thuần túy.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            Lý thuyết là vậy. Bây giờ ta sẽ dạy ngươi chiêu thức đầu tiên: Kiểm soát thời gian.
+                            Làm sao để chèn code vào *trước* khi hàm chạy, và *sau* khi hàm chạy mà không đụng vào hàm
+                            đó.
+
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Thuật Ngữ Chương Này</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">AOP (Aspect Oriented Programming)</span>
+                        <span class="term-description">Lập trình hướng khía cạnh. Giúp tách biệt các logic phụ trợ
+                            (Cross-cutting concerns) ra khỏi logic chính.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Proxy Pattern</span>
+                        <span class="term-description">Mẫu thiết kế tạo ra một đối tượng đại diện (Proxy) để kiểm soát
+                            quyền truy cập vào đối tượng thật. Spring AOP dùng JDK Dynamic Proxy hoặc CGLIB.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Cross-cutting Concerns</span>
+                        <span class="term-description">Những mối quan tâm cắt ngang nhiều module khác nhau (Log,
+                            Transaction, Security, Cache).</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Aspect</span>
+                        <span class="term-description">Module hóa của một concern. Trong Spring, nó là một class Java
+                            với annotation @Aspect.</span>
+                    </li>
+                </ul>
+
+                <div class="interview-questions">
+                    <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn</h4>
+                    <ol class="question-list">
+                        <li>AOP giải quyết vấn đề gì? (Code duplication, tản mát logic, vi phạm Single Responsibility).
+                        </li>
+                        <li>Spring AOP dùng cơ chế gì? (Proxy Pattern).</li>
+                        <li>JDK Dynamic Proxy và CGLIB khác nhau thế nào? (JDK Proxy chỉ proxy được Interface. CGLIB
+                            proxy được Class bằng cách tạo subclass). Spring Boot 2+ mặc định dùng CGLIB.</li>
+                        <li>Nêu 4 khái niệm chính của AOP? (Aspect, Advice, Pointcut, JoinPoint).</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🔮 Tiếp Theo</h3>
+                <p class="cliffhanger-text">
+                    Lâm Tuấn chuẩn bị học các ấn quyết thời gian: @Before, @After, @Around. Trong đó, @Around là chiêu
+                    thức mạnh nhất, có thể thay đổi cả kết quả trả về của hàm, thậm chí chặn hàm không cho chạy.
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="chapter-27.html">Chapter 27: Vũ Điệu Thời Gian - Advice Types →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="../arc-5-giao-dich-cong-bang/chapter-25.html" class="chapter-nav-link prev">
+                    <span class="label">← Chapter trước</span>
+                    <span class="title">Thử Thách Giao Dịch</span>
+                </a>
+                <a href="chapter-27.html" class="chapter-nav-link next">
+                    <span class="label">Chapter tiếp theo →</span>
+                    <span class="title">Vũ Điệu Thời Gian</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>

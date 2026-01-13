@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 10: Tuyệt Kỹ REST API - Thực hành xây dựng API quản lý đệ tử chuẩn RESTful">
+    <title>Chapter 10: Tuyệt Kỹ REST API | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 2: Giao Tiếp Giang Hồ</span>
+                <h1 class="chapter-title">Chapter 10: Tuyệt Kỹ REST API</h1>
+                <div class="chapter-meta">
+                    <span>📖 Practice Arc 2</span>
+                    <span>⏱️ 30 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Đại Hội Giao Lưu API <span class="section-duration">(5
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Hôm nay là ngày cuối cùng Lâm Tuấn lưu lại Cổng Giao Tiếp trước khi bước vào Tàng Kinh Các
+                            (Security). Sư Phụ Cao Nhân triệu tập anh đến Đài Quan Sát. Phía dưới, hàng loạt các cỗ máy
+                            (Mobile App, Frontend App) đang bay lượn, chờ đợi được kết nối.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Tuấn nhi, những cỗ máy kia không biết đọc HTML của ngươi đâu. Chúng cần dữ liệu tinh khiết -
+                            JSON. Nhiệm vụ hôm nay của ngươi là chuyển đổi toàn bộ hệ thống Quản Lý Đệ Tử sang chuẩn
+                            RESTful API.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử hiểu! Thay vì dùng `@Controller` trả về View, đệ tử sẽ dùng `@RestController`.
+                            Thay vì trả về `String` (tên file), đệ tử sẽ trả về `List<Disciple>` hoặc `Disciple`.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Đúng, nhưng chưa đủ. Một bộ API chuẩn phải tuân thủ nghiêm ngặt các quy tắc về HTTP Method
+                            và Status Code. Hãy bắt tay vào làm!
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: Xây Dựng CRUD API <span class="section-duration">(10 phút)</span>
+                    </h2>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đầu tiên, đệ tử tạo class `DiscipleRestController`.
+                            Gốc đường dẫn đệ tử đặt là `@RequestMapping("/api/disciples")`.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Tốt. Bắt đầu với việc <span class="emphasis">Lấy Danh Sách</span>.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử dùng `@GetMapping`.
+                            `public List<Disciple> getAll() { return discipleService.findAll(); }`
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Được. Tiếp theo, <span class="emphasis">Lấy Chi Tiết</span> một người.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            `@GetMapping("/{id}")`.
+                            Đệ tử dùng `@PathVariable` để lấy ID.
+                            Nhưng thưa Sư Phụ, nếu không tìm thấy ID thì sao?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-mvc">
+                        <span class="voice-label">Hộ Pháp MVC</span>
+                        <p class="dialogue-content">
+                            Hãy dùng `ResponseEntity`.
+                            Nếu tìm thấy -> `return ResponseEntity.ok(disciple)`.
+                            Nếu không -> `return ResponseEntity.notFound().build()`.
+                            Đừng trả về null, Client sẽ không hiểu đâu!
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Tiếp tục. <span class="emphasis">Tạo Mới</span>.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            `@PostMapping`.
+                            Dữ liệu gửi lên là JSON, nên đệ tử dùng `@RequestBody` (chứ không phải @ModelAttribute nữa).
+                            `public ResponseEntity<Disciple> create(@RequestBody Disciple d)`
+                                Sau khi lưu xong, đệ tử trả về status `201 Created`.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Rất chuyên nghiệp!
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: Cập Nhật và Xóa (Update & Delete) <span
+                            class="section-duration">(8 phút)</span></h2>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Với <span class="emphasis">Cập Nhật</span>, đệ tử dùng `@PutMapping("/{id}")`.
+                            Đệ tử cần cả `@PathVariable` (để biết sửa ai) và `@RequestBody` (để biết sửa cái gì).
+                            Logic: Tìm xem ID có tồn tại không. Nếu có thì update, nếu không thì trả về 404.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Cuối cùng, <span class="emphasis">Hủy Diệt</span>.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            `@DeleteMapping("/{id}")`.
+                            Sau khi xóa thành công, đệ tử trả về `204 No Content` hoặc `200 OK` kèm thông báo.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Hệ thống API đã hoàn tất. Nhưng làm sao để thử nghiệm khi không có giao diện? Hộ Pháp MVC
+                            rút ra một phi kiếm đưa cho Lâm Tuấn.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-mvc">
+                        <span class="voice-label">Hộ Pháp MVC</span>
+                        <p class="dialogue-content">
+                            Hãy dùng phi kiếm này - tên nó là <span class="emphasis">Postman</span> (hoặc Curl).
+                            Dùng nó để bắn các luồng JSON vào API của ngươi và xem phản hồi.
+                            Ví dụ: Bắn `POST /api/disciples` với body `{ "name": "Lâm Tuấn", "level": "Junior" }`.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: Tổng Kết Arc 2 <span class="section-duration">(7 phút)</span></h2>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Chúc mừng Tuấn nhi! Ngươi đã hoàn thành Arc 2: Giao Tiếp Giang Hồ.
+                            Ngươi đã nắm vững DispatcherServlet, RequestMapping, View với Thymeleaf, và đỉnh cao là REST
+                            API.
+                            Giờ đây, ứng dụng của ngươi đã có thể giao tiếp với cả thế giới.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Nhưng Sư Phụ, đệ tử lo lắng. Cổng thành mở rộng như vậy, nếu kẻ xấu (Hacker) trà trộn vào
+                            xóa hết dữ liệu thì sao?
+                            Đệ tử chưa hề có chốt bảo vệ nào cả!
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Đó chính là nội dung của Arc tiếp theo: <span class="emphasis">Spring Security</span> -
+                            Phòng Hộ Sơn Môn.
+                            Chúng ta sẽ xây dựng tầng tầng lớp lớp bảo vệ, từ việc nhận diện khuôn mặt (Authentication)
+                            đến phân chia quyền hạn (Authorization).
+                            Hãy nghỉ ngơi, ngày mai sẽ là một ngày sóng gió.
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Tổng Kết Arc 2</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">RESTful API</span>
+                        <span class="term-description">Kiến trúc thiết kế API dựa trên Resource (URL) và Method (như
+                            GET, POST).</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">@RequestBody</span>
+                        <span class="term-description">Phù Chú chuyển đổi JSON từ Request Body thành Java Object.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">HTTP Status Codes</span>
+                        <span class="term-description">Mã trạng thái: 200 OK, 201 Created, 400 Bad Request, 404 Not
+                            Found, 500 Server Error.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Idempotency</span>
+                        <span class="term-description">Tính chất: Thực hiện hành động nhiều lần kết quả vẫn như nhau
+                            (GET, PUT, DELETE). POST không Idempotent.</span>
+                    </li>
+                </ul>
+
+                <div class="interview-questions">
+                    <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn Tổng Hợp</h4>
+                    <ol class="question-list">
+                        <li>Sự khác biệt giữa @Controller và @RestController?</li>
+                        <li>Khi nào dùng @RequestBody, khi nào dùng @ModelAttribute?</li>
+                        <li>Giải thích ý nghĩa các HTTP Method: GET, POST, PUT, DELETE, PATCH.</li>
+                        <li>HTTP Status Code 401 và 403 khác nhau thế nào? (Sẽ học kỹ ở Arc 3).</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🔮 Tiếp Theo: ARC 3</h3>
+                <p class="cliffhanger-text">
+                    Cánh cổng Spring Security đầy uy nghiêm hiện ra. Ngay bước đầu tiên, Lâm Tuấn đã bị chặn lại bởi một
+                    rào cản vô hình: "Ngươi là ai?"
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="../arc-3-phong-ho-son-mon/chapter-11.html">Chapter 11: Xác Thực Thân Phận - Authentication
+                        →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="chapter-09.html" class="chapter-nav-link prev">
+                    <span class="label">← Chapter trước</span>
+                    <span class="title">Linh Khí Mô Hình</span>
+                </a>
+                <a href="../arc-3-phong-ho-son-mon/chapter-11.html" class="chapter-nav-link next">
+                    <span class="label">Chapter tiếp theo →</span>
+                    <span class="title">Xác Thực Thân Phận</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>

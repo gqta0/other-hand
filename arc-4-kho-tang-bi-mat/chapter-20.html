@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 20: Thử Thách Kho Tàng - Thực hành xây dựng lớp Repository với MyBatis, kết hợp Mapper, XML và Dynamic SQL">
+    <title>Chapter 20: Thử Thách Kho Tàng | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 4: Kho Tàng Bí Mật</span>
+                <h1 class="chapter-title">Chapter 20: Thử Thách Kho Tàng</h1>
+                <div class="chapter-meta">
+                    <span>📖 Database Practice</span>
+                    <span>⏱️ 35 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Nhận Nhiệm Vụ <span class="section-duration">(5 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Sư Tỷ Linh đưa Lâm Tuấn đến tầng sâu nhất của Dữ Liệu Sơn. Tại đây, có một cỗ máy khổng lồ
+                            đang chờ được khởi động.
+                            Đó là hệ thống "Phân Phối Tài Nguyên Môn Phái".
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Sư đệ, kiến thức đã đủ. Giờ hãy cho ta thấy bản lĩnh của ngươi.
+                            Ta cần ngươi xây dựng tầng Persistence (Mapper Layer) cho các bảng `Disciples`, `Weapons`,
+                            và `Missions`.
+                            Yêu cầu:
+                            1. Lấy thông tin đệ tử kèm theo vũ khí và nhiệm vụ đang làm (ResulMap).
+                            2. Tìm kiếm nhiệm vụ theo nhiều tiêu chí: Tên, độ khó, trạng thái (Dynamic SQL).
+                            3. Cập nhật trạng thái nhiệm vụ hàng loạt (Batch Update).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử xin nhận lệnh!
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: Xây Dựng Bản Đồ (XML Configuration) <span
+                            class="section-duration">(10 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn quyết định dùng XML cho sạch sẽ. Anh tạo file `DiscipleMapper.xml` và
+                            `MissionMapper.xml` trong thư mục `resources/mapper`.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Trong `DiscipleMapper.xml`, đệ tử định nghĩa `<resultMap id="DiscipleDetailMap">`.
+                                Sử dụng `<association>` để map sang `Weapon`.
+                                    Sử dụng `<collection>` để map sang List `Mission`.
+                                        Đệ tử dùng kỹ thuật `JOIN` trong SQL để lấy tất cả trong 1 câu truy vấn, tránh
+                                        lỗi N+1.
+                                        `SELECT d.*, w.name as w_name, m.title as m_title`
+                                        `FROM disciples d`
+                                        `LEFT JOIN weapons w ON d.weapon_id = w.id`
+                                        `LEFT JOIN missions m ON m.disciple_id = d.id`
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Khá lắm! Dùng JOIN là phương pháp của Cao Thủ (Senior). Nó phức tạp lúc viết Map nhưng tối
+                            ưu lúc chạy.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Sau đó, đệ tử viết hàm `selectDiscipleDetails` dùng `resultMap="DiscipleDetailMap"`.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: Tìm Kiếm Biến Ảo (Search Criteria) <span
+                            class="section-duration">(12 phút)</span></h2>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Tiếp theo là phần Tìm Kiếm Nhiệm Vụ. Đệ tử tạo class `MissionSearchReq` (DTO) chứa các
+                            trường search (nullable).
+                            Trong `MissionMapper.xml`:
+                            `&lt;select id="search"&gt;`
+                            ` SELECT * FROM missions`
+                            ` &lt;where&gt;`
+                            ` &lt;if test="title != null"&gt; AND title LIKE CONCAT('%', #{title}, '%') &lt;/if&gt;`
+                            ` &lt;if test="minDifficulty != null"&gt; AND difficulty &gt;= #{minDifficulty} &lt;/if&gt;`
+                            ` &lt;if test="status != null"&gt; AND status = #{status} &lt;/if&gt;`
+                            ` &lt;/where&gt;`
+                            `&lt;/select&gt;`
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Rất chuẩn xác. Thế còn Batch Update?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử dùng `<foreach>` để lặp qua danh sách ID cần update status.
+                                Nhưng khoan đã... MyBatis không hỗ trợ Batch Update trực tiếp trong 1 câu XML dễ dàng
+                                như Insert.
+                                Đệ tử sẽ dùng cách: Update từng cái trong vòng lặp Java, nhưng cấu hình ExecutorType là
+                                `BATCH` trong Spring để tối ưu hiệu năng.
+                                Hoặc dùng `<foreach>` để tạo câu lệnh `CASE WHEN` khổng lồ (nhưng hơi nguy hiểm).
+                                    Đệ tử chọn cách dùng `BATCH` Executor session.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Thông minh! Biết điểm dừng của công cụ cũng là một kỹ năng.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: Tổng Kết Arc 4 <span class="section-duration">(8 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn hoàn thành bài thi xuất sắc. Dữ liệu chảy trong hệ thống mượt mà, chính xác và
+                            nhanh chóng.
+                            Anh đã chinh phục được Kho Tàng Bí Mật. Nhưng ngay lúc đó, một chấn động lớn xảy ra.
+                            Đèn trong kho vụt tắt rồi lại sáng. Một số dữ liệu vừa ghi vào bị mất mác, một số lại bị
+                            trùng lặp.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            (Từ trong bóng tối bước ra) Có vẻ như ngươi đã lấy được kho báu, nhưng ngươi chưa biết cách
+                            bảo vệ sự toàn vẹn của nó khi có biến cố (Exception/Error).
+                            Ví dụ: Ngươi trừ tiền của A, nhưng chưa kịp cộng tiền cho B thì mất điện. Tiền đó đi đâu?
+                            Đó là bài học về <span class="emphasis">Transaction Management</span> - Giao Dịch Công Bằng.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Giao Dịch Công Bằng? Nghe như luật buôn bán vậy?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Đúng thế. Trong thế giới này, mọi thứ phải tuân theo luật Nhân Quả (ACID). Hoặc là thành
+                            công tất cả, hoặc là không có gì xảy ra.
+                            Hãy đến gặp Đường Chủ Transaction để học đạo lý này.
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Tổng Kết Arc 4</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">MyBatis Generic Mapper</span>
+                        <span class="term-description">Mô hình tạo BaseMapper<T> để tái sử dụng các hàm CRUD cơ bản
+                                (giống JPA Repository).</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">JOIN Fetch</span>
+                        <span class="term-description">Kỹ thuật dùng SQL JOIN để lấy dữ liệu 1-1, 1-N trong 1 lần truy
+                            vấn, giảm tải DB round-trip.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">DTO (Data Transfer Object)</span>
+                        <span class="term-description">Object dùng để hứng dữ liệu từ View gửi xuống (Search Criteria)
+                            để tránh dùng trực tiếp Entity.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Batch Executor</span>
+                        <span class="term-description">Chế độ thực thi của MyBatis giúp gom nhiều lệnh Update/Insert gửi
+                            đi 1 lần.</span>
+                    </li>
+                </ul>
+
+                <div class="interview-questions">
+                    <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn Tổng Hợp</h4>
+                    <ol class="question-list">
+                        <li>Tại sao nên dùng DTO cho Search Criteria thay vì Map? (Type-safety, dễ maintain).</li>
+                        <li>So sánh hiệu năng giữa Nested Select (N+1) và JOIN Fetch? Khi nào dùng cái nào? (JOIN nhanh
+                            hơn cho list, Nested tốt hơn cho Lazy load).</li>
+                        <li>Làm sao để debug xem MyBatis sinh ra câu SQL thực tế nào? (Bật Log Level DEBUG cho package
+                            Mapper).</li>
+                        <li>MyBatis Cache (Level 1, Level 2) là gì? (Level 1 mặc định trong Transaction, Level 2 custom
+                            scope namespace).</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🔮 Tiếp Theo: ARC 5</h3>
+                <p class="cliffhanger-text">
+                    Lâm Tuấn bước vào Đại Sảnh Giao Dịch. Nơi đây không khí trang nghiêm, mọi người di chuyển thận trọng
+                    như đi trên băng mỏng. Một sai sót nhỏ có thể khiến cả gia tài biến mất.
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="../arc-5-giao-dich-cong-bang/chapter-21.html">Chapter 21: Giao Dịch Công Bằng - Transaction
+                        Basics →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="chapter-19.html" class="chapter-nav-link prev">
+                    <span class="label">← Chapter trước</span>
+                    <span class="title">Kiếm Pháp Biến Hình</span>
+                </a>
+                <a href="../arc-5-giao-dich-cong-bang/chapter-21.html" class="chapter-nav-link next">
+                    <span class="label">Chapter tiếp theo →</span>
+                    <span class="title">Giao Dịch Công Bằng</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>

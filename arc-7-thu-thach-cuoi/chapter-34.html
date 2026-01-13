@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 34: Thử Nghiệm Tích Hợp - Sử dụng TestContainers để test với Database thật (MySQL/Postgres) trong môi trường Docker">
+    <title>Chapter 34: Thử Nghiệm Tích Hợp | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 7: Thử Thách Cuối</span>
+                <h1 class="chapter-title">Chapter 34: Thử Nghiệm Tích Hợp</h1>
+                <div class="chapter-meta">
+                    <span>📖 TestContainers & Docker</span>
+                    <span>⏱️ 35 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Những Chiếc Hộp Thần Kỳ (Docker Containers) <span
+                            class="section-duration">(8 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Sư Đệ Minh dẫn Lâm Tuấn đến một kho hàng khổng lồ chứa hàng triệu chiếc hộp container.
+                            Trên mỗi chiếc hộp ghi tên một loại công nghệ: MySQL, Redis, Kafka, ElasticSearch...
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-testing">
+                        <span class="voice-label">Sư Đệ Minh</span>
+                        <p class="dialogue-content">
+                            Huynh muốn test `DiscipleRepository` với MySQL thật đúng không?
+                            Thay vì hì hục cài MySQL vào máy, ta sẽ dùng phép thuật để triệu hồi một chiếc hộp MySQL
+                            (Docker Container) ngay trong lúc chạy test.
+                            Đây là <span class="emphasis">TestContainers</span>.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Nghe có vẻ phức tạp. Đệ tử có cần cài Docker không?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-testing">
+                        <span class="voice-label">Sư Đệ Minh</span>
+                        <p class="dialogue-content">
+                            Có, nhưng code Java thì cực đơn giản.
+                            Chỉ cần khai báo `@Container` static, và chọn loại Database huynh muốn.
+                            Khi Test bắt đầu -> Hộp mở ra -> Database sẵn sàng.
+                            Khi Test kết thúc -> Hộp biến mất -> Dữ liệu sạch sẽ.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: Thiết Lập TestContainers <span class="section-duration">(12
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử thử viết code:
+                            `@Testcontainers`
+                            `@SpringBootTest`
+                            `class DiscipleRepoTest {`
+                            ` @Container`
+                            ` static MySQLContainer
+                            <?> mysql = new MySQLContainer<>("mysql:8.0");`
+               
+               `  @DynamicPropertySource`
+               `  static void configureProps(DynamicPropertyRegistry registry) {`
+               `    registry.add("spring.datasource.url", mysql::getJdbcUrl);`
+               `    // ... username, password`
+               `  }`
+               `}`
+            </p>
+          </div>
+
+          <div class="dialogue-block voice-testing">
+             <span class="voice-label">Sư Đệ Minh</span>
+             <p class="dialogue-content">
+                Xuất sắc! Hàm `configureProps` sẽ lấy địa chỉ IP và Port động của Container (vì Docker map port ngẫu nhiên) và bơm vào Spring Environment.
+                Như vậy, ứng dụng Spring của huynh sẽ kết nối thẳng vào cái hộp MySQL đó.
+                Giờ đây, huynh có thể test những câu SQL đặc thù của MySQL (như JSON, GeoSpatial) mà H2 phải bó tay.
+             </p>
+          </div>
+
+          <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+        </section>
+
+        <section class="story-section">
+          <h2 class="section-title">Phần 3: Tốc Độ vs Sự Chính Xác <span class="section-duration">(10 phút)</span></h2>
+          
+           <div class="dialogue-block voice-lam-tuan">
+              <span class="voice-label">Lâm Tuấn</span>
+              <p class="dialogue-content">
+                 Nhưng thưa sư đệ, mỗi lần chạy test nó lại phải kéo Image về và khởi động Container, mất cả chục giây.
+                 Có cách nào nhanh hơn không?
+              </p>
+           </div>
+           
+           <div class="dialogue-block voice-testing">
+              <span class="voice-label">Sư Đệ Minh</span>
+              <p class="dialogue-content">
+                 Đó là sự đánh đổi (Trade-off). Muốn chính xác tuyệt đối (giống Production) thì phải chấp nhận chậm.
+                 Tuy nhiên, ta có thể tối ưu bằng cách dùng <span class="emphasis">Singleton Container Pattern</span>.
+                 Tức là khởi động Container 1 lần duy nhất, và dùng chung cho tất cả các Test Class.
+                 Hoặc dùng tính năng "Reusability" của TestContainers (beta).
+              </p>
+           </div>
+           
+            <div class="dialogue-block voice-lam-tuan">
+              <span class="voice-label">Lâm Tuấn</span>
+              <p class="dialogue-content">
+                 Đệ tử hiểu rồi. TestContainers dùng cho Integration Test quan trọng (CI/CD pipeline), còn lúc code bình thường thì dùng H2 hoặc Unit Test cho nhanh.
+              </p>
+           </div>
+
+          <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+        </section>
+
+        <section class="story-section">
+           <h2 class="section-title">Phần 4: Tổng Kết <span class="section-duration">(5 phút)</span></h2>
+           
+            <div class="dialogue-block voice-narrator">
+               <span class="voice-label">Người kể chuyện</span>
+               <p class="dialogue-content">
+                  Lâm Tuấn cảm thấy mình đã trang bị đầy đủ vũ khí tận răng.
+                  Unit Test để mài sắc logic.
+                  Integration Test với TestContainers để đảm bảo thực chiến.
+                  Sư Đệ Minh gật đầu hài lòng, đưa cho anh tấm lệnh bài cuối cùng.
+               </p>
+            </div>
+            
+             <div class="dialogue-block voice-testing">
+               <span class="voice-label">Sư Đệ Minh</span>
+               <p class="dialogue-content">
+                  Sư huynh đã sẵn sàng. Sư phụ đang đợi huynh ở đỉnh núi.
+                  Đó là bài kiểm tra cuối cùng để huynh chính thức trở thành một <span class="emphasis">Spring Boot Senior Developer</span>.
+               </p>
+            </div>
+
+        </section>
+
+      </div>
+
+      <div class="chapter-summary">
+        <h3 class="summary-title">📚 Thuật Ngữ Chương Này</h3>
+        <ul class="glossary-list">
+          <li class="glossary-item">
+            <span class="term-name">TestContainers</span>
+            <span class="term-description">Thư viện Java hỗ trợ JUnit tests, cung cấp các instance nhẹ của Database, Message Broker... chạy trong Docker container.</span>
+          </li>
+          <li class="glossary-item">
+            <span class="term-name">Docker</span>
+            <span class="term-description">Nền tảng containerization, cho phép đóng gói ứng dụng và môi trường chạy vào các "hộp" (container) cô lập.</span>
+          </li>
+           <li class="glossary-item">
+            <span class="term-name">@DynamicPropertySource</span>
+            <span class="term-description">Annotation dùng để ghi đè (override) các property trong application.properties bằng giá trị động runtime (ví dụ port của container).</span>
+          </li>
+          <li class="glossary-item">
+            <span class="term-name">Singleton Container Pattern</span>
+            <span class="term-description">Mẫu thiết kế để khởi động container 1 lần và dùng chung, giúp giảm thời gian chạy test suite.</span>
+          </li>
+        </ul>
+
+        <div class="interview-questions">
+           <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn</h4>
+           <ol class="question-list">
+             <li>Tại sao nên dùng TestContainers thay vì H2 Database? (Vì H2 không tương thích 100% cú pháp SQL với MySQL/Postgres, dễ bỏ lọt bug database-specific).</li>
+             <li>Làm sao để inject URL của container vào Spring Datasource? (Dùng @DynamicPropertySource).</li>
+             <li>TestContainers có yêu cầu cài Docker trên máy chạy test không? (Bắt buộc phải có Docker Daemon đang chạy).</li>
+             <li>Khi nào KHÔNG nên dùng TestContainers? (Khi cần feedback loop cực nhanh trong lúc dev feature nhỏ, hoặc máy dev quá yếu không chạy nổi Docker).</li>
+           </ol>
+        </div>
+      </div>
+
+      <div class="cliffhanger">
+        <h3 class="cliffhanger-title">🔮 Tiếp Theo: ĐẠI KẾT CỤC</h3>
+        <p class="cliffhanger-text">
+          Đỉnh núi mù sương. Sư Phụ Cao Nhân đang ngồi đợi bên bàn trà. Không còn code, không còn IDE, chỉ còn những câu hỏi về tư duy thiết kế hệ thống và xử lý tình huống. Đây là cửa ải cuối cùng.
+        </p>
+        <p class="cliffhanger-next">
+          <a href="chapter-35.html">Chapter 35: Đại Thử Thách - Senior Interview →</a>
+        </p>
+      </div>
+
+      <nav class="chapter-navigation">
+        <a href="chapter-33.html" class="chapter-nav-link prev">
+          <span class="label">← Chapter trước</span>
+          <span class="title">Huyễn Thuật Giả Lập</span>
+        </a>
+        <a href="chapter-35.html" class="chapter-nav-link next">
+          <span class="label">Chapter tiếp theo →</span>
+          <span class="title">Đại Thử Thách</span>
+        </a>
+      </nav>
+
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>Spring Boot Tu Tiên Truyện © 2024</p>
+    </div>
+  </footer>
+
+  <div class="floating-actions">
+    <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+  </div>
+
+  <script src="../assets/js/navigation.js"></script>
+  <script src="../assets/js/glossary.js"></script>
+</body>
+</html>

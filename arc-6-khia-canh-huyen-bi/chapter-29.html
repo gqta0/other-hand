@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 29: Điểm Giao Hội - Khám phá JoinPoint Interface, cách lấy Signature, Arguments và xử lý Proxy Object trong Spring AOP">
+    <title>Chapter 29: Điểm Giao Hội | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 6: Khía Cạnh Huyền Bí</span>
+                <h1 class="chapter-title">Chapter 29: Điểm Giao Hội</h1>
+                <div class="chapter-meta">
+                    <span>📖 JoinPoint Interface</span>
+                    <span>⏱️ 25 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Truy Sát Thông Tin (JoinPoint Signature) <span
+                            class="section-duration">(5 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn đã biết cách chặn cửa (Pointcut), nhưng anh vẫn chưa biết ai đang đi qua cửa.
+                            Trưởng Lão AOP ném cho anh một chiếc gương soi thần kỳ, tên là <span
+                                class="emphasis">JoinPoint</span>.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            Mọi hàm Advice (trừ @Around) đều có thể nhận tham số đầu tiên là `JoinPoint jp`.
+                            Từ đây, ngươi có thể tra khảo lai lịch của kẻ vừa kích hoạt bẫy.
+                            `jp.getSignature().getName()` -> Trả về tên hàm (ví dụ "transferMoney").
+                            `jp.getTarget().getClass().getName()` -> Trả về tên Class thật (ví dụ "BankingServiceImpl").
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Rất hữu ích cho việc Log! "Hàm X của Class Y vừa được gọi".
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: Lục Soát Hành Trang (Get Arguments) <span
+                            class="section-duration">(10 phút)</span></h2>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            Chưa hết. Quan trọng nhất là ngươi phải biết hắn mang theo cái gì.
+                            `Object[] args = jp.getArgs();`
+                            Đây là mảng chứa toàn bộ tham số truyền vào hàm.
+                            Ngươi có thể lặp qua mảng này, ép kiểu (Cast) về đúng Object của ngươi để kiểm tra.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Ví dụ: Nếu tham số đầu tiên là `TransferRequest`. Đệ tử có thể ép kiểu, rồi check
+                            `req.getAmount()`.
+                            Nếu số tiền quá lớn > 1 tỷ, đệ tử sẽ Log cảnh báo "Có giao dịch đáng ngờ!".
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            Chính xác. Nhưng hãy cẩn thận. Việc thay đổi giá trị trong `args` ở @Before KHÔNG làm thay
+                            đổi tham số truyền vào hàm thật (trừ khi Object đó là Mutable Reference).
+                            Muốn thay đổi tham số thực sự, ngươi phải dùng @Around và truyền mảng args mới vào
+                            `proceed(newArgs)`.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: Cạm Bẫy Proxy (Self-Invocation) <span class="section-duration">(8
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            Bây giờ là bài học đắt giá nhất.
+                            Giả sử trong `UserService` có hàm A gọi hàm B.
+                            Cả 2 hàm đều có Aspect Log.
+                            Khi ngươi gọi A từ bên ngoài: Log A hiện ra.
+                            Nhưng Log B có hiện ra không?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đương nhiên là có ạ. A gọi B mà.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            SAI! Log B sẽ <span class="emphasis">KHÔNG</span> hiện ra.
+                            Vì sao? Vì khi ngươi gọi A, ngươi gọi qua Proxy (Lớp vỏ bọc). Proxy kích hoạt Log A, rồi gọi
+                            vào hàm A thật (bên trong ruột).
+                            Trong hàm A thật, lệnh `this.B()` được gọi. `this` ở đây là đối tượng thật (Target Object),
+                            không phải Proxy.
+                            Mà không qua Proxy thì không có AOP, không có Transaction, không có gì cả.
+                            Đây gọi là vấn đề <span class="emphasis">Self-Invocation</span> (Tự gọi chính mình).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            (Hoảng hốt) Vậy là bao lâu nay đệ tử code sai hết? Thảo nào `@Transactional` thỉnh thoảng
+                            không chạy.
+                            Cách khắc phục là gì ạ?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            Cách 1 (Dở nhất): Tự Inject chính mình (`@Autowired UserService self`).
+                            Cách 2 (Tốt nhất): Tách hàm B sang một Service khác.
+                            Hãy nhớ: AOP chỉ hoạt động khi gọi từ BÊN NGOÀI vào.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: Tổng Kết <span class="section-duration">(5 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn toát mồ hôi hột. Hóa ra thế giới huyền bí AOP có những quy tắc khắc nghiệt như vậy.
+                            Hiểu về Proxy không chỉ giúp anh dùng AOP tốt, mà còn giải thích được vô số bug kỳ quái liên
+                            quan đến Transaction.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            Kiến thức đã đủ. Giờ ngươi hãy dùng tất cả những gì đã học: Advice, Pointcut, JoinPoint để
+                            xây dựng một "Đại Trận Pháp Theo Dõi" (Monitoring System) cho toàn bộ Spring Tông.
+                            Ta muốn biết hàm nào chạy chậm, hàm nào bị lỗi nhiều nhất.
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Thuật Ngữ Chương Này</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">JoinPoint</span>
+                        <span class="term-description">Interface cung cấp thông tin về ngữ cảnh runtime (method nào,
+                            tham số gì) tại điểm cắt.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Method Signature</span>
+                        <span class="term-description">Chữ ký của hàm (Tên, kiểu trả về, danh sách tham số). Lấy qua
+                            jp.getSignature().</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Self-Invocation</span>
+                        <span class="term-description">Vấn đề khi method A gọi method B trong cùng 1 class. Cuộc gọi này
+                            bypass qua Proxy -> Bypass AOP/Transaction.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Target Object</span>
+                        <span class="term-description">Đối tượng thực sự chứa code nghiệp vụ, nằm bên trong vỏ bọc
+                            Proxy.</span>
+                    </li>
+                </ul>
+
+                <div class="interview-questions">
+                    <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn</h4>
+                    <ol class="question-list">
+                        <li>Làm sao lấy được tham số method trong @Before? (Dùng jp.getArgs()).</li>
+                        <li>Vấn đề Self-Invocation là gì? Tại sao @Transactional không chạy khi gọi method cùng class?
+                            (Vì gọi qua 'this' reference chứ không qua Proxy -> AOP logic không được kích hoạt).</li>
+                        <li>Cách khắc phục Self-Invocation? (Refactor tách method sang Bean khác - Best practice. Hoặc
+                            Inject chính nó - Bad practice).</li>
+                        <li>Làm sao biết hàm nào đang chạy trong Advice? (jp.getSignature().getName()).</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🔮 Tiếp Theo</h3>
+                <p class="cliffhanger-text">
+                    Lâm Tuấn bắt tay vào xây dựng hệ thống Monitoring. Anh sẽ dùng @Around để đo thời gian thực thi
+                    (Performance Logging) và Custom Annotation để đánh dấu những hàm quan trọng. Đây là bài thi tốt
+                    nghiệp Arc 6.
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="chapter-30.html">Chapter 30: Thử Thách AOP - AOP Practice →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="chapter-28.html" class="chapter-nav-link prev">
+                    <span class="label">← Chapter trước</span>
+                    <span class="title">Điểm Huyệt Pháp</span>
+                </a>
+                <a href="chapter-30.html" class="chapter-nav-link next">
+                    <span class="label">Chapter tiếp theo →</span>
+                    <span class="title">Thử Thách AOP</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>

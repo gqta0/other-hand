@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 22: Tứ Đại Quy Tắc - Giải thích chi tiết về ACID properties: Atomicity, Consistency, Isolation, Durability">
+    <title>Chapter 22: Tứ Đại Quy Tắc | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 5: Giao Dịch Công Bằng</span>
+                <h1 class="chapter-title">Chapter 22: Tứ Đại Quy Tắc</h1>
+                <div class="chapter-meta">
+                    <span>📖 ACID Properties</span>
+                    <span>⏱️ 28 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Nguyên Tử và Nhất Quán (Atomicity & Consistency) <span
+                            class="section-duration">(5 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Tại đại sảnh Giao Dịch, bốn cột trụ khổng lồ dựng đứng, chống đỡ cả tòa nhà.
+                            Trên mỗi cột trụ khắc một chữ cái vàng rực: A - C - I - D.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-transaction">
+                        <span class="voice-label">Đường Chủ Transaction</span>
+                        <p class="dialogue-content">
+                            Đây là Tứ Đại Quy Tắc trấn giữ sự bình yên cho Database.
+                            Chữ <span class="emphasis">A - Atomicity (Tính Nguyên Tử)</span>: Ngươi có biết nguyên tử là
+                            gì không? Là thứ nhỏ nhất không thể chia cắt.
+                            Transaction cũng vậy. "Sinh cùng sinh, tử cùng tử". Không bao giờ có chuyện Giao Dịch thành
+                            công một nửa.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Như vụ mất điện hôm qua. Vì vi phạm chữ A nên hệ thống phải Rollback.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-transaction">
+                        <span class="voice-label">Đường Chủ Transaction</span>
+                        <p class="dialogue-content">
+                            Đúng. Tiếp theo là chữ <span class="emphasis">C - Consistency (Tính Nhất Quán)</span>.
+                            Dữ liệu trước và sau giao dịch phải luôn đúng luật.
+                            Ví dụ: Luật quy định số dư không được âm. Nếu sau khi trừ tiền mà số dư âm -> Giao dịch bị
+                            hủy ngay lập tức.
+                            Dữ liệu không bao giờ được phép vi phạm ràng buộc (Constraint) của Database.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: Sự Cô Lập Nguy Hiểm (Isolation) <span class="section-duration">(10
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-transaction">
+                        <span class="voice-label">Đường Chủ Transaction</span>
+                        <p class="dialogue-content">
+                            Chữ thứ ba là quan trọng và khó nhất: <span class="emphasis">I - Isolation (Tính Cô
+                                Lập)</span>.
+                            Giả sử có 2 người cùng nạp tiền vào một tài khoản cùng một lúc (Concurrency).
+                            Transaction A đọc số dư là 100.
+                            Transaction B cũng đọc số dư là 100.
+                            A nạp 50 -> Thành 150.
+                            B nạp 20 -> Thành 120.
+                            Cuối cùng, B chép đè lên A. Mất toi 50 đồng của A! Đó là lỗi <span class="emphasis">Lost
+                                Update</span>.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Nghe thật đáng sợ! Vậy phải làm sao?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-transaction">
+                        <span class="voice-label">Đường Chủ Transaction</span>
+                        <p class="dialogue-content">
+                            Phải cô lập chúng. Tức là khi A đang làm, B không được xen vào (hoặc ngược lại).
+                            Nhưng cô lập càng kỹ thì hiệu năng càng chậm (vì phải chờ nhau).
+                            Database đưa ra 4 cấp độ cô lập (Isolation Levels):
+                            1. <span class="emphasis">Read Uncommitted</span>: B đọc được rác của A chưa commit (Dirty
+                            Read). Tệ nhất.
+                            2. <span class="emphasis">Read Committed</span>: B chỉ đọc cái A đã commit. Tránh được Dirty
+                            Read. (Mặc định của Postgres, SQL Server).
+                            3. <span class="emphasis">Repeatable Read</span>: B đọc đi đọc lại vẫn thấy y nguyên, dù A
+                            có update. Tránh được Non-repeatable Read. (Mặc định của MySQL).
+                            4. <span class="emphasis">Serializable</span>: Xếp hàng lần lượt. An toàn tuyệt đối nhưng
+                            chậm như rùa.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Vậy là phải đánh đổi giữa An Toàn và Tốc Độ.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: Sự Bền Vững (Durability) <span class="section-duration">(5
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-transaction">
+                        <span class="voice-label">Đường Chủ Transaction</span>
+                        <p class="dialogue-content">
+                            Cuối cùng là chữ <span class="emphasis">D - Durability (Tính Bền Vững)</span>.
+                            Một khi Transaction đã Commit (Chốt Sổ), thì kết quả đó phải được lưu vĩnh viễn vào ổ cứng.
+                            Dù ngay sau đó server bị rút phích cắm, bị cháy nổ, hay bị thiên thạch rơi vào... thì khi
+                            khởi động lại, dữ liệu đó vẫn phải còn nguyên.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Làm sao Database làm được điều thần kỳ đó?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-transaction">
+                        <span class="voice-label">Đường Chủ Transaction</span>
+                        <p class="dialogue-content">
+                            Nhờ cơ chế <span class="emphasis">Write-Ahead Log (WAL)</span>. Nó ghi nhật ký hành động ra
+                            đĩa trước khi thực sự ghi dữ liệu.
+                            Nhưng đó là chuyện của Database Admin. Là Developer, ngươi chỉ cần tin tưởng vào chữ D này.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: Tổng Kết <span class="section-duration">(6 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn nhìn bốn cột trụ ACID với sự kính trọng.
+                            Hóa ra, mỗi lần anh gõ `@Transactional`, là anh đang lập một lời thề với bốn vị thần này.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-transaction">
+                        <span class="voice-label">Đường Chủ Transaction</span>
+                        <p class="dialogue-content">
+                            Lý thuyết ACID khô khan nhưng cực kỳ quan trọng khi phỏng vấn.
+                            Ngày mai, ta sẽ dạy ngươi cách điều khiển các hành vi Transaction thông qua các thuộc tính
+                            của `@Transactional`.
+                            Ví dụ: Khi nào thì Rollback? (Java Checked Exception hay Unchecked?), Timeout là bao lâu?
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Thuật Ngữ Chương Này</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">ACID</span>
+                        <span class="term-description">4 tính chất của Transaction: Atomicity, Consistency, Isolation,
+                            Durability.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Dirty Read</span>
+                        <span class="term-description">Đọc phải dữ liệu "bẩn" (chưa commit) của người khác. Nguy
+                            hiểm.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Phantom Read</span>
+                        <span class="term-description">Đọc lần 1 thấy 3 dòng, đọc lần 2 thấy 4 dòng (do người khác
+                            insert thêm). Như ma chơi.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Isolation Level</span>
+                        <span class="term-description">Cấp độ cô lập. Càng cao càng an toàn nhưng càng chậm.</span>
+                    </li>
+                </ul>
+
+                <div class="interview-questions">
+                    <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn</h4>
+                    <ol class="question-list">
+                        <li>Giải thích ngắn gọn 4 tính chất ACID?</li>
+                        <li>Dirty Read là gì? Xảy ra ở Isolation Level nào? (Read Uncommitted).</li>
+                        <li>Sự khác nhau giữa Repeatable Read và Serializable? (Repeatable Read vẫn có thể bị Phantom
+                            Read, Serializable thì không).</li>
+                        <li>Mặc định MySQL dùng Isolation Level nào? (Repeatable Read). Còn Oracle/Postgres? (Read
+                            Committed).</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🔮 Tiếp Theo</h3>
+                <p class="cliffhanger-text">
+                    Lâm Tuấn đã hiểu ACID. Nhưng khi áp dụng vào Spring, anh gặp một rắc rối: Có những lỗi (Exception)
+                    xảy ra nhưng Transaction vẫn Commit bình thường, không chịu Rollback. Tại sao vị thần lại làm ngơ?
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="chapter-23.html">Chapter 23: Phù Chú Giao Dịch - @Transactional Deep Dive →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="chapter-21.html" class="chapter-nav-link prev">
+                    <span class="label">← Chapter trước</span>
+                    <span class="title">Giao Dịch Công Bằng</span>
+                </a>
+                <a href="chapter-23.html" class="chapter-nav-link next">
+                    <span class="label">Chapter tiếp theo →</span>
+                    <span class="title">Phù Chú Giao Dịch</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>

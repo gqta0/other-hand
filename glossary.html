@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Bảng thuật ngữ Spring Boot Tu Tiên - Các thuật ngữ Spring Boot với ẩn dụ tu tiên">
+    <title>Bảng Thuật Ngữ | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/dark-mode.css">
+
+    <style>
+        .glossary-hero {
+            background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-secondary-dark) 100%);
+            color: white;
+            padding: var(--spacing-xl) var(--spacing-lg);
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .glossary-hero h1 {
+            color: white;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .search-box {
+            max-width: 500px;
+            margin: var(--spacing-lg) auto 0;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: var(--spacing-md) var(--spacing-lg);
+            font-size: var(--text-lg);
+            border: none;
+            border-radius: var(--radius-full);
+            box-shadow: var(--shadow-md);
+        }
+
+        .category-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-xl);
+            justify-content: center;
+        }
+
+        .category-btn {
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--bg-secondary);
+            border: 2px solid transparent;
+            border-radius: var(--radius-full);
+            font-family: var(--font-sans);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .glossary-section {
+            margin-bottom: var(--spacing-2xl);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 3px solid var(--color-primary);
+        }
+
+        .section-icon {
+            font-size: var(--text-2xl);
+        }
+
+        .section-header h2 {
+            margin: 0;
+            font-size: var(--text-xl);
+            color: var(--color-primary-dark);
+        }
+
+        .glossary-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        .glossary-table th {
+            background: var(--color-primary);
+            color: white;
+            padding: var(--spacing-md);
+            text-align: left;
+            font-family: var(--font-sans);
+            font-size: var(--text-sm);
+            font-weight: 600;
+        }
+
+        .glossary-table td {
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--bg-secondary);
+            vertical-align: top;
+        }
+
+        .glossary-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .glossary-table tr:hover td {
+            background: var(--bg-secondary);
+        }
+
+        .term-cell {
+            font-weight: 600;
+            color: var(--color-primary);
+            font-family: var(--font-sans);
+            white-space: nowrap;
+        }
+
+        .metaphor-cell {
+            color: var(--color-accent);
+            font-weight: 500;
+        }
+
+        .description-cell {
+            color: var(--text-secondary);
+            line-height: var(--leading-relaxed);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: var(--spacing-2xl);
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 768px) {
+            .glossary-table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .glossary-table th,
+            .glossary-table td {
+                padding: var(--spacing-sm);
+                font-size: var(--text-sm);
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            /* Card layout on mobile */
+            .glossary-table,
+            .glossary-table thead,
+            .glossary-table tbody,
+            .glossary-table tr,
+            .glossary-table th,
+            .glossary-table td {
+                display: block;
+            }
+
+            .glossary-table thead {
+                display: none;
+            }
+
+            .glossary-table tr {
+                margin-bottom: var(--spacing-md);
+                border-radius: var(--radius-md);
+                border: 1px solid var(--bg-secondary);
+                overflow: hidden;
+            }
+
+            .glossary-table td {
+                padding: var(--spacing-sm) var(--spacing-md);
+                border-bottom: none;
+                position: relative;
+                padding-left: 40%;
+            }
+
+            .glossary-table td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: var(--spacing-md);
+                font-weight: 600;
+                color: var(--text-muted);
+                font-size: var(--text-sm);
+            }
+
+            .term-cell {
+                background: var(--color-primary);
+                color: white;
+                padding-left: var(--spacing-md) !important;
+            }
+
+            .term-cell::before {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+            </div>
+        </div>
+    </header>
+
+    <section class="glossary-hero">
+        <div class="container">
+            <h1>📚 Bảng Thuật Ngữ</h1>
+            <p>Các thuật ngữ Spring Boot với ẩn dụ tu tiên</p>
+
+            <div class="search-box">
+                <input type="search" class="search-input" placeholder="Tìm kiếm thuật ngữ..." id="glossarySearch">
+            </div>
+        </div>
+    </section>
+
+    <main class="container">
+
+        <nav class="category-nav">
+            <button class="category-btn active" data-category="all">Tất cả</button>
+            <button class="category-btn" data-category="core">Spring Core</button>
+            <button class="category-btn" data-category="mvc">Web MVC</button>
+            <button class="category-btn" data-category="security">Security</button>
+            <button class="category-btn" data-category="data">MyBatis</button>
+            <button class="category-btn" data-category="tx">Transaction</button>
+            <button class="category-btn" data-category="aop">AOP</button>
+            <button class="category-btn" data-category="test">Testing</button>
+        </nav>
+
+        <!-- Spring Core -->
+        <section class="glossary-section" data-category="core">
+            <div class="section-header">
+                <span class="section-icon">🏔️</span>
+                <h2>Spring Core</h2>
+            </div>
+            <table class="glossary-table">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Thuật Ngữ</th>
+                        <th style="width: 25%;">Ẩn Dụ Tu Tiên</th>
+                        <th style="width: 55%;">Mô Tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">IoC Container</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Linh Khí Tụ</td>
+                        <td class="description-cell" data-label="Mô tả">Trung tâm quản lý tất cả Bean, chịu trách nhiệm
+                            tạo, quản lý vòng đời và inject dependency</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">Dependency Injection</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Linh Lực Quán Nhập</td>
+                        <td class="description-cell" data-label="Mô tả">Container tự động cung cấp dependency cho Bean
+                            thay vì Bean tự tạo</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">Bean</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Linh Đan</td>
+                        <td class="description-cell" data-label="Mô tả">Đối tượng được quản lý bởi Spring Container</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">@Component</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Phù Chú Linh Khí</td>
+                        <td class="description-cell" data-label="Mô tả">Annotation gốc đánh dấu class là Bean</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">@Service</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Phù Chú Dịch Vụ</td>
+                        <td class="description-cell" data-label="Mô tả">Đánh dấu class chứa business logic</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">@Repository</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Phù Chú Kho Tàng</td>
+                        <td class="description-cell" data-label="Mô tả">Đánh dấu class truy cập database, có exception
+                            translation</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">@Autowired</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Tự Động Kết Nối</td>
+                        <td class="description-cell" data-label="Mô tả">Yêu cầu Container inject dependency</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">Singleton</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Độc Nhất Vô Nhị</td>
+                        <td class="description-cell" data-label="Mô tả">Scope mặc định, chỉ một instance trong Container
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">Prototype</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Đa Bản Sao</td>
+                        <td class="description-cell" data-label="Mô tả">Tạo instance mới mỗi lần yêu cầu</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">@PostConstruct</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Sau Khi Thành Đan</td>
+                        <td class="description-cell" data-label="Mô tả">Phương thức gọi sau khi DI hoàn tất</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">@PreDestroy</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Trước Khi Tiêu Tan</td>
+                        <td class="description-cell" data-label="Mô tả">Phương thức gọi trước khi Bean bị hủy</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Spring Web MVC -->
+        <section class="glossary-section" data-category="mvc">
+            <div class="section-header">
+                <span class="section-icon">🌐</span>
+                <h2>Spring Web MVC</h2>
+            </div>
+            <table class="glossary-table">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Thuật Ngữ</th>
+                        <th style="width: 25%;">Ẩn Dụ Tu Tiên</th>
+                        <th style="width: 55%;">Mô Tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">DispatcherServlet</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Truyền Tống Linh Đồng</td>
+                        <td class="description-cell" data-label="Mô tả">Front Controller xử lý tất cả HTTP request</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">@RequestMapping</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Phù Chú Lộ Trình</td>
+                        <td class="description-cell" data-label="Mô tả">Ánh xạ URL đến phương thức Controller</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">@Controller</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Phù Chú Điều Khiển</td>
+                        <td class="description-cell" data-label="Mô tả">Đánh dấu class xử lý HTTP request</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">@RestController</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Điều Khiển Thuần Dữ Liệu</td>
+                        <td class="description-cell" data-label="Mô tả">Controller + ResponseBody, trả JSON/XML</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">@PathVariable</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Biến Đường Dẫn</td>
+                        <td class="description-cell" data-label="Mô tả">Lấy giá trị từ URL path</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">@RequestBody</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Thân Yêu Cầu</td>
+                        <td class="description-cell" data-label="Mô tả">Deserialize HTTP body thành Java object</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">ResponseEntity</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Thực Thể Phản Hồi</td>
+                        <td class="description-cell" data-label="Mô tả">Wrapper cho HTTP response với status và headers
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">Model</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Linh Khí Mô Hình</td>
+                        <td class="description-cell" data-label="Mô tả">Container chứa dữ liệu truyền từ Controller sang
+                            View</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">View</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Huyễn Cảnh</td>
+                        <td class="description-cell" data-label="Mô tả">Template engine render dữ liệu thành HTML</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Spring Security -->
+        <section class="glossary-section" data-category="security">
+            <div class="section-header">
+                <span class="section-icon">🛡️</span>
+                <h2>Spring Security</h2>
+            </div>
+            <table class="glossary-table">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Thuật Ngữ</th>
+                        <th style="width: 25%;">Ẩn Dụ Tu Tiên</th>
+                        <th style="width: 55%;">Mô Tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">Authentication</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Xác Thực Thân Phận</td>
+                        <td class="description-cell" data-label="Mô tả">Xác minh danh tính: Bạn là ai?</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">Authorization</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Phân Quyền Hạn</td>
+                        <td class="description-cell" data-label="Mô tả">Xác định quyền: Bạn được làm gì?</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">JWT Token</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Linh Bài Thông Hành</td>
+                        <td class="description-cell" data-label="Mô tả">Chuỗi mã hóa chứa thông tin xác thực</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">Security Filter Chain</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Chuỗi Phòng Hộ Pháp Trận</td>
+                        <td class="description-cell" data-label="Mô tả">Chuỗi filter xử lý security request</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">@Secured</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Phù Chú Phòng Hộ</td>
+                        <td class="description-cell" data-label="Mô tả">Bảo vệ method theo role</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- MyBatis -->
+        <section class="glossary-section" data-category="data">
+            <div class="section-header">
+                <span class="section-icon">🏛️</span>
+                <h2>MyBatis</h2>
+            </div>
+            <table class="glossary-table">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Thuật Ngữ</th>
+                        <th style="width: 25%;">Ẩn Dụ Tu Tiên</th>
+                        <th style="width: 55%;">Mô Tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">Mapper</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Bản Đồ Kho Tàng</td>
+                        <td class="description-cell" data-label="Mô tả">Interface ánh xạ SQL đến phương thức Java</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">SQL</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Thần Chú Truy Vấn</td>
+                        <td class="description-cell" data-label="Mô tả">Ngôn ngữ truy vấn database</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">ResultMap</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Bản Đồ Kết Quả</td>
+                        <td class="description-cell" data-label="Mô tả">Ánh xạ column database sang field Java</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">Dynamic SQL</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Thần Chú Biến Hóa</td>
+                        <td class="description-cell" data-label="Mô tả">SQL thay đổi theo điều kiện runtime</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Transaction -->
+        <section class="glossary-section" data-category="tx">
+            <div class="section-header">
+                <span class="section-icon">⚖️</span>
+                <h2>Transaction</h2>
+            </div>
+            <table class="glossary-table">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Thuật Ngữ</th>
+                        <th style="width: 25%;">Ẩn Dụ Tu Tiên</th>
+                        <th style="width: 55%;">Mô Tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">@Transactional</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Phù Chú Giao Dịch</td>
+                        <td class="description-cell" data-label="Mô tả">Đảm bảo tất cả thao tác thành công hoặc rollback
+                            toàn bộ</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">ACID</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Tứ Đại Quy Tắc</td>
+                        <td class="description-cell" data-label="Mô tả">Atomicity, Consistency, Isolation, Durability
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">Propagation</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Truyền Dẫn Pháp Tắc</td>
+                        <td class="description-cell" data-label="Mô tả">Cách transaction lan truyền giữa các method</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">Isolation</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Cô Lập Pháp Tắc</td>
+                        <td class="description-cell" data-label="Mô tả">Mức độ cô lập giữa các transaction</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- AOP -->
+        <section class="glossary-section" data-category="aop">
+            <div class="section-header">
+                <span class="section-icon">✨</span>
+                <h2>AOP - Aspect Oriented Programming</h2>
+            </div>
+            <table class="glossary-table">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Thuật Ngữ</th>
+                        <th style="width: 25%;">Ẩn Dụ Tu Tiên</th>
+                        <th style="width: 55%;">Mô Tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">Aspect</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Khía Cạnh Pháp</td>
+                        <td class="description-cell" data-label="Mô tả">Module chứa cross-cutting concerns</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">@Before</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Phù Chú Tiền Trận</td>
+                        <td class="description-cell" data-label="Mô tả">Advice chạy trước method</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">@After</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Phù Chú Hậu Trận</td>
+                        <td class="description-cell" data-label="Mô tả">Advice chạy sau method</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">@Around</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Phù Chú Bao Vây</td>
+                        <td class="description-cell" data-label="Mô tả">Advice bao quanh method execution</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">JoinPoint</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Điểm Giao Hội</td>
+                        <td class="description-cell" data-label="Mô tả">Điểm có thể áp dụng aspect</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">Pointcut</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Điểm Cắt</td>
+                        <td class="description-cell" data-label="Mô tả">Expression xác định JoinPoint nào được áp dụng
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">@AfterReturning</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Phù Chú Hồi Đáp</td>
+                        <td class="description-cell" data-label="Mô tả">Advice chạy sau khi method trả về thành công
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">@AfterThrowing</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Phù Chú Ngoại Lệ</td>
+                        <td class="description-cell" data-label="Mô tả">Advice chạy khi method ném ra Exception</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">ProceedingJoinPoint</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Lệnh Bài Tiếp Diễn</td>
+                        <td class="description-cell" data-label="Mô tả">Tham số của @Around, dùng để gọi method gốc
+                            (proceed)</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">Self-Invocation</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Tự Gọi Chính Mình</td>
+                        <td class="description-cell" data-label="Mô tả">Vấn đề Method A gọi Method B cùng class -> AOP
+                            không hoạt động</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Testing -->
+        <section class="glossary-section" data-category="test">
+            <div class="section-header">
+                <span class="section-icon">🧪</span>
+                <h2>Testing</h2>
+            </div>
+            <table class="glossary-table">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Thuật Ngữ</th>
+                        <th style="width: 25%;">Ẩn Dụ Tu Tiên</th>
+                        <th style="width: 55%;">Mô Tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">JUnit</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Thử Nghiệm Đơn Vị</td>
+                        <td class="description-cell" data-label="Mô tả">Framework testing cho Java</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">Mockito</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Huyễn Thuật Giả Lập</td>
+                        <td class="description-cell" data-label="Mô tả">Framework tạo mock object</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">@MockBean</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Linh Đan Giả</td>
+                        <td class="description-cell" data-label="Mô tả">Tạo mock Bean trong Spring context</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">@SpringBootTest</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Đại Thử Nghiệm</td>
+                        <td class="description-cell" data-label="Mô tả">Load toàn bộ Spring context để test</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">@WebMvcTest</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Thử Nghiệm Tầng Web</td>
+                        <td class="description-cell" data-label="Mô tả">Test slice cho Controller layer</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">Assertions</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Lời Khẳng Định</td>
+                        <td class="description-cell" data-label="Mô tả">Các hàm kiểm tra kết quả test (assertEquals,
+                            assertTrue)</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">@BeforeEach / @AfterEach</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Chuẩn Bị / Dọn Dẹp</td>
+                        <td class="description-cell" data-label="Mô tả">Chạy trước và sau mỗi @Test method</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">@BeforeAll / @AfterAll</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Khai Mở / Đóng Màn</td>
+                        <td class="description-cell" data-label="Mô tả">Chạy 1 lần duy nhất cho cả class test (static)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">@InjectMocks</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Tiêm Thuốc Hình Nhân</td>
+                        <td class="description-cell" data-label="Mô tả">Tạo object thật và inject các @Mock vào trong nó
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">TestContainers</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Hộp Thần Kỳ</td>
+                        <td class="description-cell" data-label="Mô tả">Thư viện chạy Database thật trong Docker khi
+                            test</td>
+                    </tr>
+                    <tr>
+                        <td class="term-cell" data-label="Thuật ngữ">Docker</td>
+                        <td class="metaphor-cell" data-label="Ẩn dụ">Thùng Chứa</td>
+                        <td class="description-cell" data-label="Mô tả">Nền tảng chạy ứng dụng trong container cô lập
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <div class="no-results" id="noResults" style="display: none;">
+            <p>🔍 Không tìm thấy thuật ngữ phù hợp.</p>
+        </div>
+
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024 | <a href="index.html">Về trang chủ</a></p>
+        </div>
+    </footer>
+
+    <script>
+        // Search and filter functionality
+        const searchInput = document.getElementById('glossarySearch');
+        const noResults = document.getElementById('noResults');
+        const categoryBtns = document.querySelectorAll('.category-btn');
+        const sections = document.querySelectorAll('.glossary-section');
+
+        let activeCategory = 'all';
+
+        function filterContent() {
+            const query = searchInput.value.toLowerCase().trim();
+            let totalVisible = 0;
+
+            sections.forEach(section => {
+                const category = section.dataset.category;
+                const matchesCategory = activeCategory === 'all' || category === activeCategory;
+
+                if (!matchesCategory) {
+                    section.style.display = 'none';
+                    return;
+                }
+
+                const rows = section.querySelectorAll('tbody tr');
+                let sectionVisible = 0;
+
+                rows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    const matchesSearch = query === '' || text.includes(query);
+
+                    row.style.display = matchesSearch ? '' : 'none';
+                    if (matchesSearch) sectionVisible++;
+                });
+
+                section.style.display = sectionVisible > 0 ? '' : 'none';
+                totalVisible += sectionVisible;
+            });
+
+            noResults.style.display = totalVisible === 0 ? '' : 'none';
+        }
+
+        searchInput.addEventListener('input', filterContent);
+
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                categoryBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                activeCategory = btn.dataset.category;
+                filterContent();
+            });
+        });
+    </script>
+
+    <script src="assets/js/glossary.js"></script>
+</body>
+
+</html>

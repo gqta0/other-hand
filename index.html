@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Spring Boot Tu Tiên - Học Spring Boot qua truyện tu tiên, phù hợp cho audio story tiếng Việt">
+    <title>Spring Boot Tu Tiên | Câu Chuyện Tu Luyện Spring</title>
+
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/dark-mode.css">
+
+    <style>
+        .hero {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            color: white;
+            padding: var(--spacing-2xl) var(--spacing-lg);
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .hero h1 {
+            font-size: var(--text-4xl);
+            margin-bottom: var(--spacing-md);
+            color: white;
+        }
+
+        .hero p {
+            font-size: var(--text-lg);
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto var(--spacing-lg);
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-xl);
+            margin-top: var(--spacing-lg);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+        }
+
+        .stat-label {
+            font-size: var(--text-sm);
+            opacity: 0.8;
+        }
+
+        .progress-section {
+            background: var(--bg-card);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-md);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .continue-reading {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md) var(--spacing-lg);
+            background: var(--color-primary);
+            color: white;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all var(--transition-fast);
+        }
+
+        .continue-reading:hover {
+            background: var(--color-primary-dark);
+            text-decoration: none;
+            color: white;
+        }
+
+        .arc-section {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .arc-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 3px solid var(--color-primary);
+        }
+
+        .arc-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: var(--color-primary);
+            color: white;
+            border-radius: var(--radius-full);
+            font-weight: 700;
+        }
+
+        .arc-info h2 {
+            margin: 0;
+            font-size: var(--text-xl);
+        }
+
+        .arc-info p {
+            margin: 0;
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+        }
+
+        .chapters-grid {
+            display: grid;
+            gap: var(--spacing-md);
+        }
+
+        .chapter-card {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            background: var(--bg-card);
+            border: 1px solid var(--bg-secondary);
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all var(--transition-fast);
+        }
+
+        .chapter-card:hover {
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-md);
+            text-decoration: none;
+        }
+
+        .chapter-card.locked {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .chapter-num {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 50px;
+            height: 50px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .chapter-info {
+            flex: 1;
+        }
+
+        .chapter-info h3 {
+            margin: 0 0 4px;
+            font-size: var(--text-base);
+        }
+
+        .chapter-info p {
+            margin: 0;
+            font-size: var(--text-sm);
+            color: var(--text-muted);
+        }
+
+        .chapter-status {
+            font-size: var(--text-sm);
+            color: var(--text-muted);
+        }
+
+        .chapter-status.read {
+            color: var(--color-secondary);
+        }
+
+        .quick-links {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+            flex-wrap: wrap;
+        }
+
+        .quick-link {
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            color: var(--text-primary);
+            font-size: var(--text-sm);
+            transition: all var(--transition-fast);
+        }
+
+        .quick-link:hover {
+            background: var(--color-primary);
+            color: white;
+            text-decoration: none;
+        }
+
+        @media (max-width: 480px) {
+            .hero-stats {
+                flex-direction: column;
+                gap: var(--spacing-md);
+            }
+
+            .progress-header {
+                flex-direction: column;
+                gap: var(--spacing-md);
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title">Spring Boot Tu Tiên</div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>🏔️ Spring Boot Tu Tiên Truyện</h1>
+            <p>Hành trình của Lâm Tuấn từ Junior Developer đến Senior Architect tại Spring Tông. Học Spring Boot qua câu
+                chuyện tu tiên, phù hợp cho audio story.</p>
+
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-number">7</div>
+                    <div class="stat-label">Đại Chương (Arc)</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">35</div>
+                    <div class="stat-label">Chapter</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">~10h</div>
+                    <div class="stat-label">Audio Time</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="container">
+
+        <!-- Progress Section -->
+        <section class="progress-section">
+            <div class="progress-header">
+                <div>
+                    <h3>📈 Tiến Độ Tu Luyện</h3>
+                    <p class="progress-text">0/35 chapters (0%)</p>
+                </div>
+                <a href="arc-1-nhap-mon/chapter-01.html" class="continue-reading">
+                    Bắt đầu tu luyện →
+                    <span class="chapter-num">Chapter 1</span>
+                </a>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 0%"></div>
+            </div>
+        </section>
+
+        <!-- Quick Links -->
+        <nav class="quick-links">
+            <a href="#arc-1" class="quick-link">Arc 1: Nhập Môn</a>
+            <a href="#arc-2" class="quick-link">Arc 2: Web MVC</a>
+            <a href="#arc-3" class="quick-link">Arc 3: Security</a>
+            <a href="#arc-4" class="quick-link">Arc 4: MyBatis</a>
+            <a href="#arc-5" class="quick-link">Arc 5: Transaction</a>
+            <a href="#arc-6" class="quick-link">Arc 6: AOP</a>
+            <a href="#arc-7" class="quick-link">Arc 7: Testing</a>
+            <a href="glossary.html" class="quick-link">📚 Thuật Ngữ</a>
+        </nav>
+
+        <!-- Arc 1 -->
+        <section id="arc-1" class="arc-section">
+            <div class="arc-header">
+                <span class="arc-number">1</span>
+                <div class="arc-info">
+                    <h2>Nhập Môn (Spring Core)</h2>
+                    <p>IoC Container, Dependency Injection, Bean Lifecycle, Component Stereotypes</p>
+                </div>
+            </div>
+            <div class="chapters-grid">
+                <a href="arc-1-nhap-mon/chapter-01.html" class="chapter-card">
+                    <span class="chapter-num">01</span>
+                    <div class="chapter-info">
+                        <h3>Linh Khí Tụ Huyền Bí</h3>
+                        <p>IoC Container - Trung tâm quản lý Bean</p>
+                    </div>
+                    <span class="chapter-status">~18 phút</span>
+                </a>
+                <a href="arc-1-nhap-mon/chapter-02.html" class="chapter-card">
+                    <span class="chapter-num">02</span>
+                    <div class="chapter-info">
+                        <h3>Linh Lực Quán Nhập</h3>
+                        <p>Dependency Injection - Kỹ thuật tiêm phụ thuộc</p>
+                    </div>
+                    <span class="chapter-status">~18 phút</span>
+                </a>
+                <a href="arc-1-nhap-mon/chapter-03.html" class="chapter-card">
+                    <span class="chapter-num">03</span>
+                    <div class="chapter-info">
+                        <h3>Vòng Đời Linh Đan</h3>
+                        <p>Bean Lifecycle - Từ sinh đến hủy</p>
+                    </div>
+                    <span class="chapter-status">~18 phút</span>
+                </a>
+                <a href="arc-1-nhap-mon/chapter-04.html" class="chapter-card">
+                    <span class="chapter-num">04</span>
+                    <div class="chapter-info">
+                        <h3>Các Loại Phù Chú</h3>
+                        <p>Component Stereotypes - @Component, @Service, @Repository</p>
+                    </div>
+                    <span class="chapter-status">~17 phút</span>
+                </a>
+                <a href="arc-1-nhap-mon/chapter-05.html" class="chapter-card">
+                    <span class="chapter-num">05</span>
+                    <div class="chapter-info">
+                        <h3>Đại Quan Nhập Môn</h3>
+                        <p>Spring Fundamentals Practice - Thử thách tổng hợp</p>
+                    </div>
+                    <span class="chapter-status">~20 phút</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Arc 2 -->
+        <section id="arc-2" class="arc-section">
+            <div class="arc-header">
+                <span class="arc-number">2</span>
+                <div class="arc-info">
+                    <h2>Giao Tiếp Giang Hồ (Spring Web MVC)</h2>
+                    <p>DispatcherServlet, Request Mapping, View & Template, REST API</p>
+                </div>
+            </div>
+            <div class="chapters-grid">
+                <a href="arc-2-giao-tiep-giang-ho/chapter-06.html" class="chapter-card">
+                    <span class="chapter-num">06</span>
+                    <div class="chapter-info">
+                        <h3>Truyền Tống Linh Đồng</h3>
+                        <p>DispatcherServlet - Front Controller</p>
+                    </div>
+                    <span class="chapter-status">~18 phút</span>
+                </a>
+                <a href="arc-2-giao-tiep-giang-ho/chapter-07.html" class="chapter-card">
+                    <span class="chapter-num">07</span>
+                    <div class="chapter-info">
+                        <h3>Phù Chú Lộ Trình</h3>
+                        <p>Request Mapping - @GetMapping, @PostMapping</p>
+                    </div>
+                    <span class="chapter-status">~18 phút</span>
+                </a>
+                <a href="#" class="chapter-card locked">
+                    <span class="chapter-num">08</span>
+                    <div class="chapter-info">
+                        <h3>Huyễn Cảnh Giao Diện</h3>
+                        <p>View & Template - Thymeleaf</p>
+                    </div>
+                    <span class="chapter-status">🔒 Sắp ra mắt</span>
+                </a>
+                <a href="#" class="chapter-card locked">
+                    <span class="chapter-num">09</span>
+                    <div class="chapter-info">
+                        <h3>Linh Khí Mô Hình</h3>
+                        <p>Model & Data Binding</p>
+                    </div>
+                    <span class="chapter-status">🔒 Sắp ra mắt</span>
+                </a>
+                <a href="#" class="chapter-card locked">
+                    <span class="chapter-num">10</span>
+                    <div class="chapter-info">
+                        <h3>Đại Quan Giao Tiếp</h3>
+                        <p>REST API Practice</p>
+                    </div>
+                    <span class="chapter-status">🔒 Sắp ra mắt</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Arc 3 -->
+        <section id="arc-3" class="arc-section">
+            <div class="arc-header">
+                <span class="arc-number">3</span>
+                <div class="arc-info">
+                    <h2>Phòng Hộ Sơn Môn (Spring Security)</h2>
+                    <p>Authentication, Authorization, JWT, Security Filter Chain</p>
+                </div>
+            </div>
+            <div class="chapters-grid">
+                <a href="#" class="chapter-card locked">
+                    <span class="chapter-num">11</span>
+                    <div class="chapter-info">
+                        <h3>Xác Thực Thân Phận</h3>
+                        <p>Authentication - Kiểm tra danh tính</p>
+                    </div>
+                    <span class="chapter-status">🔒 Sắp ra mắt</span>
+                </a>
+                <a href="#" class="chapter-card locked">
+                    <span class="chapter-num">12-15</span>
+                    <div class="chapter-info">
+                        <h3>Và 4 chapter nữa...</h3>
+                        <p>Authorization, JWT, Security Filter Chain, Practice</p>
+                    </div>
+                    <span class="chapter-status">🔒 Sắp ra mắt</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Arc 4-7 -->
+        <section id="arc-4" class="arc-section">
+            <div class="arc-header">
+                <span class="arc-number">4</span>
+                <div class="arc-info">
+                    <h2>Kho Tàng Bí Mật (MyBatis)</h2>
+                    <p>Mapper, SQL Mapping, Dynamic SQL, Cache</p>
+                </div>
+            </div>
+            <p style="color: var(--text-muted); font-style: italic;">🔒 5 chapters - Sắp ra mắt</p>
+        </section>
+
+        <section id="arc-5" class="arc-section">
+            <div class="arc-header">
+                <span class="arc-number">5</span>
+                <div class="arc-info">
+                    <h2>Giao Dịch Công Bằng (Transaction)</h2>
+                    <p>@Transactional, ACID, Propagation, Isolation</p>
+                </div>
+            </div>
+            <p style="color: var(--text-muted); font-style: italic;">🔒 5 chapters - Sắp ra mắt</p>
+        </section>
+
+        <section id="arc-6" class="arc-section">
+            <div class="arc-header">
+                <span class="arc-number">6</span>
+                <div class="arc-info">
+                    <h2>Khía Cạnh Huyền Bí (AOP & AspectJ)</h2>
+                    <p>Aspect, @Before, @After, @Around, Pointcut</p>
+                </div>
+            </div>
+            <p style="color: var(--text-muted); font-style: italic;">🔒 5 chapters - Sắp ra mắt</p>
+        </section>
+
+        <section id="arc-7" class="arc-section">
+            <div class="arc-header">
+                <span class="arc-number">7</span>
+                <div class="arc-info">
+                    <h2>Thử Thách Cuối (Testing)</h2>
+                    <p>JUnit, Mockito, Integration Testing, Senior Interview</p>
+                </div>
+            </div>
+            <p style="color: var(--text-muted); font-style: italic;">🔒 5 chapters - Sắp ra mắt</p>
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024 | Tối ưu cho Samsung Browser S22 Ultra</p>
+            <p style="font-size: var(--text-sm); margin-top: var(--spacing-sm);">
+                Học Spring Boot qua truyện tu tiên | Phù hợp cho audio story tiếng Việt
+            </p>
+        </div>
+    </footer>
+
+    <script src="assets/js/navigation.js"></script>
+    <script src="assets/js/glossary.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 28: Điểm Huyệt Pháp - Làm chủ Pointcut Expression trong Spring AOP: execution, within, @annotation, và bean">
+    <title>Chapter 28: Điểm Huyệt Pháp | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 6: Khía Cạnh Huyền Bí</span>
+                <h1 class="chapter-title">Chapter 28: Điểm Huyệt Pháp</h1>
+                <div class="chapter-meta">
+                    <span>📖 Pointcut Expressions</span>
+                    <span>⏱️ 30 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Cấu Trúc Thần Chú (Execution) <span class="section-duration">(10
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Trưởng Lão AOP dẫn Lâm Tuấn đến "Bia Đá Định Vị". Trên đó khắc chi chít những dòng cổ ngữ
+                            khó hiểu.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            Để dùng AOP, ngươi phải biết "Điểm Huyệt". Nếu điểm sai, kẻ địch không chết mà ta lại chết.
+                            Thần chú mạnh nhất là <span class="emphasis">execution()</span>. Nó giúp ngươi chọn chính
+                            xác hàm nào sẽ bị tác động.
+                            Cấu trúc chung:
+                            `execution(modifiers-pattern? ret-type-pattern declaring-type-pattern?
+                            name-pattern(param-pattern) throws-pattern?)`
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Dài quá thưa Trưởng Lão!
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            Ta ví dụ cho dễ hiểu.
+                            `execution(* com.example.service.*.*(..))`
+                            - Dấu sao đầu tiên: Bất kỳ kiểu trả về nào (void, int, String...).
+                            - `com.example.service.*`: Bất kỳ Class nào trong package service.
+                            - `.*`: Bất kỳ Method nào trong Class đó.
+                            - `(..)`: Bất kỳ tham số nào (0 tham số, 1, hay n tham số đều dính hết).
+                            Đây là câu thần chú phổ biến nhất: "Bao trọn gói package Service".
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: Giới Hạn Phạm Vi (Within & @Annotation) <span
+                            class="section-duration">(8 phút)</span></h2>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Thế nếu đệ tử chỉ muốn áp dụng cho những hàm nào có dán bùa `@Loggable` do đệ tử tự tạo ra
+                            thì sao?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            Câu hỏi hay! Lúc đó ta dùng <span class="emphasis">@annotation()</span>.
+                            `@Around("@annotation(com.example.annotation.Loggable)")`
+                            Cách này rất linh hoạt. Ngươi thích hàm nào có Log thì dán annotation lên hàm đó là xong,
+                            không cần sửa pointcut.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            Ngoài ra còn có <span class="emphasis">within()</span>.
+                            `within(com.example.service..*)`
+                            Nó giống `execution` nhưng nhẹ nhàng hơn, chỉ quan tâm Class nằm ở đâu, không quan tâm chi
+                            tiết hàm. Nó chạy nhanh hơn `execution` một chút.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: Kết Hợp Thần Chú (&&, ||, !) <span class="section-duration">(7
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            Đỉnh cao của Điểm Huyệt là sự kết hợp.
+                            Ngươi muốn: "Tất cả hàm trong Service, NHƯNG TRỪ hàm get/set (vì nó quá nhiều và rác)".
+                            Thần chú: `execution(* com.example.service..*(..)) && !execution(* get*(..)) && !execution(*
+                            set*(..))`
+                            Ta dùng toán tử `&&` (Và), `||` (Hoặc), `!` (Không).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Vậy là đệ tử có thể tạo ra một mạng lưới lọc cực kỳ tinh vi.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            Đúng. Nhưng nhớ đặt tên cho chúng bằng <span class="emphasis">@Pointcut</span> để tái sử
+                            dụng.
+                            Ví dụ:
+                            `@Pointcut("execution(...)") public void serviceLayer() {}`
+                            Sau đó dùng: `@Before("serviceLayer()")`. Code sẽ gọn gàng hơn nhiều.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: Tổng Kết <span class="section-duration">(5 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn tập luyện viết Pointcut đến tóe lửa. Anh thử target vào Controller, Repository, thử
+                            loại trừ các class DTO...
+                            Bây giờ, anh đã có khả năng "bắn tỉa" vào bất kỳ hàm nào trong hệ thống.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            Ngươi đã điểm được huyệt. Nhưng khi chạm vào huyệt đạo đó, ngươi cần lấy thông tin gì?
+                            Tên hàm là gì? Tham số truyền vào là bao nhiêu? Ai là người gọi?
+                            Tất cả thông tin đó nằm trong một bảo vật gọi là <span class="emphasis">JoinPoint</span>.
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Thuật Ngữ Chương Này</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">Pointcut Expression</span>
+                        <span class="term-description">Biểu thức để lọc ra các JoinPoint (Method execution) mà Aspect sẽ
+                            áp dụng.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">execution()</span>
+                        <span class="term-description">Pointcut designator mạnh nhất và phổ biến nhất, match dựa trên
+                            method signature.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">within()</span>
+                        <span class="term-description">Pointcut designator giới hạn việc matching trong các Type
+                            (Class/Interface) cụ thể.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">@annotation()</span>
+                        <span class="term-description">Pointcut designator match các method có dán một annotation cụ
+                            thể. Rất hữu ích cho custom AOP.</span>
+                    </li>
+                </ul>
+
+                <div class="interview-questions">
+                    <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn</h4>
+                    <ol class="question-list">
+                        <li>Sự khác nhau giữa execution() và within()? (execution lọc chi tiết đến method, within chỉ
+                            lọc level class -> within nhanh hơn nhưng ít chi tiết hơn).</li>
+                        <li>Làm sao để áp dụng AOP cho tất cả các *public* method trong class A? (`execution(public *
+                            com.example.A.*(..))`).</li>
+                        <li>Ký hiệu `..` trong Pointcut nghĩa là gì? (Trong package nghĩa là sub-packages. Trong method
+                            param nghĩa là 0 hoặc nhiều arguments).</li>
+                        <li>Bean PCD (`bean(*Service)`) dùng để làm gì? (Lọc theo tên của Spring Bean ID. Chỉ có trong
+                            Spring AOP, không có trong AspectJ chuẩn).</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🔮 Tiếp Theo</h3>
+                <p class="cliffhanger-text">
+                    Lâm Tuấn muốn viết một cái Log cực xịn: "User A đang gọi hàm B với tham số C". Nhưng làm sao lấy
+                    được chữ "A, B, C" đó từ trong hư không? JoinPoint chính là chìa khóa.
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="chapter-29.html">Chapter 29: Điểm Giao Hội - JoinPoint Interface →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="chapter-27.html" class="chapter-nav-link prev">
+                    <span class="label">← Chapter trước</span>
+                    <span class="title">Vũ Điệu Thời Gian</span>
+                </a>
+                <a href="chapter-29.html" class="chapter-nav-link next">
+                    <span class="label">Chapter tiếp theo →</span>
+                    <span class="title">Điểm Giao Hội</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>

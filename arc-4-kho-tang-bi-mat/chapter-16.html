@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 16: Bản Đồ Kho Tàng - Làm quen với MyBatis, Mapper Interface và cách kết nối database">
+    <title>Chapter 16: Bản Đồ Kho Tàng | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 4: Kho Tàng Bí Mật</span>
+                <h1 class="chapter-title">Chapter 16: Bản Đồ Kho Tàng</h1>
+                <div class="chapter-meta">
+                    <span>📖 MyBatis & Mapper</span>
+                    <span>⏱️ 25 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Người Giữ Kho <span class="section-duration">(5 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Rời khỏi Tàng Kinh Các với kiến thức phòng thủ vững chắc, Lâm Tuấn được dẫn đến một ngọn núi
+                            phía sau tông môn gọi là "Dữ Liệu Sơn".
+                            Tại chân núi, một hang động lớn phát ra ánh sáng lung linh, bên trên đề ba chữ: "Kho Tàng Bí
+                            Mật" (Database).
+                            Đứng trấn giữ cửa hang là một nữ tử xinh đẹp, khí chất thanh cao, tay cầm một cuốn bản đồ da
+                            cổ kính.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Chào sư đệ. Ta là Linh, người cai quản dữ liệu của Spring Tông. Sư Phụ nói ngươi muốn học
+                            cách lấy báu vật (Data) từ trong kho này ra một cách tinh tế nhất?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Chào Sư Tỷ. Đệ tử trước giờ dùng JDBC, phải tự tay đục đá (viết Connection,
+                            PreparedStatement, ResultSet) rất vất vả.
+                            Nghe nói môn phái có tuyệt kỹ <span class="emphasis">MyBatis</span> giúp công việc này nhẹ
+                            nhàng hơn?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Đúng vậy. MyBatis (hay còn gọi là Tiên Pháp Mai Ba Tít) là một "Persistence Framework".
+                            Khác với Hibernate (một pháp môn khác tự động hóa hoàn toàn), MyBatis trao cho ngươi quyền
+                            kiểm soát tuyệt đối câu thần chú (SQL).
+                            Nó không tự ý sinh ra câu lệnh lạ, mà chỉ giúp ngươi ánh xạ kết quả từ SQL vào Object Java.
+                            Chúng ta gọi đó là <span class="emphasis">SQL Mapping</span>.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: Tấm Bản Đồ (Mapper Interface) <span class="section-duration">(10
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Để vào kho, ngươi không cần mang theo búa rìu (JDBC Code) nữa. Ngươi chỉ cần vẽ một tấm bản
+                            đồ, gọi là <span class="emphasis">Mapper Interface</span>.
+                            MyBatis sẽ nhìn vào bản đồ đó và tự động tạo ra người thợ đào kho báu cho ngươi (Proxy
+                            Object).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Đầu tiên, hãy tạo một Interface và gắn huy hiệu `@Mapper` lên đó.
+                            Ví dụ:
+                            `@Mapper`
+                            `public interface DiscipleMapper { ... }`
+                            Việc gắn `@Mapper` giúp Spring tự động nhận diện và tạo Bean cho nó (scan). Ngươi không cần
+                            `@Repository` nữa.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đơn giản vậy sao? Vậy làm sao để định nghĩa câu lệnh SQL?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Có hai cách. Cách thứ nhất là dùng <span class="emphasis">Annotation</span> ngay trên hàm.
+                            `@Select("SELECT * FROM disciples WHERE id = #{id}")`
+                            `Disciple findById(Long id);`
+                            Cách này nhanh, gọn, dùng cho câu lệnh đơn giản.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Cách thứ hai là dùng <span class="emphasis">XML Configuration</span>. Ngươi viết SQL trong
+                            một file XML riêng biệt.
+                            Cách này mạnh mẽ hơn, giúp tách biệt code Java và SQL, rất hữu dụng khi câu lệnh dài và phức
+                            tạp (Dynamic SQL).
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: Cấu Hình Kết Nối <span class="section-duration">(5 phút)</span>
+                    </h2>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Nhưng Sư Tỷ, làm sao MyBatis biết kho báu (Database) nằm ở đâu mà đào?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Ngươi cần khai báo thông tin kết nối trong `application.properties`.
+                            `spring.datasource.url=jdbc:mysql://localhost:3306/spring_sect`
+                            `spring.datasource.username=root`
+                            `spring.datasource.password=secret`
+                            Và quan trọng là driver: `spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver`.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Ngoài ra, để MyBatis tìm thấy các file XML (nếu dùng cách 2), ngươi cần thêm:
+                            `mybatis.mapper-locations=classpath:mapper/*.xml`
+                            Và để viết ngắn gọn trong XML (không cần package name dài dòng), ta dùng:
+                            `mybatis.type-aliases-package=com.springsect.model`
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử hiểu rồi.
+                            1. Config Datasource (Địa chỉ kho).
+                            2. Tạo Mapper Interface (Bản đồ).
+                            3. Viết SQL (Thần chú).
+                            4. Inject Mapper vào Service và dùng.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: Tổng Kết <span class="section-duration">(5 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn nhận lấy cuộn giấy da `@Mapper` từ tay Sư Tỷ Linh. Anh cảm thấy nhẹ nhõm hơn hẳn so
+                            với việc cầm cái búa tạ JDBC nặng trịch.
+                            MyBatis giống như một người trợ lý đắc lực: Bạn chỉ cần nói muốn gì (SQL) và muốn nhận lại
+                            gì (Object), còn việc chuyển đổi (Resultset Parsing) để nó lo.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Hôm nay ngươi đã có bản đồ. Ngày mai, chúng ta sẽ bắt đầu học những câu thần chú cơ bản để
+                            lấy đồ vật ra, cất đồ vật vào.
+                            Hãy chuẩn bị tinh thần học về <span class="emphasis">CRUD Operations</span> với MyBatis.
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Thuật Ngữ Chương Này</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">MyBatis</span>
+                        <span class="term-description">Persistence Framework giúp ánh xạ SQL vào Java Object. Kiểm soát
+                            SQL tốt hơn JPA.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">@Mapper</span>
+                        <span class="term-description">Annotation đánh dấu Interface lầ MyBatis Mapper. Spring sẽ tạo
+                            Proxy implementation cho nó.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">ORM (Object Relational Mapping)</span>
+                        <span class="term-description">Kỹ thuật ánh xạ dữ liệu quan hệ (bảng) sang đối tượng (class).
+                            MyBatis là "Semi-ORM".</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Datasource</span>
+                        <span class="term-description">Cấu hình nguồn dữ liệu (URL, User, Pass) để kết nối
+                            Database.</span>
+                    </li>
+                </ul>
+
+                <div class="interview-questions">
+                    <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn</h4>
+                    <ol class="question-list">
+                        <li>Sự khác biệt chính giữa MyBatis và Hibernate/JPA? (SQL Control vs Full Automation).</li>
+                        <li>@Mapper và @Repository khác nhau thế nào trong ngữ cảnh MyBatis?</li>
+                        <li>Làm sao để cấu hình MyBatis tìm thấy file XML mapper? (mybatis.mapper-locations).</li>
+                        <li>`#{param}` và `${param}` trong MyBatis khác nhau ra sao? (Prepared Statement vs String
+                            Substitution - Cẩn thận SQL Injection!).</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🔮 Tiếp Theo</h3>
+                <p class="cliffhanger-text">
+                    Lâm Tuấn cầm bản đồ bước vào kho. Nhưng kho quá rộng lớn, muốn lấy đúng món đồ cần thiết phải đọc
+                    đúng thần chú. Sai một từ thôi, cả núi dữ liệu có thể đổ sập xuống đầu.
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="chapter-17.html">Chapter 17: Thần Chú Truy Vấn - SQL Mapping →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="../arc-3-phong-ho-son-mon/chapter-15.html" class="chapter-nav-link prev">
+                    <span class="label">← Chapter trước</span>
+                    <span class="title">Thử Thách Security</span>
+                </a>
+                <a href="chapter-17.html" class="chapter-nav-link next">
+                    <span class="label">Chapter tiếp theo →</span>
+                    <span class="title">Thần Chú Truy Vấn</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>

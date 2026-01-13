@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 7: Phù Chú Lộ Trình - Học về @RequestMapping, @PathVariable và cách định tuyến request">
+    <title>Chapter 07: Phù Chú Lộ Trình | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 2: Giao Tiếp Giang Hồ</span>
+                <h1 class="chapter-title">Chapter 07: Phù Chú Lộ Trình</h1>
+                <div class="chapter-meta">
+                    <span>📖 Request Mapping</span>
+                    <span>⏱️ 25 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Bản Đồ Kỳ Bí <span class="section-duration">(5 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Sáng hôm sau, Lâm Tuấn quay lại Cổng Giao Tiếp. Hộ Pháp MVC đang đứng trước một tấm bản đồ
+                            khổng lồ treo trên tường thành. Trên bản đồ chằng chịt những đường kẻ phát sáng, nối từ cổng
+                            vào các tòa tháp Controller bên trong.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-mvc">
+                        <span class="voice-label">Hộ Pháp MVC</span>
+                        <p class="dialogue-content">
+                            Đây là <span class="emphasis">HandlerMapping</span>. Nhờ nó mà ta biết được một Request (ví
+                            dụ `/profile`) phải đi đến đâu. Nhưng để vẽ được những đường này, các Controller phải tự
+                            khai báo vị trí của mình bằng <span class="emphasis">@RequestMapping</span>.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử thấy có rất nhiều màu sắc khác nhau trên bản đồ. Chúng có ý nghĩa gì vậy ạ?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-mvc">
+                        <span class="voice-label">Hộ Pháp MVC</span>
+                        <p class="dialogue-content">
+                            Đó là các loại hành động (HTTP Methods).
+                            Màu Xanh Lá là <span class="emphasis">GET</span>: Dùng để lấy thông tin. An toàn và không
+                            làm thay đổi dữ liệu (Idempotent).
+                            Màu Vàng là <span class="emphasis">POST</span>: Dùng để tạo mới. Nguy hiểm hơn, thay đổi
+                            trạng thái hệ thống.
+                            Màu Cam là <span class="emphasis">PUT</span>: Thay thế toàn bộ.
+                            Màu Tím là <span class="emphasis">PATCH</span>: Chỉnh sửa một phần.
+                            Màu Đỏ là <span class="emphasis">DELETE</span>: Hủy diệt.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: Bí Ẩn URL (Endpoint Design) <span class="section-duration">(8
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Tuấn nhi, để vẽ được một bản đồ tốt, ngươi phải tuân thủ quy tắc RESTful. Hãy nhìn ví dụ
+                            này.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Sai lầm thường gặp: Dùng URL để mô tả hành động.
+                            Ví dụ: `/getAllDisciples`, `/createDisciple`, `/deleteDisciple`. Đây là phong cách RPC
+                            (Remote Procedure Call) cổ lỗ sĩ.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Quy tắc RESTful: Dùng URL để chỉ <span class="emphasis">Tài Nguyên</span> (Resource), và
+                            dùng HTTP Method để chỉ <span class="emphasis">Hành Động</span>.
+                            `GET /disciples` : Lấy danh sách.
+                            `POST /disciples` : Tạo mới.
+                            `GET /disciples/{id}` : Lấy chi tiết một người.
+                            `DELETE /disciples/{id}` : Xóa một người.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            À! Vậy là URL là Danh Từ, còn Method là Động Từ.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-mvc">
+                        <span class="voice-label">Hộ Pháp MVC</span>
+                        <p class="dialogue-content">
+                            Chính xác! Để cài đặt điều này trong Spring, chúng ta dùng các biến thể của @RequestMapping:
+                            <span class="emphasis">@GetMapping</span>, <span class="emphasis">@PostMapping</span>, <span
+                                class="emphasis">@PutMapping</span>, <span class="emphasis">@DeleteMapping</span>.
+                            Ví dụ: `@GetMapping("/{id}")`.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Nhưng `{id}` là cái gì ạ?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-mvc">
+                        <span class="voice-label">Hộ Pháp MVC</span>
+                        <p class="dialogue-content">
+                            Đó là <span class="emphasis">URI Template Variable</span>. Khi có Request `GET
+                            /disciples/10`, Spring sẽ hiểu `{id}` là `10`.
+                            Để lấy nó ra, ta dùng Phù Chú <span class="emphasis">@PathVariable</span>.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: Phân Biệt PathVariable và RequestParam <span
+                            class="section-duration">(6 phút)</span></h2>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử thấy đôi khi người ta dùng dấu hỏi chấm `?name=Tuan` trên URL. Đó là gì ạ?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-mvc">
+                        <span class="voice-label">Hộ Pháp MVC</span>
+                        <p class="dialogue-content">
+                            Đó là <span class="emphasis">Query Parameter</span>. Ta dùng Phù Chú <span
+                                class="emphasis">@RequestParam</span> để lấy nó.
+                            Ví dụ: `/disciples?level=Senior`.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Hãy phân biệt rõ:
+                            <span class="emphasis">@PathVariable</span>: Dùng để định danh một tài nguyên cụ thể (Ví dụ:
+                            ID 10). Nó là một phần bắt buộc của URL.
+                            <span class="emphasis">@RequestParam</span>: Dùng để lọc, sắp xếp, tìm kiếm (Ví dụ: tìm
+                            những người tên A, trang 1, sắp xếp theo tên). Nó thường là tùy chọn.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Ví dụ: `GET /disciples/10/skills?minLevel=5`
+                            `10` là @PathVariable (ID của đệ tử).
+                            `5` là @RequestParam (Lọc skill cấp 5 trở lên).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử đã thông suốt! Path là xương sống, Param là phụ kiện.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: ResponseEntity - Kiểm Soát Tối Đa <span
+                            class="section-duration">(6 phút)</span></h2>
+
+                    <div class="dialogue-block voice-mvc">
+                        <span class="voice-label">Hộ Pháp MVC</span>
+                        <p class="dialogue-content">
+                            Khi trả về dữ liệu, ngươi có thể trả về Object trực tiếp (như `Disciple`). Spring sẽ trả về
+                            HTTP 200 OK mặc định.
+                            Nhưng một cao thủ cần kiểm soát nhiều hơn thế. Ví dụ: Khi tạo mới thành công, phải trả về
+                            201 Created. Khi không tìm thấy, phải trả về 404 Not Found.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-mvc">
+                        <span class="voice-label">Hộ Pháp MVC</span>
+                        <p class="dialogue-content">
+                            Để làm điều đó, hãy dùng <span class="emphasis">ResponseEntity</span>.
+                            `return ResponseEntity.status(HttpStatus.CREATED).body(newDisciple);`
+                            `return ResponseEntity.notFound().build();`
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Nó giống như việc gói món quà lại cẩn thận, ghi rõ nhãn mác trước khi gửi đi vậy!
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Đúng vậy. Một API tốt không chỉ trả về đúng dữ liệu, mà phải trả về đúng Status Code để
+                            client biết cách xử lý.
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Thuật Ngữ Chương Này</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">@RequestMapping</span>
+                        <span class="term-description">Phù Chú gốc để ánh xạ URL vào Controller.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">@GetMapping / @PostMapping...</span>
+                        <span class="term-description">Shortcuts cho các HTTP Methods cụ thể.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">@PathVariable</span>
+                        <span class="term-description">Lấy giá trị từ trong chính URL (ví dụ /id). Bắt buộc.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">@RequestParam</span>
+                        <span class="term-description">Lấy giá trị từ query string (?key=value). Thường dùng để
+                            lọc/sort.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">ResponseEntity</span>
+                        <span class="term-description">Wrapper cho phép tùy chỉnh Status Code, Headers và Body của
+                            Response.</span>
+                    </li>
+                </ul>
+
+                <div class="interview-questions">
+                    <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn</h4>
+                    <ol class="question-list">
+                        <li>Tại sao nên dùng HTTP Methods đúng mục đích (GET vs POST)? (Idempotency)</li>
+                        <li>Sự khác biệt cốt lõi giữa @PathVariable và @RequestParam là gì? Khi nào dùng cái nào?</li>
+                        <li>Làm thế nào để trả về custom HTTP Status Code (ví dụ 201, 404) trong Spring Controller?</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🔮 Tiếp Theo</h3>
+                <p class="cliffhanger-text">
+                    Chúng ta đã biết cách tạo API trả về dữ liệu. Nhưng nếu muốn tạo một trang web có giao diện đẹp mắt
+                    để người dùng cuối (End User) tương tác thì sao?
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="chapter-08.html">Chapter 08: Huyễn Cảnh Giao Diện - View & Template Engine →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="chapter-06.html" class="chapter-nav-link prev">
+                    <span class="label">← Chapter trước</span>
+                    <span class="title">Truyền Tống Linh Đồng</span>
+                </a>
+                <a href="chapter-08.html" class="chapter-nav-link next">
+                    <span class="label">Chapter tiếp theo →</span>
+                    <span class="title">Huyễn Cảnh Giao Diện</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>

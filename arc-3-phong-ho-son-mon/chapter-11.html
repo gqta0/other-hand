@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 11: Xác Thực Thân Phận - Lâm Tuấn học về Authentication, SecurityContext và UserDetailsService trong Spring Security">
+    <title>Chapter 11: Xác Thực Thân Phận | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 3: Phòng Hộ Sơn Môn</span>
+                <h1 class="chapter-title">Chapter 11: Xác Thực Thân Phận</h1>
+                <div class="chapter-meta">
+                    <span>📖 Authentication</span>
+                    <span>⏱️ 26 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Cổng Tàng Kinh Các <span class="section-duration">(5 phút)</span>
+                    </h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Sau khi hoàn thành việc xây dựng Cổng Giao Tiếp (Web API), Lâm Tuấn cảm thấy mình đã đủ bản
+                            lĩnh để khám phá những bí mật sâu kín hơn của Spring Tông. Anh quyết định tiến về Tàng Kinh
+                            Các - nơi lưu giữ những tuyệt kỹ tối thượng.
+                            Tuy nhiên, vừa mới đặt chân lên bậc thềm đá xanh, một luồng áp lực vô hình nhưng cực kỳ mạnh
+                            mẽ đã chặn đứng bước chân anh.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-security">
+                        <span class="voice-label">Sư Huynh Đại</span>
+                        <p class="dialogue-content">
+                            <span class="emphasis">Dừng lại!</span> Kẻ nào dám xâm nhập khu vực cấm?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Một tráng sĩ thân hình vạm vỡ, mặc giáp phục màu xanh đen (Spring Security), từ từ bước ra
+                            từ bóng tối. Trên tay hắn cầm một chiếc khiên có khắc hình chiếc lá chắn. Khí thế tỏa ra
+                            khiến Lâm Tuấn, dù đã là Developer, cũng phải rùng mình.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Tại hạ là Lâm Tuấn, đệ tử mới của Sư Phụ Cao Nhân. Tại hạ muốn vào tìm sách tham khảo.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-security">
+                        <span class="voice-label">Sư Huynh Đại</span>
+                        <p class="dialogue-content">
+                            Ta không quan tâm ngươi nói ngươi là ai. Ta cần bằng chứng.
+                            Tại Spring Tông, quy tắc đầu tiên của Phòng Hộ Sơn Môn là: <span
+                                class="emphasis">Authentication</span> - Xác Thực Thân Phận.
+                            Nếu không chứng minh được bản thân (Principal) và đưa ra mật khẩu (Credentials) hợp lệ, thì
+                            ngay cả con ruồi cũng không lọt qua được.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: Cơ Chế Xác Thực (The Authentication Flow) <span
+                            class="section-duration">(8 phút)</span></h2>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Vậy xin Sư Huynh chỉ giáo, làm sao để xác thực? Đệ tử chỉ cần đưa thẻ bài đệ tử ra là được
+                            chứ gì?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-security">
+                        <span class="voice-label">Sư Huynh Đại</span>
+                        <p class="dialogue-content">
+                            Ngây thơ! Để ta giải thích cho ngươi quy trình hoạt động của bộ máy an ninh này.
+                            Khi ngươi gửi một yêu cầu đăng nhập (Login Request), ngươi không gặp ta ngay đâu. Ngươi sẽ
+                            gặp một loạt các lính gác cổng gọi là <span class="emphasis">Authentication Filter</span>.
+                            Họ sẽ thu lấy Tên (Username) và Mật Khẩu (Password) của ngươi, gói ghém lại thành một token
+                            sơ khai gọi là `UsernamePasswordAuthenticationToken`.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-security">
+                        <span class="voice-label">Sư Huynh Đại</span>
+                        <p class="dialogue-content">
+                            Sau đó, token này được chuyển đến cho <span class="emphasis">AuthenticationManager</span> -
+                            Tổng Quản Lý An Ninh.
+                            Ông ta không tự mình kiểm tra, mà sẽ ủy quyền cho các chuyên gia gọi là <span
+                                class="emphasis">AuthenticationProvider</span>.
+                            Mỗi Provider có một cách kiểm tra riêng: người thì tra sổ sách (DAO), người thì tra LDAP,
+                            người thì tra OAuth2.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Vậy Provider sẽ tra sổ sách ở đâu?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-security">
+                        <span class="voice-label">Sư Huynh Đại</span>
+                        <p class="dialogue-content">
+                            Hắn sẽ gọi một nhân vật đặc biệt: <span class="emphasis">UserDetailsService</span>.
+                            Nhân vật này có nhiệm vụ duy nhất: "Tìm người dùng dựa trên tên đăng nhập".
+                            `loadUserByUsername(String username)`.
+                            Nếu tìm thấy, hắn sẽ trả về một bản ghi chi tiết gọi là <span
+                                class="emphasis">UserDetails</span> (chứa password đã mã hóa, quyền hạn...).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-security">
+                        <span class="voice-label">Sư Huynh Đại</span>
+                        <p class="dialogue-content">
+                            Cuối cùng, Provider sẽ so sánh Mật Khẩu ngươi đưa và Mật Khẩu trong UserDetails. Nếu khớp,
+                            ngươi được cấp một thẻ bài <span class="emphasis">Authentication</span> chính thức
+                            (Authenticated = true).
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: SecurityContext & ThreadLocal <span class="section-duration">(7
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Quy trình chặt chẽ thật! Nhưng sau khi xác thực xong, làm sao hệ thống nhớ đệ tử là ai trong
+                            suốt quá trình đi lại trong Tàng Kinh Các? Chẳng lẽ mỗi bước đi đệ tử lại phải trình thẻ
+                            bài?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-security">
+                        <span class="voice-label">Sư Huynh Đại</span>
+                        <p class="dialogue-content">
+                            Không cần. Khi ngươi đã được xác thực, thẻ bài Authentication của ngươi sẽ được cất vào một
+                            nơi cực kỳ an toàn gọi là <span class="emphasis">SecurityContext</span>.
+                            Và SecurityContext lại được cất giữ trong <span
+                                class="emphasis">SecurityContextHolder</span>.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-security">
+                        <span class="voice-label">Sư Huynh Đại</span>
+                        <p class="dialogue-content">
+                            Bí mật nằm ở đây: SecurityContextHolder sử dụng ma pháp <span
+                                class="emphasis">ThreadLocal</span>.
+                            Nghĩa là thông tin của ngươi được gắn chặt vào "linh hồn" (Thread) đang xử lý yêu cầu của
+                            ngươi. Dù ngươi đi đâu trong hệ thống (gọi Service, Repository...), miễn là vẫn trong Thread
+                            đó, bất kỳ ai cũng có thể biết ngươi là ai bằng cách gọi:
+                            `SecurityContextHolder.getContext().getAuthentication()`.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            À! Giống như có một cái hào quang ghi tên trên đầu đệ tử, đi đâu ai cũng thấy mà không cần
+                            hỏi lại.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-security">
+                        <span class="voice-label">Sư Huynh Đại</span>
+                        <p class="dialogue-content">
+                            Đúng vậy. Nhưng hãy cẩn thận! Hào quang đó chỉ tồn tại trong Thread đó thôi. Nếu ngươi tách
+                            hồn (tạo Async Thread mới), hào quang sẽ không tự đi theo đâu, trừ khi ngươi dùng phép thuật
+                            chuyển giao đặc biệt.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: Tổng Kết <span class="section-duration">(6 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn gật gù thán phục. Hệ thống phòng thủ của Spring quả là tầng tầng lớp lớp nhưng lại
+                            rất logic.
+                            1. <span class="emphasis">AuthenticationManager</span>: Quản lý tổng.
+                            2. <span class="emphasis">AuthenticationProvider</span>: Người thực thi kiểm tra.
+                            3. <span class="emphasis">UserDetailsService</span>: Người cung cấp dữ liệu gốc.
+                            4. <span class="emphasis">SecurityContext</span>: Kho chứa thẻ bài sau khi xác thực.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử đã hiểu! Bây giờ đệ tử sẽ về chuẩn bị UserDetailsService để kết nối với bảng
+                            `Disciples` trong database của đệ tử, thay vì dùng user ảo trong bộ nhớ (In-Memory).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-security">
+                        <span class="voice-label">Sư Huynh Đại</span>
+                        <p class="dialogue-content">
+                            Được lắm. Nhưng nhớ kỹ, xác thực (Authentication) mới chỉ là bước 1: Biết ngươi là ai.
+                            Còn việc ngươi có được phép vào kho sách Cấm hay không, đó là chuyện của <span
+                                class="emphasis">Authorization</span> - Phân Quyền Hạn.
+                            Ngày mai ta sẽ kiểm tra xem thẻ bài của ngươi có đủ quyền lực hay không.
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Thuật Ngữ Chương Này</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">Authentication</span>
+                        <span class="term-description">Xác thực - Quy trình xác định danh tính người dùng (Who are
+                            you?).</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Principal</span>
+                        <span class="term-description">Thông tin chính về người dùng (thường là UserDetails hoặc
+                            Username).</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Credentials</span>
+                        <span class="term-description">Bằng chứng xác thực (thường là Password).</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">UserDetailsService</span>
+                        <span class="term-description">Interface cốt lõi để tải dữ liệu user từ nguồn lưu trữ (DB,
+                            LDAP...). Chỉ có 1 hàm: loadUserByUsername.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">SecurityContextHolder</span>
+                        <span class="term-description">Nơi lưu trữ Authentication của Thread hiện tại. Mặc định dùng
+                            ThreadLocal.</span>
+                    </li>
+                </ul>
+
+                <div class="interview-questions">
+                    <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn</h4>
+                    <ol class="question-list">
+                        <li>Sự khác biệt giữa Authentication và Authorization?</li>
+                        <li>SecurityContextHolder lưu trữ thông tin như thế nào? (ThreadLocal). Vấn đề gì xảy ra khi
+                            dùng Async?</li>
+                        <li>UserDetailsService có nhiệm vụ gì? Tại sao Password encoder lại quan trọng khi dùng nó?</li>
+                        <li>Giải thích luồng đi (Flow) của một quá trình xác thực trong Spring Security?</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🔮 Tiếp Theo</h3>
+                <p class="cliffhanger-text">
+                    Lâm Tuấn đã chứng minh được mình là đệ tử Spring Tông. Nhưng khi anh định với tay lấy cuốn bí kíp
+                    "Tối Thượng Thần Công", Sư Huynh Đại lại chặn lại: "Ngươi chỉ là Junior, không đủ quyền hạn!"
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="chapter-12.html">Chapter 12: Phân Quyền Hạn - Authorization →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="../arc-2-giao-tiep-giang-ho/chapter-10.html" class="chapter-nav-link prev">
+                    <span class="label">← Chapter trước</span>
+                    <span class="title">Tuyệt Kỹ REST API</span>
+                </a>
+                <a href="chapter-12.html" class="chapter-nav-link next">
+                    <span class="label">Chapter tiếp theo →</span>
+                    <span class="title">Phân Quyền Hạn</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>

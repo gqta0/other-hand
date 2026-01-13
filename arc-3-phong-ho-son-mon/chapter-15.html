@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 15: Thử Thách Bảo Vệ Môn Phái - Thực hành tích hợp Spring Security, JWT và Phân Quyền vào dự án">
+    <title>Chapter 15: Thử Thách Bảo Vệ Môn Phái | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 3: Phòng Hộ Sơn Môn</span>
+                <h1 class="chapter-title">Chapter 15: Thử Thách Bảo Vệ Môn Phái</h1>
+                <div class="chapter-meta">
+                    <span>📖 Security Practice</span>
+                    <span>⏱️ 35 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Nhận Nhiệm Vụ <span class="section-duration">(5 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Cổng Tàng Kinh Các mở ra lần cuối. Sư Huynh Đại bước ra, tay cầm một cuộn giấy vàng rực.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-security">
+                        <span class="voice-label">Sư Huynh Đại</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn, ngươi đã học xong lý thuyết về Phòng Hộ Pháp Trận.
+                            Hôm nay, ta giao cho ngươi nhiệm vụ cuối cùng: Hãy quay về bảo vệ hệ thống "Quản Lý Đệ Tử"
+                            mà ngươi đã xây dựng ở Arc 2.
+                            Yêu cầu:
+                            1. Phải có chức năng Đăng Nhập lấy Token (JWT).
+                            2. API `/api/disciples` chỉ cho phép người đã đăng nhập xem.
+                            3. API `/api/disciples/create` và `/delete` chỉ cho phép ADMIN.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử xin nhận lệnh! Đệ tử sẽ biến nó thành một pháo đài bất khả xâm phạm.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: Chuẩn Bị Nguyên Liệu (User & JWT Util) <span
+                            class="section-duration">(10 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Bước đầu tiên, Lâm Tuấn tạo ra class `User` (Đệ Tử Môn Phái), có thêm thuộc tính `username`,
+                            `password` (đã mã hóa) và `role`.
+                            Sau đó, anh chế tạo công cụ `JwtUtil` - chiếc khuôn đúc lệnh bài.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Trong `JwtUtil`, đệ tử viết hàm `generateToken(String username)`.
+                            Đệ tử dùng thư viện `io.jsonwebtoken` (JJWT).
+                            Bí kíp (Secret Key) đệ tử giấu kỹ trong `application.properties`.
+                            Thời hạn (Expiration) đệ tử set là 10 ngày (864000000 ms).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Đừng quên hàm `validateToken` và `extractUsername`. Cái phễu lọc sẽ cần dùng đến chúng.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Vâng thưa Sư Phụ. Tiếp theo, đệ tử viết `CustomUserDetailsService` implements
+                            `UserDetailsService`.
+                            Trong hàm `loadUserByUsername`, đệ tử gọi `userRepository.findByUsername(username)`.
+                            Nếu tìm thấy, đệ tử convert nó sang object `UserDetails` của Spring.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: Dựng Trận Pháp (Filter & Config) <span
+                            class="section-duration">(12 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Công đoạn khó nhất bắt đầu: Lắp ráp bộ lọc `JwtAuthenticationFilter`.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử kế thừa `OncePerRequestFilter`. Trong hàm `doFilterInternal`:
+                            1. Lấy Header `Authorization`.
+                            2. Cắt bỏ chữ "Bearer ".
+                            3. Dùng `JwtUtil` để kiểm tra Token.
+                            4. Nếu tốt, lấy thông tin UserDetails và set vào `SecurityContextHolder`.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-security">
+                        <span class="voice-label">Sư Huynh Đại</span>
+                        <p class="dialogue-content">
+                            Tốt lắm. Giờ hãy thiết lập tổng thể trong `SecurityConfig`. Đây là bản đồ phòng thủ của
+                            ngươi.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử dùng `@EnableWebSecurity`.
+                            `.csrf(csrf -> csrf.disable())` // Tắt CSRF vì dùng JWT.
+                            `.sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))` //
+                            Không dùng Session.
+                            `.authorizeHttpRequests(auth -> auth`
+                            ` .requestMatchers("/api/auth/**").permitAll()` // Cho phép đăng nhập/đăng ký tự do.
+                            ` .requestMatchers(HttpMethod.POST, "/api/disciples/**").hasRole("ADMIN")` // Chỉ Admin được
+                            tạo.
+                            ` .anyRequest().authenticated()` // Còn lại phải đăng nhập.
+                            `)`
+                            Và cuối cùng: `.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)`.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Hoàn hảo! Đừng quên `PasswordEncoder`. Hãy dùng `BCryptPasswordEncoder` để băm mật khẩu.
+                            Đừng bao giờ lưu mật khẩu dạng Plain Text!
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: Tổng Kết Arc 3 <span class="section-duration">(8 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn kích hoạt hệ thống. Anh thử dùng Postman bắn một lệnh API lấy danh sách. Kết quả:
+                            `403 Forbidden`.
+                            Anh cười đắc chí. Sau đó, anh gọi API Login, lấy được một chuỗi JWT dài ngoằng.
+                            Anh dán chuỗi đó vào Header, bắn lại API lấy danh sách. Kết quả: `200 OK` kèm dữ liệu.
+                            Anh thử xóa một đệ tử. Kết quả: `403 Forbidden` (vì anh đang dùng tài khoản User thường).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Chúc mừng Tuấn nhi! Sơn Môn của chúng ta đã được bảo vệ an toàn.
+                            Ngươi đã nắm được tinh hoa của Spring Security.
+                            Tuy nhiên, trong quá trình làm việc, ngươi có thấy việc viết câu lệnh SQL trong Repository
+                            hay việc mapping dữ liệu từ bảng vào object hơi thủ công không?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Dạ có ạ. Đệ tử vẫn phải tự viết `result.getString("name")` đôi khi nếu dùng JDBC thuần. Hoặc
+                            dùng JPA thì đôi khi khó kiểm soát câu Query phúc tạp.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Vậy thì hãy chuẩn bị hành trang. Chúng ta sẽ đến Kho Tàng Bí Mật, nơi một Sư Tỷ xinh đẹp
+                            đang cai quản một pháp bảo giúp ngươi thao túng dữ liệu thần sầu. Đó là <span
+                                class="emphasis">MyBatis</span>.
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Tổng Kết Arc 3</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">BCryptPasswordEncoder</span>
+                        <span class="term-description">Thuật toán băm mật khẩu một chiều mạnh mẽ kèm Salt.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">SecurityConfig</span>
+                        <span class="term-description">Class cấu hình trung tâm (dùng SecurityFilterChain Bean) để thiết
+                            lập quy tắc bảo mật.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">SessionCreationPolicy.STATELESS</span>
+                        <span class="term-description">Cấu hình tắt Session, bắt buộc dùng Token cho mỗi Request.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">antMatchers / requestMatchers</span>
+                        <span class="term-description">Phương thức định nghĩa các mẫu URL để phân quyền.</span>
+                    </li>
+                </ul>
+
+                <div class="interview-questions">
+                    <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn Tổng Hợp</h4>
+                    <ol class="question-list">
+                        <li>Tại sao phải tắt CSRF khi dùng JWT? (Vì không dùng Cookie Session).</li>
+                        <li>Làm sao để xử lý Exception (như 401, 403) trả về JSON chuẩn thay vì trang lỗi mặc định của
+                            Spring? (Dùng AuthenticationEntryPoint và AccessDeniedHandler).</li>
+                        <li>JWT có an toàn tuyệt đối không? Nếu bị lộ Secret Key thì sao?</li>
+                        <li>Sự khác biệt giữa AuthenticationProvider và UserDetailsService?</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🔮 Tiếp Theo: ARC 4</h3>
+                <p class="cliffhanger-text">
+                    Cánh cửa Kho Tàng Bí Mật từ từ mở ra. Ánh sáng xanh ngọc bích tỏa ra chói lòa. Sư Tỷ Linh đang đứng
+                    đó, tay cầm một tấm bản đồ (Mapper) dẫn đến những kho báu dữ liệu khổng lồ.
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="../arc-4-kho-tang-bi-mat/chapter-16.html">Chapter 16: Bản Đồ Kho Tàng - Mapper Basics →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="chapter-14.html" class="chapter-nav-link prev">
+                    <span class="label">← Chapter trước</span>
+                    <span class="title">Security Filter Chain</span>
+                </a>
+                <a href="../arc-4-kho-tang-bi-mat/chapter-16.html" class="chapter-nav-link next">
+                    <span class="label">Chapter tiếp theo →</span>
+                    <span class="title">Bản Đồ Kho Tàng</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Chapter 1: Lâm Tuấn bước vào Spring Tông, học về IoC Container - Linh Khí Tụ">
+    <title>Chapter 01: Linh Khí Tụ Huyền Bí | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 1: Nhập Môn</span>
+                <h1 class="chapter-title">Chapter 01: Linh Khí Tụ Huyền Bí</h1>
+                <div class="chapter-meta">
+                    <span>📖 IoC Container</span>
+                    <span>⏱️ 18 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Đến Spring Tông <span class="section-duration">(3 phút)</span>
+                    </h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Trên đỉnh núi Xuân Sơn, giữa làn mây trắng bồng bềnh, tọa lạc một môn phái huyền bí có tên
+                            Spring Tông. Đây là nơi các Developer tu luyện để trở thành những Architect thực thụ.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Hôm nay, một thanh niên trẻ tuổi tên Lâm Tuấn đang leo những bậc thang đá dẫn vào cổng chính
+                            của môn phái. Anh ta chỉ vừa tốt nghiệp đại học, là một Junior Developer với ước mơ trở
+                            thành Senior.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Cuối cùng ta cũng đến được Spring Tông! Nghe nói đây là nơi đào tạo ra những Developer mạnh
+                            nhất Đại Lục.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Vừa bước qua cổng, Lâm Tuấn đứng sững lại. Trước mắt anh là một hồ nước khổng lồ nằm giữa
+                            sân, tỏa ra ánh sáng xanh dịu nhẹ. Trong hồ, hàng trăm viên cầu phát sáng đang trôi nổi, mỗi
+                            viên có màu sắc và kích thước khác nhau.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Ngươi chắc hẳn là Lâm Tuấn, đệ tử mới?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn quay lại, thấy một người đàn ông trung niên mặc áo bào trắng, râu tóc bạc phơ nhưng
+                            đôi mắt sáng như sao. Đây chính là Sư Phụ Cao Nhân, một trong những Architect lừng danh của
+                            Spring Tông.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Vâng thưa Sư Phụ! Đệ tử là Lâm Tuấn. Xin hỏi, hồ nước kia là gì vậy ạ?
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: IoC Container <span class="section-duration">(6 phút)</span></h2>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Đây chính là trái tim của Spring Tông. Chúng ta gọi nó là <span class="emphasis">Linh Khí
+                                Tụ</span>. Trong thuật ngữ kỹ thuật, nó được gọi là <span class="emphasis">IoC
+                                Container</span>.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            IoC Container? Nó có tác dụng gì vậy Sư Phụ?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            IoC là viết tắt của Inversion of Control, nghĩa là Đảo Ngược Quyền Kiểm Soát. Để ta giải
+                            thích bằng một ví dụ đơn giản.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Tưởng tượng ngươi là một đầu bếp. Theo cách truyền thống, ngươi phải tự đi chợ mua nguyên
+                            liệu, tự chọn từng món, rồi mới nấu ăn. Nhưng nếu có người khác đi chợ giúp ngươi, chuẩn bị
+                            sẵn nguyên liệu trên bàn, ngươi chỉ việc nấu thôi. Đó chính là IoC. Quyền kiểm soát việc lấy
+                            nguyên liệu đã được đảo ngược, không còn nằm ở ngươi nữa.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Vậy trong lập trình thì sao ạ?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Trong lập trình, thay vì một class tự tạo ra các dependency của mình, Container sẽ tạo và
+                            cung cấp cho class đó. Các viên cầu sáng ngươi thấy trong hồ kia, mỗi viên là một <span
+                                class="emphasis">Bean</span>, hay ta gọi là <span class="emphasis">Linh Đan</span>.
+                            Container quản lý tất cả các Bean này, tạo ra chúng, kết nối chúng với nhau, và hủy chúng
+                            khi không cần nữa.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Sư Phụ chỉ tay về phía hồ. Lâm Tuấn thấy một viên cầu màu xanh lá đang phát sáng, và từ nó
+                            có những sợi chỉ bạc nối đến ba viên cầu khác.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Ngươi thấy viên Linh Đan màu xanh kia không? Nó là một Service Bean. Nó cần ba dependency
+                            khác để hoạt động. Container tự động kết nối chúng, không cần Service Bean phải tự đi tìm.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: Các Loại Annotation <span class="section-duration">(5 phút)</span>
+                    </h2>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Làm sao Container biết đâu là Bean cần quản lý?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Câu hỏi hay! Chúng ta dùng các <span class="emphasis">Phù Chú</span>, trong kỹ thuật gọi là
+                            Annotation, để đánh dấu. Có bốn loại Phù Chú chính.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Thứ nhất là <span class="emphasis">@Component</span>, Phù Chú Linh Khí cơ bản nhất. Đánh dấu
+                            một class là Bean để Container quản lý.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Thứ hai là <span class="emphasis">@Service</span>, Phù Chú Dịch Vụ. Dành cho các class chứa
+                            business logic. Về bản chất nó giống @Component, nhưng mang ý nghĩa semantic rõ ràng hơn.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Thứ ba là <span class="emphasis">@Repository</span>, Phù Chú Kho Tàng. Dành cho các class
+                            truy cập database. Đặc biệt, nó còn có khả năng tự động dịch các database exception thành
+                            Spring exception.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Thứ tư là <span class="emphasis">@Controller</span>, Phù Chú Điều Khiển. Dành cho các class
+                            xử lý HTTP request trong ứng dụng web.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Vậy là có bốn loại: Component, Service, Repository, và Controller. Đệ tử ghi nhớ!
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Đúng vậy. Và nhớ rằng, Service, Repository, Controller thực chất đều là Component. Chúng chỉ
+                            là phiên bản đặc biệt hóa, giúp code dễ đọc và bảo trì hơn.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: Câu Hỏi Phỏng Vấn <span class="section-duration">(3 phút)</span>
+                    </h2>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Tuấn nhi, ta có một câu hỏi cho ngươi. Đây là câu hỏi thường gặp trong các buổi phỏng vấn.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Sự khác biệt giữa IoC và DI là gì?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn suy nghĩ một lúc, cố gắng nhớ lại những gì vừa học.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử nghĩ rằng IoC là nguyên lý tổng quát, là ý tưởng đảo ngược quyền kiểm soát. Còn DI,
+                            tức Dependency Injection, là một cách để thực hiện IoC. IoC là "cái gì", còn DI là "làm như
+                            thế nào". Có đúng không Sư Phụ?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Xuất sắc! Ngươi đã hiểu được tinh túy. IoC là nguyên lý, DI là kỹ thuật. Ngày mai, ta sẽ dạy
+                            ngươi chi tiết về Dependency Injection.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Mặt trời đã lặn, hồ Linh Khí Tụ bắt đầu phát sáng mạnh hơn trong bóng tối. Hàng trăm viên
+                            Linh Đan lấp lánh như những vì sao dưới nước. Lâm Tuấn biết rằng hành trình tu luyện của
+                            mình chỉ mới bắt đầu.
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Thuật Ngữ Chương Này</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">IoC Container</span>
+                        <span class="term-description">Linh Khí Tụ - Trung tâm quản lý tất cả Bean, tạo và kết nối các
+                            dependency</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Bean</span>
+                        <span class="term-description">Linh Đan - Đối tượng được Container quản lý</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">@Component</span>
+                        <span class="term-description">Phù Chú Linh Khí - Đánh dấu class là Bean</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">@Service</span>
+                        <span class="term-description">Phù Chú Dịch Vụ - Dành cho business logic</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">@Repository</span>
+                        <span class="term-description">Phù Chú Kho Tàng - Dành cho data access</span>
+                    </li>
+                </ul>
+
+                <div class="interview-questions">
+                    <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn</h4>
+                    <ol class="question-list">
+                        <li>IoC là gì? Giải thích bằng ví dụ thực tế.</li>
+                        <li>Sự khác biệt giữa IoC và Dependency Injection là gì?</li>
+                        <li>Các loại stereotype annotation trong Spring và công dụng của chúng?</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🔮 Tiếp Theo</h3>
+                <p class="cliffhanger-text">
+                    Container biết cách quản lý Bean, nhưng làm sao để inject dependency vào đúng nơi cần? <span
+                        class="emphasis">Dependency Injection</span> sẽ tiết lộ bí mật!
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="chapter-02.html">Chapter 02: Linh Lực Quán Nhập →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="../index.html" class="chapter-nav-link prev">
+                    <span class="label">← Trang chủ</span>
+                    <span class="title">Mục lục</span>
+                </a>
+                <a href="chapter-02.html" class="chapter-nav-link next">
+                    <span class="label">Chapter tiếp →</span>
+                    <span class="title">Linh Lực Quán Nhập</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 17: Thần Chú Truy Vấn - Học cách viết SQL Mapping cơ bản với @Select, @Insert, @Update, @Delete">
+    <title>Chapter 17: Thần Chú Truy Vấn | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 4: Kho Tàng Bí Mật</span>
+                <h1 class="chapter-title">Chapter 17: Thần Chú Truy Vấn</h1>
+                <div class="chapter-meta">
+                    <span>📖 SQL Mapping Basics</span>
+                    <span>⏱️ 28 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Khai Mở Kho Tàng (SELECT) <span class="section-duration">(5
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn đứng trước cửa kho bạc lấp lánh. Trên tay anh là tấm bản đồ `DiscipleMapper` mới
+                            tinh.
+                            Sư Tỷ Linh đứng bên cạnh, mỉm cười khích lệ.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Nào sư đệ, hãy thử đọc câu thần chú đầu tiên để lấy danh sách đệ tử ra xem nào.
+                            Hãy dùng ấn quyết <span class="emphasis">@Select</span>.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Vâng ạ.
+                            `@Select("SELECT id, name, age, level FROM disciples")`
+                            `List<Disciple> findAll();`
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Vừa dứt lời, từ trong hang động, một luồng ánh sáng bay ra, hóa thành một danh sách các đệ
+                            tử xếp hàng ngay ngắn trước mặt Lâm Tuấn.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Tuyệt quá! Không cần `ResultSet.next()`, không cần `getInt`, `getString`. MyBatis tự động
+                            điền (map) dữ liệu vào class `Disciple` sao?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Đúng vậy. Nhưng nhớ kỹ quy tắc: <span class="emphasis">Tên cột trong bảng phải trùng với tên
+                                thuộc tính trong class</span>.
+                            Cột `name` sẽ vào thuộc tính `name`.
+                            Nếu tên lệch nhau (ví dụ bảng là `full_name` mà class là `name`), ngươi phải dùng `AS` trong
+                            SQL: `SELECT full_name AS name ...`.
+                            Hoặc phải dùng cấu hình nâng cao `mapUnderscoreToCamelCase` (sẽ học sau).
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: Cất Giữ Báu Vật (INSERT) <span class="section-duration">(8
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Bây giờ, hãy thử đưa một đệ tử mới vào kho. Dùng ấn quyết <span
+                                class="emphasis">@Insert</span>.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            `@Insert("INSERT INTO disciples(name, age, level) VALUES(#{name}, #{age}, #{level})")`
+                            `int insert(Disciple disciple);`
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử dùng dấu thăng `#{...}` để lấy giá trị từ object `disciple` truyền vào.
+                            Hàm trả về `int` là số dòng bị ảnh hưởng, đúng không ạ?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Chính xác. Nhưng có một vấn đề: ID của đệ tử là tự tăng (Auto Increment). Khi insert xong,
+                            làm sao ngươi biết ID mới sinh ra là bao nhiêu để gán ngược lại vào object `disciple`?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Ái chà, cái này JDBC phải dùng `getGeneratedKeys` rất rắc rối.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Với MyBatis, chỉ cần thêm phù chú phụ trợ <span class="emphasis">@Options</span>.
+                            `@Options(useGeneratedKeys = true, keyProperty = "id")`
+                            Sau khi câu lệnh chạy xong, MyBatis sẽ tự lấy ID mới và điền vào thuộc tính `id` của object
+                            `disciple` cho ngươi.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: Tu Sửa và Hủy Diệt (UPDATE & DELETE) <span
+                            class="section-duration">(7 phút)</span></h2>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử đã hiểu quy luật. Vậy chắc chắn sẽ có <span class="emphasis">@Update</span> và <span
+                                class="emphasis">@Delete</span>.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            `@Update("UPDATE disciples SET level = #{level} WHERE id = #{id}")`
+                            `void updateLevel(Long id, String level);`
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Và:
+                            `@Delete("DELETE FROM disciples WHERE id = #{id}")`
+                            `void deleteById(Long id);`
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Ngươi học rất nhanh. Nhưng hãy cẩn thận với tham số.
+                            Nếu hàm chỉ có 1 tham số (ví dụ Object hoặc Long), ngươi có thể dùng thẳng tên thuộc tính
+                            (`#{name}`) hoặc `#{id}`.
+                            Nhưng nếu hàm có nhiều tham số rời rạc (ví dụ `updateLevel(Long id, String level)`), ngươi
+                            phải đặt tên cho chúng bằng <span class="emphasis">@Param</span>.
+                            `void updateLevel(@Param("id") Long id, @Param("level") String level);`
+                            Nếu không MyBatis sẽ không biết cái nào là `#{id}`, cái nào là `#{level}`.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đa tạ Sư Tỷ chỉ điểm! Chỗ này rất dễ nhầm lẫn.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: Tổng Kết <span class="section-duration">(6 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn sung sướng múa may tấm bản đồ. Giờ đây anh có thể thao túng dữ liệu trong kho một
+                            cách dễ dàng.
+                            Thêm, Sửa, Xóa, Lấy - Tứ đại chiêu thức cơ bản đã nằm trong lòng bàn tay.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-data">
+                        <span class="voice-label">Sư Tỷ Linh</span>
+                        <p class="dialogue-content">
+                            Đừng vội mừng. Những món đồ ngươi vừa lấy (Disciple) đều là những món đồ đơn giản, một bảng
+                            (Table) ánh xạ ra một class (POJO).
+                            Nhưng trong kho tàng này còn có những báu vật phức tạp hơn nhiều. Ví dụ: Một Đệ Tử có thể sở
+                            hữu nhiều Pháp Bảo (List<Artifact>). Một Pháp Bảo lại thuộc về một Đệ Tử.
+                                Đó là quan hệ 1-N, N-1. Làm sao để lấy tất cả chúng ra chỉ bằng một câu thần chú?
+                                Ngày mai, ta sẽ dạy ngươi tuyệt kỹ <span class="emphasis">ResultMap</span>.
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Thuật Ngữ Chương Này</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">@Select, @Insert, @Update, @Delete</span>
+                        <span class="term-description">Bộ tứ Annotation cơ bản của MyBatis để định nghĩa SQL.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">@Options(useGeneratedKeys=true)</span>
+                        <span class="term-description">Cấu hình giúp lấy lại ID tự tăng sau khi Insert.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">@Param</span>
+                        <span class="term-description">Annotation đặt tên cho tham số khi method có nhiều tham
+                            số.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">#{param}</span>
+                        <span class="term-description">Parameter Placeholder. MyBatis sẽ thay thế bằng dấu ? (Prepared
+                            Statement) để chống SQL Injection.</span>
+                    </li>
+                </ul>
+
+                <div class="interview-questions">
+                    <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn</h4>
+                    <ol class="question-list">
+                        <li>Tại sao nên dùng `#{}` thay vì `${}` trong MyBatis? (Security & Performance).</li>
+                        <li>Làm sao lấy được ID vừa insert trong MyBatis? (useGeneratedKeys).</li>
+                        <li>Khi nào bắt buộc phải dùng @Param? (Khi method có >1 tham số và muốn dùng tên cụ thể trong
+                            SQL).</li>
+                        <li>MyBatis có hỗ trợ Transaction không? (Có, nó tích hợp tốt với @Transactional của Spring).
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🔮 Tiếp Theo</h3>
+                <p class="cliffhanger-text">
+                    Dữ liệu không bao giờ đứng một mình. Chúng liên kết với nhau chằng chịt như mạng nhện. Lâm Tuấn đối
+                    mặt với thử thách ánh xạ những mối quan hệ phức tạp đó vào Java Object.
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="chapter-18.html">Chapter 18: Bản Đồ Chi Tiết - Result Map & Association →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="chapter-16.html" class="chapter-nav-link prev">
+                    <span class="label">← Chapter trước</span>
+                    <span class="title">Bản Đồ Kho Tàng</span>
+                </a>
+                <a href="chapter-18.html" class="chapter-nav-link next">
+                    <span class="label">Chapter tiếp theo →</span>
+                    <span class="title">Bản Đồ Chi Tiết</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>

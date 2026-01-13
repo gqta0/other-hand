@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 27: Vũ Điệu Thời Gian - Tìm hiểu 5 loại Advice trong AOP: @Before, @After, @AfterReturning, @AfterThrowing, @Around">
+    <title>Chapter 27: Vũ Điệu Thời Gian | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 6: Khía Cạnh Huyền Bí</span>
+                <h1 class="chapter-title">Chapter 27: Vũ Điệu Thời Gian</h1>
+                <div class="chapter-meta">
+                    <span>📖 Advice Types</span>
+                    <span>⏱️ 28 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Những Cú Chạm Nhẹ (@Before & @After) <span
+                            class="section-duration">(5 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Trưởng Lão AOP đưa Lâm Tuấn vào một căn phòng đầy đồng hồ.
+                            Ông chỉ tay vào một thanh kiếm đang lơ lửng (tượng trưng cho hàm `Service`).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            Muốn can thiệp vào thanh kiếm này, ta có 5 thời điểm.
+                            Đầu tiên là <span class="emphasis">@Before</span> (Phù Chú Tiền Trận).
+                            Nó sẽ kích hoạt ngay trước khi hàm chạy.
+                            Ngươi dùng nó để kiểm tra quyền hạn (Security Check) hoặc Log tham số đầu vào.
+                            Nếu @Before ném Exception, hàm chính sẽ KHÔNG được chạy.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            Tiếp theo là <span class="emphasis">@After</span> (Phù Chú Hậu Trận).
+                            Nó chạy sau khi hàm kết thúc, bất kể thành công hay thất bại (như khối `finally`).
+                            Dùng để dọn dẹp tài nguyên (Close File, Release Memory).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Nhưng thưa Trưởng Lão, nếu đệ tử chỉ muốn ghi Log khi "Thành công" thôi thì sao?
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: Phân Nhánh Kết Quả (@Returning & @Throwing) <span
+                            class="section-duration">(8 phút)</span></h2>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            Lúc đó, ngươi hãy dùng <span class="emphasis">@AfterReturning</span>.
+                            Nó chỉ chạy khi hàm trả về kết quả êm đẹp. Ngươi thậm chí có thể "nhìn trộm" kết quả trả về
+                            bằng thuộc tính `returning = "result"`.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Nhìn trộm? Vậy đệ tử có thể sửa nó không?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            Ngươi chỉ xem được thôi, KHÔNG sửa được giá trị trả về ở đây.
+                            Còn nếu hàm bị lỗi, ta dùng <span class="emphasis">@AfterThrowing</span>.
+                            Dùng để gửi email cảnh báo cho Admin khi hệ thống sập. Thuộc tính `throwing = "ex"` giúp
+                            ngươi bắt được con Exception đó.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: Quyền Năng Tối Thượng (@Around) <span class="section-duration">(10
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Thưa Trưởng Lão, vậy có cách nào bao trọn gói cả trước lẫn sau, và CÓ THỂ sửa đổi kết quả
+                            không?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            (Mỉm cười bí hiểm) Có. Đó là chiêu thức mạnh nhất: <span class="emphasis">@Around</span>
+                            (Phù Chú Bao Vây).
+                            Khi dùng chiêu này, ngươi nắm quyền sinh sát trong tay.
+                            Hàm của ngươi sẽ nhận vào một đối tượng `ProceedingJoinPoint`.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            Logic sẽ như sau:
+                            1. Làm việc A (Trước).
+                            2. Gọi `joinPoint.proceed()` để cho hàm thật chạy.
+                            3. Nhận kết quả trả về. (Tại đây ngươi có thể tráo đổi nó thành cái khác!).
+                            4. Làm việc B (Sau).
+                            Thậm chí, ngươi có thể KHÔNG gọi `proceed()`, tức là chặn đứng hàm thật, trả về kết quả giả.
+                            Đây gọi là Mocking hoặc Caching.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Thật đáng sợ! Nếu dùng sai, đệ tử có thể làm hỏng toàn bộ logic của chương trình.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            Chính xác. "Quyền lực càng lớn, trách nhiệm càng cao".
+                            Chỉ dùng @Around khi thực sự cần thiết (ví dụ: Đo thời gian thực thi, Caching Transaction).
+                            Còn Log đơn giản thì cứ dùng @Before/@After cho lành.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: Tổng Kết <span class="section-duration">(5 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn khắc 5 ấn quyết vào tâm trí.
+                            @Before, @After, @AfterReturning, @AfterThrowing, và @Around.
+                            Với bộ công cụ này, anh có thể thiên biến vạn hóa, chèn logic vào bất cứ đâu mà không làm
+                            bẩn code chính.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-aop">
+                        <span class="voice-label">Trưởng Lão AOP</span>
+                        <p class="dialogue-content">
+                            Ngươi đã biết "Làm gì" và "Khi nào".
+                            Nhưng quan trọng nhất là "Ở đâu".
+                            Làm sao để ra lệnh cho Advice chỉ áp dụng vào hàm `save()` của `UserRepository` mà không áp
+                            dụng vào hàm `login()`?
+                            Ngày mai, ta sẽ dạy ngươi viết Thần Chú Định Vị - <span class="emphasis">Pointcut
+                                Expression</span>.
+
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Thuật Ngữ Chương Này</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">Advice</span>
+                        <span class="term-description">Hành động cụ thể của Aspect. Có 5 loại dựa trên thời điểm kích
+                            hoạt.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">@Around</span>
+                        <span class="term-description">Advice mạnh nhất, bao quanh method execution. Phải gọi proceed()
+                            để chạy method gốc.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">ProceedingJoinPoint</span>
+                        <span class="term-description">Tham số đặc biệt chỉ có trong @Around, dùng để kích hoạt method
+                            gốc.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">@AfterReturning</span>
+                        <span class="term-description">Advice chạy sau khi method return thành công. Có thể đọc được
+                            return value.</span>
+                    </li>
+                </ul>
+
+                <div class="interview-questions">
+                    <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn</h4>
+                    <ol class="question-list">
+                        <li>Sự khác biệt giữa @After và @AfterReturning? (@After chạy nnhư finally block,
+                            @AfterReturning chỉ chạy khi không có exception).</li>
+                        <li>Tại sao phải dùng ProceedingJoinPoint trong @Around? (Để control việc thực thi method gốc.
+                            Nếu không gọi proceed, method gốc sẽ bị skip).</li>
+                        <li>@Around có thể thay đổi giá trị trả về của method không? (Có, bằng cách return một object
+                            khác sau khi proceed).</li>
+                        <li>Thứ tự chạy của các Advice trên cùng 1 method? (Around Start -> Before -> Method -> Around
+                            End -> After -> AfterReturning/Throwing).</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🔮 Tiếp Theo</h3>
+                <p class="cliffhanger-text">
+                    Chỉ sai một ký tự trong câu thần chú Pointcut, toàn bộ hệ thống sẽ bị tê liệt vì Aspect áp dụng lung
+                    tung (ví dụ áp dụng Log cho cả hàm toString thì log tràn ổ cứng). Lâm Tuấn phải học cách định vị
+                    chính xác mục tiêu.
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="chapter-28.html">Chapter 28: Điểm Huyệt Pháp - Pointcut Basic →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="chapter-26.html" class="chapter-nav-link prev">
+                    <span class="label">← Chapter trước</span>
+                    <span class="title">Khía Cạnh Huyền Bí</span>
+                </a>
+                <a href="chapter-28.html" class="chapter-nav-link next">
+                    <span class="label">Chapter tiếp theo →</span>
+                    <span class="title">Điểm Huyệt Pháp</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>

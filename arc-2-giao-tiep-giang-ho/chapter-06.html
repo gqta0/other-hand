@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 6: DispatcherServlet - Truyền Tống Linh Đồng và bí mật của Spring MVC request lifecycle">
+    <title>Chapter 06: Truyền Tống Linh Đồng | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 2: Giao Tiếp Giang Hồ</span>
+                <h1 class="chapter-title">Chapter 06: Truyền Tống Linh Đồng</h1>
+                <div class="chapter-meta">
+                    <span>📖 DispatcherServlet</span>
+                    <span>⏱️ 22 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Cổng Thành Phồn Hoa <span class="section-duration">(4 phút)</span>
+                    </h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Rời khỏi đỉnh Xuân Sơn yên bình, Lâm Tuấn đi xuống chân núi. Trước mắt anh là một tòa thành
+                            huy hoàng tráng lệ, nơi hàng ngàn dòng người (Requests) đang tấp nập ra vào. Đó chính là
+                            Cổng Giao Tiếp (Web Layer) của Spring Tông.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Tại đây, anh gặp một vị trưởng lão uy nghiêm, tay cầm lệnh bài, đứng ngay giữa đại lộ chính.
+                            Mọi người muốn vào thành đều phải trình diện trước ông ta.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Hãy chào Hộ Pháp MVC! Ông ấy chính là <span class="emphasis">DispatcherServlet</span>, hay
+                            còn gọi là Truyền Tống Linh Đồng.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Sư Phụ, tại sao chỉ có một người đứng đó? Nếu có hàng triệu người cùng vào thì ông ấy có xử
+                            lý kịp không?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-mvc">
+                        <span class="voice-label">Hộ Pháp MVC</span>
+                        <p class="dialogue-content">
+                            Ha ha! Ta không xử lý từng người. Ta chỉ "điều phối". Ta là <span class="emphasis">Front
+                                Controller</span>. Mọi yêu cầu HTTP (GET, POST...) đều phải qua tay ta. Ta là điểm tập
+                            trung duy nhất để kiểm soát an ninh, log và định tuyến. Nếu mỗi Controller tự mở cổng riêng,
+                            tòa thành này sẽ loạn!
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: Lục Bộ Quy Trình (Request Lifecycle) <span
+                            class="section-duration">(8 phút)</span></h2>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Hãy quan sát quy trình xử lý một yêu cầu. Đây là bí mật cốt lõi của Spring MVC.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-mvc">
+                        <span class="voice-label">Hộ Pháp MVC</span>
+                        <p class="dialogue-content">
+                            Bước 1: Khi có Request đến (ví dụ: `GET /disciples`), ta chặn nó lại.
+                            Bước 2: Ta quay sang hỏi <span class="emphasis">HandlerMapping</span> (Bản Đồ Chỉ Đường).
+                            "Này, cái đường dẫn `/disciples` này thuộc về Controller nào?".
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-mvc">
+                        <span class="voice-label">Hộ Pháp MVC</span>
+                        <p class="dialogue-content">
+                            Bước 3: HandlerMapping trả lời: "Nó thuộc về `DiscipleController`, phương thức `getAll()`".
+                            Nhưng ta không gọi trực tiếp. Ta cần một người phiên dịch, gọi là <span
+                                class="emphasis">HandlerAdapter</span>.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Tại sao phải cần Adapter cầu kỳ vậy ạ?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-mvc">
+                        <span class="voice-label">Hộ Pháp MVC</span>
+                        <p class="dialogue-content">
+                            Bởi vì Controller có thể được viết bằng nhiều cách khác nhau! Có cái dùng annotation
+                            `@RequestMapping`, có cái implement interface `Controller` cổ điển. HandlerAdapter giúp ta
+                            gọi được tất cả bọn họ một cách thống nhất.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-mvc">
+                        <span class="voice-label">Hộ Pháp MVC</span>
+                        <p class="dialogue-content">
+                            Bước 4: Adapter gọi phương thức thực sự trong Controller. Controller xử lý logic (gọi
+                            Service, Repository...) rồi trả về kết quả. Kết quả này được gói trong một mô hình gọi là
+                            <span class="emphasis">ModelAndView</span> (Dữ liệu + Tên View).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-mvc">
+                        <span class="voice-label">Hộ Pháp MVC</span>
+                        <p class="dialogue-content">
+                            Bước 5: Ta cầm cái tên View đó (ví dụ: "disciple-list") đi tìm <span
+                                class="emphasis">ViewResolver</span>. Ông này sẽ lục trong kho để tìm file template thực
+                            sự (ví dụ: `disciple-list.html`).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-mvc">
+                        <span class="voice-label">Hộ Pháp MVC</span>
+                        <p class="dialogue-content">
+                            Bước 6: View render thành HTML và ta gửi trả lại (Response) cho người dùng.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: REST API và Kẻ Phá Vỡ Quy Tắc <span class="section-duration">(6
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Quy trình này thật chặt chẽ! Nhưng Hộ Pháp ơi, nếu con dùng @RestController thì sao? Con
+                            nghe nói nó không trả về View?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-mvc">
+                        <span class="voice-label">Hộ Pháp MVC</span>
+                        <p class="dialogue-content">
+                            A ha! Ngươi rất tinh ý. Với @RestController, quy trình sẽ tắt ở Bước 5 và 6.
+                            Thay vì tìm ViewResolver, Adapter sẽ dùng một bảo vật gọi là <span
+                                class="emphasis">HttpMessageConverter</span>.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-mvc">
+                        <span class="voice-label">Hộ Pháp MVC</span>
+                        <p class="dialogue-content">
+                            Nó sẽ biến thẳng đối tượng Java (ví dụ: `List<Disciple>`) thành chuỗi JSON (hoặc XML) và ghi
+                                trực tiếp vào body của Response. Nhanh, gọn, lẹ! Đây là cách các ứng dụng hiện đại giao
+                                tiếp.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Thật vi diệu! Vậy là ta có hai con đường: Một là MVC cổ điển (trả về HTML), hai là REST API
+                            (trả về JSON).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Chính xác. Và DispatcherServlet xử lý cả hai con đường đó một cách mượt mà. Nó chính là trái
+                            tim của Spring Web.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: Tổng Kết <span class="section-duration">(4 phút)</span></h2>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Hôm nay ngươi đã thấy bộ máy khổng lồ đứng sau một request đơn giản.
+                            Hãy ghi nhớ: DispatcherServlet -> HandlerMapping -> HandlerAdapter -> Controller ->
+                            ViewResolver (hoặc Converter).
+                            Đó là con đường độc đạo mà mọi request đều phải đi qua.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Nhưng Sư Phụ, làm sao HandlerMapping biết đường dẫn nào (`/abc`) đi vào Controller nào? Làm
+                            sao ta dán nhãn cho các con đường đó?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-mvc">
+                        <span class="voice-label">Hộ Pháp MVC</span>
+                        <p class="dialogue-content">
+                            Đó là nhiệm vụ của <span class="emphasis">@RequestMapping</span> - Phù Chú Lộ Trình.
+                            Ngày mai ta sẽ dạy ngươi cách vẽ bản đồ chi tiết cho môn phái!
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Thuật Ngữ Chương Này</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">DispatcherServlet</span>
+                        <span class="term-description">Front Controller Pattern - Điểm tiếp nhận duy nhất cho mọi
+                            request.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">HandlerMapping</span>
+                        <span class="term-description">Ánh xạ Request URL -> Controller Handler.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">HandlerAdapter</span>
+                        <span class="term-description">Giúp DispatcherServlet gọi được nhiều loại Controller khác
+                            nhau.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">ViewResolver</span>
+                        <span class="term-description">Phân giải tên View (String) thành View Object (JSP/Thymeleaf) để
+                            render.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">HttpMessageConverter</span>
+                        <span class="term-description">Chuyển đổi Object <-> JSON/XML trong REST API (dùng Jackson mặc
+                                định).</span>
+                    </li>
+                </ul>
+
+                <div class="interview-questions">
+                    <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn</h4>
+                    <ol class="question-list">
+                        <li>Vẽ và giải thích quy trình xử lý Request (Request Lifecycle) trong Spring MVC?</li>
+                        <li>Design Pattern nào được sử dụng trong DispatcherServlet? (Front Controller)</li>
+                        <li>HandlerAdapter dùng để làm gì? Tại sao không gọi trực tiếp Controller?</li>
+                        <li>Sự khác biệt trong quy trình xử lý giữa @Controller và @RestController?</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🔮 Tiếp Theo</h3>
+                <p class="cliffhanger-text">
+                    Chúng ta đã có người dẫn đường, nhưng bản đồ chưa được vẽ. Làm sao để định nghĩa các con đường (URL)
+                    chi tiết?
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="chapter-07.html">Chapter 07: Phù Chú Lộ Trình - Request Mapping →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="../arc-1-nhap-mon/chapter-05.html" class="chapter-nav-link prev">
+                    <span class="label">← Chapter trước</span>
+                    <span class="title">Đại Quan Nhập Môn</span>
+                </a>
+                <a href="chapter-07.html" class="chapter-nav-link next">
+                    <span class="label">Chapter tiếp theo →</span>
+                    <span class="title">Phù Chú Lộ Trình</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>

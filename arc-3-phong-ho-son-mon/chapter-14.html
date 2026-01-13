@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 14: Phòng Hộ Pháp Trận - Khám phá Security Filter Chain và cách hoạt động của các bộ lọc bảo mật">
+    <title>Chapter 14: Phòng Hộ Pháp Trận | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 3: Phòng Hộ Sơn Môn</span>
+                <h1 class="chapter-title">Chapter 14: Phòng Hộ Pháp Trận</h1>
+                <div class="chapter-meta">
+                    <span>📖 Security Filter Chain</span>
+                    <span>⏱️ 28 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Chuỗi Xích Phòng Thủ <span class="section-duration">(5
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Hôm nay, Lâm Tuấn háo hức mang "chiếc phễu JWT" (JwtAuthenticationFilter) mà mình vừa chế
+                            tạo đến nhờ Sư Huynh Đại lắp đặt vào hệ thống phòng thủ.
+                            Anh định đặt nó ngay ngoài cùng, trước cả cổng chính.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-security">
+                        <span class="voice-label">Sư Huynh Đại</span>
+                        <p class="dialogue-content">
+                            <span class="warning-tone">Dừng tay!</span> Đệ định phá hủy cả hệ thống sao?
+                            Hệ thống phòng thủ của chúng ta không phải là một bức tường đơn lẻ. Nó là một <span
+                                class="emphasis">Security Filter Chain</span> - một chuỗi xích bao gồm hàng chục lớp bảo
+                            vệ liên kết chặt chẽ với nhau.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Nhiều lớp vậy sao? Đệ tử cứ tưởng chỉ có mỗi việc kiểm tra đăng nhập.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-security">
+                        <span class="voice-label">Sư Huynh Đại</span>
+                        <p class="dialogue-content">
+                            Ngây thơ! Để ta chỉ cho ngươi xem kiến trúc thực sự.
+                            Khi một kẻ lạ mặt (Request) đến, hắn phải đi qua một cái cổng trung gian gọi là <span
+                                class="emphasis">DelegatingFilterProxy</span>. Cổng này sẽ chuyển hắn vào thế giới của
+                            Spring Security, nơi <span class="emphasis">FilterChainProxy</span> đang cai quản.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-security">
+                        <span class="voice-label">Sư Huynh Đại</span>
+                        <p class="dialogue-content">
+                            Bên trong, có khoảng 15-20 bộ lọc (Standard Filters) đang xếp hàng chờ sẵn.
+                            Người đầu tiên: <span class="emphasis">SecurityContextPersistenceFilter</span> (người khôi
+                            phục trí nhớ).
+                            Người ở giữa: <span class="emphasis">UsernamePasswordAuthenticationFilter</span> (người kiểm
+                            tra Form Login).
+                            Người cuối cùng: <span class="emphasis">FilterSecurityInterceptor</span> (người quyết định
+                            có cho vào hay không - Authorization).
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: Vị Trí Của JWT Filter <span class="section-duration">(8
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Vậy cái phễu JWT của đệ tử phải đứng ở đâu trong hàng ngũ đó?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-security">
+                        <span class="voice-label">Sư Huynh Đại</span>
+                        <p class="dialogue-content">
+                            Nó phải đứng <span class="emphasis">TRƯỚC</span> bộ lọc
+                            UsernamePasswordAuthenticationFilter.
+                            Tại sao? Vì nếu người dùng mang theo Token, ta muốn xác thực họ ngay lập tức bằng Token đó,
+                            trước khi hệ thống bắt họ phải nhập Username/Password.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-security">
+                        <span class="voice-label">Sư Huynh Đại</span>
+                        <p class="dialogue-content">
+                            Trong cấu hình (SecurityConfig), ngươi phải dùng lệnh:
+                            `.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)`
+                            Nếu ngươi đặt sai chỗ, ví dụ đặt sau cùng, thì người dùng đã bị chặn lại bởi Authorization
+                            (FilterSecurityInterceptor) trước khi kịp trình Token ra.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Ra là vậy! Thứ tự là sống còn.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: OncePerRequestFilter & CORS <span class="section-duration">(8
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Còn một điều nữa. Bộ lọc của ngươi kế thừa class nào?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử định `implements Filter` của javax.servlet.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Không nên. Trong một Request phức tạp (như forward/include), Filter thường có thể bị kích
+                            hoạt nhiều lần. Việc giải mã JWT nhiều lần là lãng phí.
+                            Hãy kế thừa <span class="emphasis">OncePerRequestFilter</span> của Spring. Nó đảm bảo bộ lọc
+                            của ngươi chỉ chạy đúng một lần duy nhất cho mỗi Request.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử nhớ rồi. À, còn một chướng ngại vật nữa... Trình duyệt (Browser) hay càu nhàu về cái
+                            gọi là CORS khi đệ tử gọi API từ tên miền khác (domain).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-security">
+                        <span class="voice-label">Sư Huynh Đại</span>
+                        <p class="dialogue-content">
+                            Đó là <span class="emphasis">CorsFilter</span> - Bộ lọc kiểm soát nguồn gốc (Cross-Origin
+                            Resource Sharing). Nó đứng đầu tiên trong chuỗi xích.
+                            Nếu ngươi không cấu hình `.cors()`, trình duyệt sẽ chặn đứng Request javascript (như
+                            Axios/Fetch) vì lý do an ninh.
+                            Hãy nhớ mở cổng CORS cho các domain tin cậy (như localhost:3000 của Frontend).
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: Tổng Kết <span class="section-duration">(7 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn nhìn sơ đồ Security Filter Chain như nhìn một thế trận bát quái đồ.
+                            Mọi thứ đều có vị trí của nó.
+                            1. CORS (Mở cửa cho người quen).
+                            2. CSRF (Chống giả mạo - thường tắt khi dùng JWT).
+                            3. JWT Filter (Xác thực Token).
+                            4. UsernamePassword Filter (Xác thực Form).
+                            5. Authorization Filter (Kiểm tra quyền).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Lý thuyết đã xong. Arc 3 này vô cùng quan trọng vì 90% các lỗi bảo mật là do cấu hình sai
+                            các Filter này.
+                            Ngày mai, chúng ta sẽ bước vào trận chiến thực sự: Code một ứng dụng hoàn chỉnh có Login,
+                            JWT, Phân quyền Admin/User.
+                            Đó là bài thi cuối cùng của Arc 3.
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Thuật Ngữ Chương Này</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">Security Filter Chain</span>
+                        <span class="term-description">Chuỗi các bộ lọc bảo mật xử lý Request theo thứ tự.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">OncePerRequestFilter</span>
+                        <span class="term-description">Class cơ sở đảm bảo Filter chỉ chạy 1 lần/request.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">UsernamePasswordAuthenticationFilter</span>
+                        <span class="term-description">Filter mặc định xử lý Form Login (/login).</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">FilterSecurityInterceptor (AuthorizationFilter)</span>
+                        <span class="term-description">Filter cuối cùng, kiểm tra quyền hạn truy cập
+                            (Authorization).</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">CORS (Cross-Origin Resource Sharing)</span>
+                        <span class="term-description">Cơ chế cho phép Browser gọi API từ domain khác.</span>
+                    </li>
+                </ul>
+
+                <div class="interview-questions">
+                    <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn</h4>
+                    <ol class="question-list">
+                        <li>Tại sao phải dùng OncePerRequestFilter thay vì Filter thường?</li>
+                        <li>Làm thế nào để thêm một Filter tùy chỉnh vào chuỗi bảo mật của Spring?
+                            (addFilterBefore/After).</li>
+                        <li>CORS là gì và tại sao chúng ta thường gặp lỗi CORS khi phát triển Frontend/Backend tách
+                            biệt?</li>
+                        <li>CSRF là gì? Tại sao khi dùng JWT ta thường disable CSRF? (Vì JWT lưu ở client, không dùng
+                            Session cookie tự động gửi).</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🔮 Tiếp Theo</h3>
+                <p class="cliffhanger-text">
+                    Tất cả binh pháp đã nằm trong đầu. Giờ là lúc thực chiến. Lâm Tuấn sẽ phải tự tay xây dựng "Phòng Hộ
+                    Sơn Môn" từ con số không, đối mặt với thử thách thực tế.
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="chapter-15.html">Chapter 15: Thử Thách - Bảo Vệ Môn Phái →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="chapter-13.html" class="chapter-nav-link prev">
+                    <span class="label">← Chapter trước</span>
+                    <span class="title">Linh Bài Thông Hành</span>
+                </a>
+                <a href="chapter-15.html" class="chapter-nav-link next">
+                    <span class="label">Chapter tiếp theo →</span>
+                    <span class="title">Thử Thách Security</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>

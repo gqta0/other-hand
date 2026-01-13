@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Chapter 2: Lâm Tuấn học về Dependency Injection - Linh Lực Quán Nhập">
+    <title>Chapter 02: Linh Lực Quán Nhập | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 1: Nhập Môn</span>
+                <h1 class="chapter-title">Chapter 02: Linh Lực Quán Nhập</h1>
+                <div class="chapter-meta">
+                    <span>📖 Dependency Injection</span>
+                    <span>⏱️ 22 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Khí Tụ Đan Điền <span class="section-duration">(4 phút)</span>
+                    </h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Sáng sớm hôm sau, sương mù vẫn còn bao phủ đỉnh Xuân Sơn. Lâm Tuấn đã có mặt tại hồ Linh Khí
+                            Tụ, nơi Sư Phụ Cao Nhân đang đứng chờ. Hôm qua, anh đã hiểu rằng IoC Container là hồ chứa
+                            năng lượng khổng lồ. Hôm nay, anh sẽ học cách đưa năng lượng đó vào cơ thể.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Tuấn nhi, ngươi thấy những viên Linh Đan (Bean) đang trôi nổi kia chứ? Chúng không thể tồn
+                            tại độc lập. Một viên đan "Chiến Binh" cần có vũ khí. Một viên đan "Dịch Vụ" cần có kho tàng
+                            dữ liệu. Sự phụ thuộc lẫn nhau này là quy luật của trời đất.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Thưa Sư Phụ, vậy làm sao để kết nối chúng? Chẳng lẽ viên đan Chiến Binh phải tự đi tìm vũ
+                            khí cho mình?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Không! Đó là cách làm của kẻ phàm phu (Java thuần). Ở Spring Tông, chúng ta dùng <span
+                                class="emphasis">Linh Lực Quán Nhập</span> - hay còn gọi là <span
+                                class="emphasis technical-term" data-term="dependency-injection">Dependency
+                                Injection</span> (DI). Ta sẽ tiêm (inject) những thứ nó cần vào ngay bên trong nó.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Hãy tưởng tượng: Ngươi không cần đi rèn kiếm. Ngươi chỉ cần mở tay ra, và thanh kiếm sẽ tự
+                            động xuất hiện trong tay người ngay khi ngươi được sinh ra. Đó là sức mạnh của DI.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn rùng mình. Nếu đúng như vậy, việc tu luyện sẽ trở nên đơn giản hơn biết bao nhiêu.
+                            Anh không cần lo lắng về việc khởi tạo hay tìm kiếm các thành phần phụ thuộc nữa.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: Ba Pháp Môn Quán Nhập <span class="section-duration">(8
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Có ba con đường để thực hiện Linh Lực Quán Nhập. Ngươi phải lắng nghe cho kỹ, vì chọn sai
+                            đường có thể dẫn đến tẩu hỏa nhập ma.
+                            <br><br>
+                            Pháp môn thứ nhất: <span class="emphasis">Constructor Injection</span> - hay Cốt Tủy Quán
+                            Nhập.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Sư Phụ phất tay, một viên Linh Đan hình thành ngay trước mắt. Ngay trong quá trình hình
+                            thành, các luồng năng lượng phụ trợ đã hòa quyện vào cốt lõi của nó. Khi viên đan hoàn tất,
+                            nó đã đầy đủ sức mạnh.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Đây là pháp môn mạnh nhất và được khuyến khích nhất (Best Practice).
+                            Khi khai báo Class, ta yêu cầu các dependency ngay trong hàm khởi tạo (Constructor).
+                            Lợi ích là:
+                            Thứ nhất, đảm bảo tính toàn vẹn (Immutability) - ta có thể đánh dấu dependency là `final`.
+                            Thứ hai, không bao giờ có chuyện Bean được tạo ra mà thiếu linh kiện.
+                            Thứ ba, dễ dàng cho việc thử thách (Unit Test) sau này.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Vậy còn pháp môn thứ hai ạ?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Pháp môn thứ hai: <span class="emphasis">Setter Injection</span> - Kinh Mạch Quán Nhập.
+                            Ta tạo ra Bean trước, sau đó mới dùng các huyệt đạo (Hàm Setter) để truyền năng lượng vào.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Cách này linh hoạt, cho phép thay đổi dependency sau khi Bean đã sinh ra. Tuy nhiên, nó có
+                            rủi ro: Bean có thể tồn tại ở trạng thái chưa hoàn chỉnh nếu ta quên gọi hàm Setter. Chỉ nên
+                            dùng cho các dependency không bắt buộc (Optional).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Còn pháp môn thứ ba? Đệ tử nghe nói có cách dùng Phù Chú @Autowired trực tiếp?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Hừm! Đó là <span class="emphasis">Field Injection</span> - Hư Không Quán Nhập.
+                            Ngươi chỉ cần dán bùa @Autowired (Ô Tô Wai Rơ) lên thuộc tính của Class. Container sẽ dùng
+                            phép thuật (Reflection) để tự điền vào.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Nghe có vẻ tiện lợi nhất! Code ngắn gọn, không cần Constructor hay Setter dài dòng.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            <span class="warning-tone">Cấm kỵ!</span> Đừng để sự tiện lợi làm mờ mắt. Field Injection là
+                            con dao hai lưỡi.
+                            Nó giấu đi các dependency, khiến Class của ngươi trông có vẻ đơn giản nhưng thực chất lại
+                            phụ thuộc rất nhiều thứ (Violation of Single Responsibility Principle).
+                            Quan trọng hơn, người ngoài (như Unit Test) không thể truyền dependency vào được vì không có
+                            Constructor hay Setter.
+                            Hãy nhớ: <span class="emphasis">Luôn ưu tiên Constructor Injection!</span>
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: Tẩu Hỏa Nhập Ma - Circular Dependency <span
+                            class="section-duration">(6 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Đột nhiên, mặt nước hồ Linh Khí Tụ sủi bọt cuồn cuộn. Hai viên Linh Đan, một Đỏ một Xanh,
+                            đang xoay tròn quanh nhau với tốc độ chóng mặt, hút cạn linh khí xung quanh nhưng không thể
+                            định hình.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Chuyện gì xảy ra vậy Sư Phụ? Chúng sắp nổ tung rồi!
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Đó là <span class="emphasis">Circular Dependency</span> - Vòng Tròn Phụ Thuộc.
+                            Bean A cần Bean B trong Constructor. Nhưng Bean B lại cần Bean A trong Constructor.
+                            Container không biết tạo ai trước. A đợi B, B đợi A. Vĩnh viễn bế tắc!
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Nguy hiểm quá! Làm sao để hóa giải?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Cách tốt nhất là thiết kế lại (Refactor). Vòng tròn phụ thuộc thường là dấu hiệu của thiết
+                            kế tồi.
+                            Nhưng nếu tình thế bắt buộc, ta có thể dùng <span class="emphasis">@Lazy</span> - Phù Chú
+                            Trì Hoãn.
+                            Ta nói với Bean A: "Hãy nhận một bản sao ảo (Proxy) của B trước. Khi nào cần dùng thật sự
+                            mới gọi B."
+                            Hoặc chuyển sang dùng Setter Injection cho một trong hai Bean, để phá vỡ vòng tròn khởi tạo.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Sư Phụ búng tay, một luồng sáng vàng (@Lazy) bay vào viên đan Đỏ. Ngay lập tức, viên đan Đỏ
+                            chấp nhận bản sao ảo của Xanh và hình thành. Sau đó viên đan Xanh cũng hình thành theo. Hồ
+                            nước trở lại yên bình.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: Tổng Kết <span class="section-duration">(4 phút)</span></h2>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Hôm nay ngươi đã học được cốt lõi của Spring. Dependency Injection không chỉ là kỹ thuật, nó
+                            là triết lý thiết kế (Design Philosophy).
+                            Nó giúp code của ngươi lỏng lẻo (Loosely Coupled), dễ bảo trì, dễ kiểm thử.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử xin ghi nhớ ba điều cốt yếu:
+                            1. DI là tiêm phụ thuộc vào Bean.
+                            2. Constructor Injection là chính đạo.
+                            3. Cẩn thận với Circular Dependency.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn rời hồ Linh Khí Tụ với tâm trạng phấn chấn. Anh cảm thấy như mình vừa được trao một
+                            thanh bảo kiếm. Nhưng một Bean sau khi được tạo ra và tiêm dependency thì sẽ sống như thế
+                            nào? Nó sẽ tồn tại bao lâu?
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Thuật Ngữ Chapter Này</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">Dependency Injection (DI)</span>
+                        <span class="term-description">Linh Lực Quán Nhập - Kỹ thuật cung cấp đối tượng phụ thuộc từ bên
+                            ngoài.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Constructor Injection</span>
+                        <span class="term-description">Tiêm qua hàm khởi tạo. Bắt buộc, Immutable, Dễ test. (Khuyên
+                            dùng)</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Setter Injection</span>
+                        <span class="term-description">Tiêm qua hàm Setter. Tùy chọn, Mutable.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Field Injection</span>
+                        <span class="term-description">Tiêm trực tiếp vào biến. Tiện nhưng khó test, vi phạm
+                            Encapsulation. (Hạn chế)</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Circular Dependency</span>
+                        <span class="term-description">Vòng tròn phụ thuộc (A cần B, B cần A). Gây lỗi khởi tạo.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">@Autowired</span>
+                        <span class="term-pronunciation">Ô Tô Wai Rơ</span>
+                        <span class="term-description">Phù Chú tự động kết nối Bean.</span>
+                    </li>
+                </ul>
+
+                <div class="interview-questions">
+                    <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn</h4>
+                    <ol class="question-list">
+                        <li>Tại sao Constructor Injection lại tốt hơn Field Injection?</li>
+                        <li>Làm thế nào để xử lý Circular Dependency trong Spring?</li>
+                        <li>Có mấy loại Dependency Injection trong Spring? So sánh chúng.</li>
+                        <li>@Autowired hoạt động như thế nào?</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🔮 Tiếp Theo</h3>
+                <p class="cliffhanger-text">
+                    Một Bean được sinh ra (Instantiate), được nạp năng lượng (Populate Properties), rồi sau đó sẽ ra
+                    sao? Nó sống bao lâu và chết khi nào? <span class="emphasis">Bean Lifecycle</span> - Vòng Đời Linh
+                    Đan sẽ được hé lộ!
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="chapter-03.html">Chapter 03: Vòng Đời Linh Đan →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="chapter-01.html" class="chapter-nav-link prev">
+                    <span class="label">← Chapter trước</span>
+                    <span class="title">Linh Khí Tụ Huyền Bí</span>
+                </a>
+                <a href="chapter-03.html" class="chapter-nav-link next">
+                    <span class="label">Chapter tiếp theo →</span>
+                    <span class="title">Vòng Đời Linh Đan</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 9: Linh Khí Mô Hình - Học về Model, @ModelAttribute và Data Binding với Form">
+    <title>Chapter 09: Linh Khí Mô Hình | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 2: Giao Tiếp Giang Hồ</span>
+                <h1 class="chapter-title">Chapter 09: Linh Khí Mô Hình</h1>
+                <div class="chapter-meta">
+                    <span>📖 Model & Data Binding</span>
+                    <span>⏱️ 28 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Dòng Chảy Ngược Dòng <span class="section-duration">(5
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Hôm qua, Lâm Tuấn đã học cách biến linh khí (Data) thành ảo ảnh (View) để người thường nhìn
+                            thấy. Hôm nay, bài toán ngược lại xuất hiện: Làm sao để người thường gửi nguyện vọng của họ
+                            vào trong môn phái?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Sư Phụ, đệ tử đã tạo được cái Form đăng ký đẹp lung linh bằng HTML. Nhưng khi người dùng
+                            điền tên và bấm nút "Gửi", làm sao đệ tử hứng được dữ liệu đó trong Controller? Chẳng lẽ
+                            phải dùng `request.getParameter("name")` thủ công như thời Servlet cổ đại sao?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Tuyệt đối không! Đó là cách làm của thời kỳ Đồ Đá.
+                            Tại Spring Tông, chúng ta sử dụng pháp thuật <span class="emphasis">Data Binding</span> -
+                            hay Linh Khí Kết Ấn.
+                            Nó sẽ tự động hút dữ liệu từ Form HTML và đúc thành một Object Java hoàn chỉnh cho ngươi.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: Mối Lương Duyên (Binding) <span class="section-duration">(8
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-mvc">
+                        <span class="voice-label">Hộ Pháp MVC</span>
+                        <p class="dialogue-content">
+                            Để thực hiện kết ấn, ngươi cần chuẩn bị hai phía.
+                            Phía HTML (Thymeleaf), ngươi phải chỉ định Form này dành cho đối tượng nào bằng phù chú
+                            <span class="emphasis">th:object</span>.
+                            Ví dụ: `form th:object="${disciple}"`.
+                            Và mỗi ô input phải gắn với một thuộc tính bằng <span class="emphasis">th:field</span>.
+                            Ví dụ: `input th:field="*{name}"`.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Khoan đã Hộ Pháp! Tại sao dùng dấu sao `*{...}` mà không phải đô la `${...}`?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-mvc">
+                        <span class="voice-label">Hộ Pháp MVC</span>
+                        <p class="dialogue-content">
+                            Câu hỏi hay! Dấu sao `*{...}` gọi là <span class="emphasis">Selection Expression</span>. Nó
+                            có nghĩa là "thuộc tính của đối tượng cha được chọn ở trên" (chính là object trong
+                            th:object).
+                            Nó giúp người viết ngắn gọn hơn, không phải lặp lại `"${disciple.name}"`.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Còn ở phía Controller, ngươi dùng phù chú <span class="emphasis">@ModelAttribute</span> để
+                            hứng lấy nó.
+                            `public String submitForm(@ModelAttribute Disciple disciple)`
+                            Spring sẽ tự động tìm các trường trong Form có tên trùng với thuộc tính của class `Disciple`
+                            và gán giá trị vào.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn tưởng tượng: Người dùng ném những mảnh vụn (tên, tuổi) vào lò luyện. Data Binding
+                            như một lực hút nam châm, gom tất cả mảnh vụn đó lại và đúc thành một thực thể `Disciple`
+                            hoàn chỉnh ngay khi nó bay vào tay Controller.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: Thẩm Định Tư Chất (Validation) <span class="section-duration">(10
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Nhưng nhỡ người dùng điền linh tinh thì sao? Ví dụ tuổi là -100, hay tên để trống?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Đó là lúc ta cần <span class="emphasis">Validation</span>.
+                            Ta dán các lá bùa xác thực lên chính class `Disciple`.
+                            `@NotBlank` lên tên.
+                            `@Min(18)` lên tuổi.
+                            Sau đó, ở Controller, ta thêm phù chú <span class="emphasis">@Valid</span> trước tham số
+                            `@ModelAttribute`.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Và quan trọng nhất: Phải có <span class="emphasis">BindingResult</span> đi ngay sau đó.
+                            `public String submit(@Valid @ModelAttribute Disciple d, BindingResult result)`
+                            Nếu có lỗi (ví dụ tuổi âm), Spring sẽ không ném Exception ngay, mà sẽ ghi lỗi vào cuốn sổ
+                            `BindingResult`.
+                            Ngươi phải kểm tra `result.hasErrors()` để quyết định có cho qua hay bắt nhập lại.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Nếu bắt nhập lại, làm sao hiển thị lỗi cho người dùng biết?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-mvc">
+                        <span class="voice-label">Hộ Pháp MVC</span>
+                        <p class="dialogue-content">
+                            Thymeleaf lại ra tay! Dùng `th:errors="*{field}"` ngay bên cạnh ô input. Nó sẽ tự động hiện
+                            thông báo lỗi nếu có.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: Tổng Kết <span class="section-duration">(5 phút)</span></h2>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Hôm nay ngươi đã học được trọn vẹn vòng tròn khép kín:
+                            1. Controller chuẩn bị Model (Object rỗng) -> gửi ra View.
+                            2. View (Form) điền thông tin vào Object (Binding).
+                            3. Người dùng Submit -> Gửi về Controller.
+                            4. Controller nhận lại Object đầy đủ (@ModelAttribute).
+                            5. Controller kiểm tra tính hợp lệ (Validation).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Vậy là đệ tử đã có thể xây dựng tính năng đăng ký hoàn chỉnh rồi! Từ giao diện đến xử lý
+                            logic.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Nhưng đó là cách làm truyền thống với Form submit (tải lại trang).
+                            Thế giới hiện đại đòi hỏi tốc độ cao hơn, tương tác mượt mà hơn qua API.
+                            Ngày mai, chúng ta sẽ thực hành xây dựng một REST API thực thụ để phục vụ cho cả Mobile App
+                            và Web App hiện đại.
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Thuật Ngữ Chương Này</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">@ModelAttribute</span>
+                        <span class="term-description">Phù Chú ràng buộc dữ liệu từ Request (Form/Param) vào Object
+                            Java.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Data Binding</span>
+                        <span class="term-description">Cơ chế tự động ánh xạ dữ liệu text (từ HTML) sang các kiểu dữ
+                            liệu Java (int, Date, Object).</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">@Valid</span>
+                        <span class="term-description">Kích hoạt kiểm tra tính hợp lệ (Validation) trên Bean.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">BindingResult</span>
+                        <span class="term-description">Cuốn sổ ghi chép kết quả Binding và Validation. Phải đặt ngay sau
+                            tham số @Valid.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">th:object / th:field</span>
+                        <span class="term-description">Cặp bài trùng trong Thymeleaf Form để hỗ trợ Binding 2
+                            chiều.</span>
+                    </li>
+                </ul>
+
+                <div class="interview-questions">
+                    <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn</h4>
+                    <ol class="question-list">
+                        <li>Tại sao BindingResult phải nằm ngay sau tham số @ModelAttribute/@Valid mà không được cách
+                            ra?</li>
+                        <li>Làm thế nào để tạo custom validation annotation (ví dụ @StrongPassword)?</li>
+                        <li>Sự khác nhau giữa @ModelAttribute ở mức phương thức (Method level) và mức tham số (Parameter
+                            level)?</li>
+                        <li>@RequestBody và @ModelAttribute khác nhau như thế nào? (Gợi ý: JSON vs Form Data).</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🔮 Tiếp Theo</h3>
+                <p class="cliffhanger-text">
+                    Lâm Tuấn đã thành thạo võ công MVC truyền thống. Nhưng giang hồ đang đồn đại về một loại tuyệt kỹ
+                    mới: RESTful API - giao tiếp không cần mặt mũi (Stateless), nhanh như điện xẹt.
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="chapter-10.html">Chapter 10: Tuyệt Kỹ REST API - Thực Hành →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="chapter-08.html" class="chapter-nav-link prev">
+                    <span class="label">← Chapter trước</span>
+                    <span class="title">Huyễn Cảnh Giao Diện</span>
+                </a>
+                <a href="chapter-10.html" class="chapter-nav-link next">
+                    <span class="label">Chapter tiếp theo →</span>
+                    <span class="title">Tuyệt Kỹ REST API</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>

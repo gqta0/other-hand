@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 24: Truyền Dẫn Pháp Tắc - Khám phá cơ chế Propagation (REQUIRED, REQUIRES_NEW) và Isolation Levels trong Spring Transaction">
+    <title>Chapter 24: Truyền Dẫn Pháp Tắc | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 5: Giao Dịch Công Bằng</span>
+                <h1 class="chapter-title">Chapter 24: Truyền Dẫn Pháp Tắc</h1>
+                <div class="chapter-meta">
+                    <span>📖 Propagation Levels</span>
+                    <span>⏱️ 32 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Ngọn Lửa Lan Truyền (Propagation) <span
+                            class="section-duration">(5 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Tại đại sảnh, Đường Chủ Transaction bắt đầu vẽ lên không trung một sơ đồ phức tạp.
+                            Một hàm `ServiceA` (có Transaction) gọi sang `ServiceB` (cũng có Transaction).
+                            Chuyện gì sẽ xảy ra?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-transaction">
+                        <span class="voice-label">Đường Chủ Transaction</span>
+                        <p class="dialogue-content">
+                            Đây gọi là vấn đề <span class="emphasis">Propagation (Truyền Dẫn)</span>.
+                            Spring cung cấp 7 pháp tắc truyền dẫn. Nhưng các ngươi chỉ cần nhớ kỹ 3 cái quan trọng nhất:
+                            1. <span class="emphasis">REQUIRED</span> (Mặc định).
+                            2. <span class="emphasis">REQUIRES_NEW</span>.
+                            3. <span class="emphasis">NESTED</span>.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Xin Đường Chủ giải thích từng cái một.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: REQUIRED vs REQUIRES_NEW <span class="section-duration">(12
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-transaction">
+                        <span class="voice-label">Đường Chủ Transaction</span>
+                        <p class="dialogue-content">
+                            <span class="emphasis">PROPAGATION_REQUIRED</span>: "Có thì dùng chung, chưa có thì tạo
+                            mới".
+                            Nếu A đang có Transaction, B sẽ nhảy vào dùng chung Transaction của A.
+                            Hệ quả: Nếu B bị lỗi (Rollback), thì cả A cũng bị vạ lây và Rollback theo.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Giống như hai đệ tử cùng ngồi một chiếc thuyền. Thuyền thủng thì cả hai cùng chết đuối.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-transaction">
+                        <span class="voice-label">Đường Chủ Transaction</span>
+                        <p class="dialogue-content">
+                            Chính xác. Còn <span class="emphasis">PROPAGATION_REQUIRES_NEW</span>: "Tự lập môn hộ".
+                            B sẽ tạm dừng Transaction của A (suspend), tự tạo ra một Transaction mới hoàn toàn độc lập.
+                            Nếu B lỗi, chỉ mình B chết, A vẫn sống (miễn là A bắt được Exception của B).
+                            Nếu B thành công, B commit ngay lập tức, không chờ A.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Khi nào thì dùng cái này ạ?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-transaction">
+                        <span class="voice-label">Đường Chủ Transaction</span>
+                        <p class="dialogue-content">
+                            Ví dụ: A là hàm "Chuyển tiền". B là hàm "Ghi Log giao dịch vào bảng Audit".
+                            Dù chuyển tiền thất bại (Rollback), ngươi vẫn muốn lưu Log thất bại đó vào database để tra
+                            soát sau này.
+                            Nếu dùng chung (REQUIRED), khi A rollback, Log của B cũng bay màu.
+                            Vậy nên B (Ghi Log) phải là <span class="emphasis">REQUIRES_NEW</span>.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Tuyệt vời! Hiểu đúng ngữ cảnh mới thấy nó lợi hại.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: NESTED & Isolation <span class="section-duration">(10 phút)</span>
+                    </h2>
+
+                    <div class="dialogue-block voice-transaction">
+                        <span class="voice-label">Đường Chủ Transaction</span>
+                        <p class="dialogue-content">
+                            Còn <span class="emphasis">NESTED</span> (Lồng nhau) giống như tạo một "Savepoint" trong
+                            Game.
+                            Nó vẫn nằm trong Transaction của A. Nhưng nếu B lỗi, nó chỉ Rollback về Savepoint đầu B,
+                            không làm A rollback toàn bộ.
+                            Tuy nhiên, nếu A chết, thì B cũng chết theo (vì cùng 1 cha).
+                            Lưu ý: JPA/Hibernate mặc định không hỗ trợ tốt Nested, thường dùng với JDBC template hơn.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Thế còn Isolation Level? Đệ tử có thể chỉnh nó trong `@Transactional` không?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-transaction">
+                        <span class="voice-label">Đường Chủ Transaction</span>
+                        <p class="dialogue-content">
+                            Được, dùng thuộc tính `isolation`.
+                            `@Transactional(isolation = Isolation.READ_COMMITTED)`
+                            Nhưng hãy cẩn thận. Việc nâng cấp Isolation (lên Serializable) sẽ giết chết hiệu năng.
+                            Thường ta để mặc định của Database (DEFAULT), và xử lý vấn đề Concurrency bằng cơ chế khác
+                            như Optimistic Locking (dùng cột @Version).
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: Tổng Kết <span class="section-duration">(5 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Đầu óc Lâm Tuấn quay cuồng với các khái niệm Truyền Dẫn. Nhưng anh biết đây là chìa khóa để
+                            xây dựng các hệ thống lớn, nơi hàng chục Service gọi nhau chằng chịt.
+                            Một sai lầm nhỏ trong configuration có thể dẫn đến việc "Ghi Log cũng mất" hoặc "Tiền trừ
+                            rồi mà không thấy đâu".
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-transaction">
+                        <span class="voice-label">Đường Chủ Transaction</span>
+                        <p class="dialogue-content">
+                            Lý thuyết đã hết. Giờ là thử thách cuối cùng của Arc 5.
+                            Ta muốn ngươi cài đặt chức năng "Chuyển tiền liên ngân hàng", có ghi Log (bất tử), và xử lý
+                            Lock để tránh race condition.
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Thuật Ngữ Chương Này</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">REQUIRED</span>
+                        <span class="term-description">Propagation mặc định. Nếu đã có Tx thì dùng chung, chưa có thì
+                            tạo mới.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">REQUIRES_NEW</span>
+                        <span class="term-description">Luôn tạo Tx mới. Tạm dừng Tx cũ (nếu có). 2 Tx độc lập hoàn
+                            toàn.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">MANDATORY</span>
+                        <span class="term-description">Bắt buộc phải có Tx sẵn từ bên ngoài, nếu không sẽ ném lỗi. (Ít
+                            dùng).</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Savepoint</span>
+                        <span class="term-description">Điểm lưu trạng thái tạm thời trong DB. Cơ chế cốt lõi của Nested
+                            Transaction.</span>
+                    </li>
+                </ul>
+
+                <div class="interview-questions">
+                    <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn</h4>
+                    <ol class="question-list">
+                        <li>Sự khác biệt cốt lõi giữa REQUIRED và REQUIRES_NEW? (Dùng chung vs Độc lập).</li>
+                        <li>Khi nào dùng REQUIRES_NEW? (Ghi Log, Audit, gửi Notification độc lập với logic chính).</li>
+                        <li>Nếu hàm A (REQUIRED) gọi hàm B (REQUIRES_NEW). B bị lỗi Rollback thì A có bị Rollback không?
+                            (Có thể, nếu A không try-catch exception từ B ném ra).</li>
+                        <li>Nếu hàm A (REQUIRED) gọi hàm B (REQUIRED). B bị lỗi Rollback thì A có bị Rollback không?
+                            (Chắc chắn có, vì chung 1 Tx. Dù A có try-catch thì Tx cũng đã bị đánh dấu là
+                            "rollback-only").</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🔮 Tiếp Theo</h3>
+                <p class="cliffhanger-text">
+                    Lâm Tuấn nhận bài toán cuối cùng: Chuyển tiền từ A sang B. Nghe có vẻ đơn giản, nhưng nếu hai người
+                    cùng chuyển tiền cho nhau cùng lúc thì sao? Deadlock (Khóa Chết) đang rình rập.
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="chapter-25.html">Chapter 25: Thử Thách Giao Dịch - Transaction Practice →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="chapter-23.html" class="chapter-nav-link prev">
+                    <span class="label">← Chapter trước</span>
+                    <span class="title">Phù Chú Giao Dịch</span>
+                </a>
+                <a href="chapter-25.html" class="chapter-nav-link next">
+                    <span class="label">Chapter tiếp theo →</span>
+                    <span class="title">Thử Thách Giao Dịch</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>

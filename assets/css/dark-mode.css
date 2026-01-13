@@ -1,0 +1,281 @@
+/* ==========================================
+   Spring Boot Tu Tiên Story - Dark Mode Stylesheet
+   Eye-friendly Dark Theme for Night Reading
+   ========================================== */
+
+/* ==========================================
+   Dark Mode Color Variables
+   ========================================== */
+[data-theme="dark"] {
+    /* Background Colors */
+    --bg-primary: #0F172A;
+    --bg-secondary: #1E293B;
+    --bg-card: #1E293B;
+
+    /* Text Colors */
+    --text-primary: #F1F5F9;
+    --text-secondary: #94A3B8;
+    --text-muted: #64748B;
+
+    /* Primary Colors - Lighter for dark bg */
+    --color-primary: #A78BFA;
+    --color-primary-light: #C4B5FD;
+    --color-primary-dark: #8B5CF6;
+
+    /* Secondary Colors */
+    --color-secondary: #34D399;
+    --color-secondary-light: #6EE7B7;
+    --color-secondary-dark: #10B981;
+
+    /* Accent */
+    --color-accent: #FBBF24;
+    --color-accent-light: #FDE68A;
+
+    /* Voice Colors - Adjusted for dark bg */
+    --voice-narrator: #94A3B8;
+    --voice-lam-tuan: #60A5FA;
+    --voice-su-phu: #A78BFA;
+    --voice-su-huynh: #34D399;
+    --voice-su-ty: #F472B6;
+    --voice-su-de: #FB923C;
+
+    /* Shadows - deeper for dark mode */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+}
+
+/* ==========================================
+   Dark Mode Specific Overrides
+   ========================================== */
+
+/* Header */
+[data-theme="dark"] .site-header {
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+    border-bottom: 1px solid #334155;
+}
+
+/* Voice Blocks - Dark versions */
+[data-theme="dark"] .voice-narrator {
+    background: linear-gradient(135deg, #1E293B 0%, #334155 100%);
+}
+
+[data-theme="dark"] .voice-lam-tuan {
+    background: linear-gradient(135deg, #1E3A5F 0%, #1E40AF 20%, transparent 100%);
+}
+
+[data-theme="dark"] .voice-su-phu {
+    background: linear-gradient(135deg, #2E1065 0%, #4C1D95 20%, transparent 100%);
+}
+
+[data-theme="dark"] .voice-su-huynh {
+    background: linear-gradient(135deg, #064E3B 0%, #065F46 20%, transparent 100%);
+}
+
+[data-theme="dark"] .voice-su-ty {
+    background: linear-gradient(135deg, #500724 0%, #831843 20%, transparent 100%);
+}
+
+[data-theme="dark"] .voice-su-de {
+    background: linear-gradient(135deg, #7C2D12 0%, #9A3412 20%, transparent 100%);
+}
+
+/* Emphasis */
+[data-theme="dark"] .emphasis {
+    color: var(--color-primary-light);
+    background: linear-gradient(180deg, transparent 60%, rgba(139, 92, 246, 0.4) 60%);
+}
+
+/* Pronunciation */
+[data-theme="dark"] .pronunciation {
+    background: rgba(52, 211, 153, 0.2);
+    color: var(--color-secondary-light);
+}
+
+/* Tech Terms */
+[data-theme="dark"] .tech-term {
+    border-bottom-color: var(--color-primary-light);
+}
+
+[data-theme="dark"] .tech-term:hover {
+    background: rgba(139, 92, 246, 0.2);
+}
+
+[data-theme="dark"] .tech-term[data-tooltip]::after {
+    background: var(--text-primary);
+    color: var(--bg-primary);
+}
+
+/* Cards */
+[data-theme="dark"] .card {
+    border: 1px solid #334155;
+}
+
+/* Arc Cards */
+[data-theme="dark"] .arc-card {
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+}
+
+/* Chapter Summary */
+[data-theme="dark"] .chapter-summary {
+    background: #1E293B;
+    border: 1px solid #334155;
+}
+
+/* Interview Questions */
+[data-theme="dark"] .interview-questions {
+    background: linear-gradient(135deg, #1E293B 0%, #422006 50%, transparent 100%);
+    border-color: var(--color-accent);
+}
+
+/* Cliffhanger */
+[data-theme="dark"] .cliffhanger {
+    background: linear-gradient(135deg, #4C1D95 0%, #7C3AED 100%);
+}
+
+/* Navigation Links */
+[data-theme="dark"] .chapter-nav-link {
+    background: var(--bg-card);
+    border-color: #334155;
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .chapter-nav-link:hover {
+    border-color: var(--color-primary);
+    background: #334155;
+}
+
+/* Pause Marker */
+[data-theme="dark"] .pause-marker::before,
+[data-theme="dark"] .pause-marker::after {
+    background: var(--text-muted);
+}
+
+/* Floating Buttons */
+[data-theme="dark"] .floating-btn {
+    background: var(--bg-card);
+    border: 1px solid #334155;
+}
+
+[data-theme="dark"] .floating-btn:hover {
+    background: #334155;
+}
+
+/* Progress Bar */
+[data-theme="dark"] .progress-bar {
+    background: #334155;
+}
+
+/* Footer */
+[data-theme="dark"] .site-footer {
+    background: #1E293B;
+    border-top: 1px solid #334155;
+}
+
+/* Links */
+[data-theme="dark"] a {
+    color: var(--color-primary-light);
+}
+
+[data-theme="dark"] a:hover {
+    color: var(--color-primary);
+}
+
+/* Scrollbar Styling */
+[data-theme="dark"] ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 5px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+    background: #475569;
+}
+
+/* Selection */
+[data-theme="dark"] ::selection {
+    background: rgba(139, 92, 246, 0.4);
+    color: white;
+}
+
+/* ==========================================
+   Dark Mode Toggle Button
+   ========================================== */
+.theme-toggle {
+    position: relative;
+    width: 60px;
+    height: 30px;
+    background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 100%);
+    border-radius: var(--radius-full);
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    overflow: hidden;
+}
+
+[data-theme="dark"] .theme-toggle {
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+}
+
+.theme-toggle::before {
+    content: '☀️';
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    transform: translateY(-50%);
+    font-size: 16px;
+    transition: all var(--transition-normal);
+}
+
+[data-theme="dark"] .theme-toggle::before {
+    content: '🌙';
+    left: calc(100% - 25px);
+}
+
+.theme-toggle::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 24px;
+    height: 24px;
+    background: white;
+    border-radius: 50%;
+    transition: all var(--transition-normal);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .theme-toggle::after {
+    left: calc(100% - 27px);
+    background: #334155;
+}
+
+/* ==========================================
+   Transition for Theme Switch
+   ========================================== */
+html {
+    transition: background-color var(--transition-normal),
+        color var(--transition-normal);
+}
+
+body,
+.card,
+.site-header,
+.site-footer,
+.dialogue-block,
+.chapter-summary,
+.interview-questions,
+.floating-btn,
+.chapter-nav-link {
+    transition: background var(--transition-normal),
+        border-color var(--transition-normal),
+        color var(--transition-normal);
+}

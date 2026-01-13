@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 31: Thử Nghiệm Pháp Trận - Nhập môn Automated Testing với JUnit 5, Assertions, và Lifecycle methods">
+    <title>Chapter 31: Thử Nghiệm Pháp Trận | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 7: Thử Thách Cuối</span>
+                <h1 class="chapter-title">Chapter 31: Thử Nghiệm Pháp Trận</h1>
+                <div class="chapter-meta">
+                    <span>📖 JUnit Basics</span>
+                    <span>⏱️ 25 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Nỗi Sợ Của Developer (Fear of Breaking Things) <span
+                            class="section-duration">(5 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn bước vào Sàn Đấu Thử Nghiệm. Không khí ở đây lạnh lẽo và đầy sát khí.
+                            Tại đây, anh gặp Sư Đệ Minh - người có biệt danh là "Kẻ Hủy Diệt Bug". Toàn thân hắn ta đeo
+                            đầy những lá bùa màu xanh lá cây (Green Bar).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-testing">
+                        <span class="voice-label">Sư Đệ Minh</span>
+                        <p class="dialogue-content">
+                            Chào sư huynh. Huynh có bao giờ sửa một chức năng cũ, nhưng lại sợ làm hỏng những chức năng
+                            khác không?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Có chứ! Cảm giác đó gọi là "Depression Driven Development". Mỗi lần sửa code là tim đập chân
+                            run.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-testing">
+                        <span class="voice-label">Sư Đệ Minh</span>
+                        <p class="dialogue-content">
+                            Để trị bệnh sợ hãi đó, chúng ta dùng <span class="emphasis">Automated Testing</span> (Thử
+                            Nghiệm Tự Động).
+                            Thay vì nhờ con người test (vừa chậm vừa hay quên), ta viết code để test code của chính
+                            mình.
+                            Và công cụ trấn phái chính là <span class="emphasis">JUnit 5</span>.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: Cấu Trúc Trận Pháp (@Test) <span class="section-duration">(10
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-testing">
+                        <span class="voice-label">Sư Đệ Minh</span>
+                        <p class="dialogue-content">
+                            Một bài test đơn giản gồm 3 phần: Arrange (Chuẩn bị), Act (Hành động), Assert (Khẳng định).
+                            Huynh chỉ cần tạo một method và dán bùa <span class="emphasis">@Test</span> lên trên.
+                            Ví dụ: Test hàm cộng 1 + 1.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            `@Test`
+                            `void testAddition()` {
+                            Calculator calc = new Calculator(); // Arrange
+                            int result = calc.add(1, 1); // Act
+                            // Assert? Làm sao để nói nó phải bằng 2?
+                            }
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-testing">
+                        <span class="voice-label">Sư Đệ Minh</span>
+                        <p class="dialogue-content">
+                            Dùng class `Assertions`.
+                            `Assertions.assertEquals(2, result, "1 + 1 phải bằng 2 chứ đồ ngốc!");`
+                            Nếu kết quả đúng, huynh sẽ thấy một thanh màu xanh (Green Bar) tuyệt đẹp.
+                            Nếu sai (Red Bar), huynh sẽ biết ngay mình vừa phá hỏng cái gì.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: Vòng Đời Thử Nghiệm (Lifecycle) <span class="section-duration">(7
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Nhưng nếu đệ tử có 100 cái test, cái nào cũng phải `new Calculator()` thì mỏi tay lắm.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-testing">
+                        <span class="voice-label">Sư Đệ Minh</span>
+                        <p class="dialogue-content">
+                            Hãy dùng các Lifecycle Annotations.
+                            <span class="emphasis">@BeforeEach</span>: Chạy trước mỗi test case (Dùng để khởi tạo mới
+                            object).
+                            <span class="emphasis">@AfterEach</span>: Chạy sau mỗi test case (Dùng để dọn dẹp).
+                            <span class="emphasis">@BeforeAll</span>: Chạy đúng 1 lần duy nhất khi bắt đầu class test
+                            (Dùng để kết nối Database giả). Phải là static method.
+                            <span class="emphasis">@AfterAll</span>: Chạy đúng 1 lần duy nhất khi kết thúc tất cả.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Thật tiện lợi! Vậy là môi trường test luôn sạch sẽ, không bị nhiễm bẩn từ test này sang test
+                            kia.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: Tổng Kết <span class="section-duration">(5 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn viết thử vài cái test đơn giản. Cảm giác nhìn thanh Green Bar hiện lên thật gây
+                            nghiện (Dopamine).
+                            Nó mang lại sự tự tin tuyệt đối. Anh biết code của mình chạy đúng mà không cần phải bật cả
+                            server lên để bấm click click.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-testing">
+                        <span class="voice-label">Sư Đệ Minh</span>
+                        <p class="dialogue-content">
+                            Đây mới chỉ là khởi đầu. Huynh đang test những class đơn giản (POJO).
+                            Nhưng trong Spring, các class phụ thuộc lẫn nhau chằng chịt.
+                            Làm sao huynh test `UserService` khi nó cần `UserRepository`, mà `UserRepository` lại cần
+                            Database thật?
+                            Ngày mai, ta sẽ dạy huynh tuyệt kỹ <span class="emphasis">Mocking</span> (Huyễn Thuật Giả
+                            Lập).
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Thuật Ngữ Chương Này</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">JUnit 5</span>
+                        <span class="term-description">Framework testing tiêu chuẩn cho Java. Phiên bản 5 gồm Jupiter,
+                            Vintage và Platform.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">@Test</span>
+                        <span class="term-description">Annotation đánh dấu một method là một test case.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Assertions</span>
+                        <span class="term-description">Class chứa các hàm static (assertEquals, assertTrue,
+                            assertThrows) để kiểm tra kết quả thực tế so với mong đợi.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">@BeforeEach / @AfterEach</span>
+                        <span class="term-description">Lifecycle hooks chạy trước và sau mỗi test method, đảm bảo tính
+                            cô lập (Isolation) của test.</span>
+                    </li>
+                </ul>
+
+                <div class="interview-questions">
+                    <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn</h4>
+                    <ol class="question-list">
+                        <li>Tại sao phải viết Unit Test? (Đảm bảo chất lượng, dám refactor, document code, phát hiện bug
+                            sớm).</li>
+                        <li>Sự khác nhau giữa @BeforeAll và @BeforeEach? (@BeforeAll chạy 1 lần/class và phải static.
+                            @BeforeEach chạy n lần/n test methods).</li>
+                        <li>AssertThrows dùng để làm gì? (Kiểm tra xem code có ném ra Exception mong muốn hay không).
+                        </li>
+                        <li>TDD (Test Driven Development) là gì? (Viết Test trước -> Test đỏ -> Viết Code -> Test xanh
+                            -> Refactor).</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🔮 Tiếp Theo</h3>
+                <p class="cliffhanger-text">
+                    Thế giới thực rất phức tạp. UserService không thể chạy nếu thiếu UserRepository. Nhưng kết nối
+                    Database thật thì quá chậm và rủi ro. Lâm Tuấn cần một "hình nhân thế mạng" để đóng giả
+                    UserRepository.
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="chapter-32.html">Chapter 32: Thử Nghiệm Đơn Vị - Unit Testing with Mockito →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="../arc-6-khia-canh-huyen-bi/chapter-30.html" class="chapter-nav-link prev">
+                    <span class="label">← Chapter trước</span>
+                    <span class="title">Thử Thách AOP</span>
+                </a>
+                <a href="chapter-32.html" class="chapter-nav-link next">
+                    <span class="label">Chapter tiếp theo →</span>
+                    <span class="title">Thử Nghiệm Đơn Vị</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>

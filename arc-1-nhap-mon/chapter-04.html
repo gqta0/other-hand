@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 4: Nhiệm Vụ Phân Minh - Học về @Component, @Service, @Repository, @Controller và ý nghĩa thực sự của chúng">
+    <title>Chapter 04: Các Loại Phù Chú | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 1: Nhập Môn</span>
+                <h1 class="chapter-title">Chapter 04: Các Loại Phù Chú</h1>
+                <div class="chapter-meta">
+                    <span>📖 Component Stereotypes</span>
+                    <span>⏱️ 20 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Sự Hỗn Loạn Của Danh Phận <span class="section-duration">(4
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn đang đứng trước bảng vàng liệt kê danh sách các đệ tử trong Spring Tông. Anh nhận
+                            thấy một điều lạ lùng: Dù ai cũng tu luyện Linh Khí (Bean), nhưng danh xưng lại khác nhau.
+                            Người thì là "Chiến Binh", người là "Thủ Kho", người là "Sứ Giả".
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Sư Phụ, đệ tử thấy hơi bối rối. Nếu tất cả đều là Bean (Linh Đan) do Spring quản lý, tại sao
+                            không gọi tất cả là @Component cho đơn giản? Tại sao phải sinh ra @Service, @Repository,
+                            @Controller làm gì cho rắc rối?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Một câu hỏi rất thực tế! Về mặt kỹ thuật thuần túy, ngươi nói không sai. Container đối xử
+                            với chúng gần như giống hệt nhau. Nhưng, lập trình không chỉ là viết cho máy chạy, mà là
+                            viết cho <span class="emphasis">người đọc</span>.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Hãy tưởng tượng một đội quân mà ai cũng mặc áo lính giống hệt nhau, từ tướng quân đến anh
+                            nuôi. Làm sao ngươi biết ai chịu trách nhiệm chiến đấu, ai giữ kho lương, ai truyền tin?
+                            Các Phù Chú này chính là quân phục, giúp phân định chức trách rõ ràng ("Separation of
+                            Concerns").
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: Tam Đại Chức Trách <span class="section-duration">(8 phút)</span>
+                    </h2>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Chúng ta có ba tầng chính trong kiến trúc Spring.
+                            Tầng thứ nhất: <span class="emphasis">@Controller</span> - hay Sứ Giả.
+                            Nhiệm vụ: Đứng ở cổng thành, tiếp nhận yêu cầu (Request) từ bên ngoài và trả lời (Response).
+                            Nó không nên chứa logic phức tạp, mà chỉ điều phối công việc.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Tầng thứ hai: <span class="emphasis">@Service</span> - hay Nghệ Nhân.
+                            Nhiệm vụ: Chứa Business Logic (Nghiệp vụ cốt lõi). Đây là nơi quan trọng nhất, xử lý tính
+                            toán, quy trình.
+                            Ví dụ: Nếu có yêu cầu "Đăng ký đệ tử mới", Service sẽ kiểm tra tuổi tác, tư chất, cấp phát
+                            vũ khí...
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Tầng thứ ba: <span class="emphasis">@Repository</span> - hay Thủ Kho.
+                            Nhiệm vụ: Giao tiếp với Kho Tàng Dữ Liệu (Database). Nó chỉ biết cất vào và lấy ra, không
+                            nên chứa logic nghiệp vụ.
+                            Nhưng @Repository có một bí mật mà @Component không có.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Bí mật gì vậy ạ?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Đó là pháp thuật <span class="emphasis text-primary">Persistence Exception
+                                Translation</span>.
+                            Khi thao tác với Database (như SQL), lỗi xảy ra thường là những lỗi thô sơ và khó hiểu
+                            (SQLException).
+                            Khi ngươi dùng @Repository, Spring tự động kích hoạt một hậu vệ
+                            (PersistenceExceptionTranslationPostProcessor) để bắt các lỗi thô sơ đó và chuyển hóa thành
+                            <span class="emphasis">DataAccessException</span> hierarchy của Spring.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Điều này cực kỳ lợi hại! Ngươi không cần try-catch những lỗi JDBC lằng nhằng nữa. Và lỗi của
+                            Spring là Unchecked Exception, giúp code của ngươi sạch sẽ hơn. @Component hay @Service
+                            không có khả năng này đâu!
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Thật vi diệu! Vậy là dùng đúng annotation không chỉ để đẹp đội hình, mà còn được "buff" thêm
+                            sức mạnh ẩn.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: RestController và Câu Chuyện JSON <span
+                            class="section-duration">(5 phút)</span></h2>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Sư Phụ, đệ tử thấy dạo này người ta hay dùng <span class="emphasis">@RestController</span>
+                            thay vì @Controller. Khác nhau chỗ nào ạ?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            À, đó là sự tiến hóa để phù hợp với thời đại API.
+                            @Controller truyền thống thường trả về một <span class="emphasis">View</span> (trang HTML)
+                            để người dùng xem.
+                            Nhưng trong thời đại này, các ứng dụng thường chỉ cần dữ liệu thô (JSON/XML) để mobile app
+                            hay frontend framework xử lý.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Nếu dùng @Controller muốn trả về JSON, ngươi phải thêm phù chú <span
+                                class="emphasis">@ResponseBody</span> vào từng hàm. Rất mỏi tay!
+                            <span class="emphasis">@RestController</span> chính là sự kết hợp của @Controller và
+                            @ResponseBody. Nó mặc định rằng mọi phản hồi từ nó đều là dữ liệu, không phải là giao diện.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            A ha! Giống như một Sứ Giả chuyên đưa tin mật mã (Data) thay vì đưa tranh vẽ (View).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Chính xác. Hãy nhớ linh hoạt sử dụng tùy vào mục đích của ngươi.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: Tổng Kết <span class="section-duration">(3 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn nhìn lại bảng vàng một lần nữa. Giờ đây, những danh xưng kia không còn rắc rối nữa.
+                            Controller: Cổng giao tiếp.
+                            Service: Bộ não xử lý.
+                            Repository: Kho tàng dữ liệu (kèm bảo hộ).
+                            Component: Những tiện ích khác.
+                            Tất cả phối hợp nhịp nhàng tạo nên sức mạnh tổng thể của Spring Tông.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Ngày mai, chúng ta sẽ bắt tay vào thực hành. Ngươi hãy chuẩn bị tinh thần để xây dựng ứng
+                            dụng đầu tiên!
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Thuật Ngữ Chương Này</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">@Component</span>
+                        <span class="term-description">Phù Chú cơ bản nhất đánh dấu Bean.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">@Service</span>
+                        <span class="term-description">Phù Chú Dịch Vụ - Chứa Business Logic, dễ dàng áp dụng
+                            Transaction.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">@Repository</span>
+                        <span class="term-description">Phù Chú Kho Tàng - Chứa Data Access Logic. Tự động dịch JDBC
+                            Exception sang DataAccessException.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">@Controller</span>
+                        <span class="term-description">Phù Chú Điều Khiển - Xử lý Web Request, trả về View.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">@RestController</span>
+                        <span class="term-description">@Controller + @ResponseBody. Trả về Data (JSON/XML).</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">DataAccessException</span>
+                        <span class="term-description">Hệ thống ngoại lệ unchecked thống nhất của Spring cho truy cập dữ
+                            liệu.</span>
+                    </li>
+                </ul>
+
+                <div class="interview-questions">
+                    <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn</h4>
+                    <ol class="question-list">
+                        <li>Tại sao không dùng @Component cho tất cả mọi class?</li>
+                        <li>@Repository có tác dụng đặc biệt gì ngoài việc đánh dấu Bean?</li>
+                        <li>Sự khác biệt giữa @Controller và @RestController?</li>
+                        <li>Chuyện gì xảy ra nếu tôi đánh dấu @Service cho một DAO class?</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🔮 Tiếp Theo</h3>
+                <p class="cliffhanger-text">
+                    Lý thuyết đã đủ. Giờ là lúc thực chiến. Hãy cùng Lâm Tuấn xây dựng ứng dụng Spring Boot đầu tiên,
+                    kết hợp tất cả kiến thức đã học!
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="chapter-05.html">Chapter 05: Đại Quan Nhập Môn - Thực Hành →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="chapter-03.html" class="chapter-nav-link prev">
+                    <span class="label">← Chapter trước</span>
+                    <span class="title">Vòng Đời Linh Đan</span>
+                </a>
+                <a href="chapter-05.html" class="chapter-nav-link next">
+                    <span class="label">Chapter tiếp theo →</span>
+                    <span class="title">Đại Quan Nhập Môn</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>

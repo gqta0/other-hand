@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 8: Huyễn Cảnh Giao Diện - Học về Thymeleaf Template Engine, cú pháp và cách tạo giao diện động">
+    <title>Chapter 08: Huyễn Cảnh Giao Diện | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 2: Giao Tiếp Giang Hồ</span>
+                <h1 class="chapter-title">Chapter 08: Huyễn Cảnh Giao Diện</h1>
+                <div class="chapter-meta">
+                    <span>📖 Thymeleaf View Engine</span>
+                    <span>⏱️ 25 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Nghệ Thuật Tạo Ảo Ảnh <span class="section-duration">(5
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Sau khi nắm vững các bí pháp định tuyến (Request Mapping), Lâm Tuấn được Hộ Pháp MVC dẫn đến
+                            một tòa lầu các lộng lẫy tên là "Huyễn Cảnh Lâu".
+                            Khác với những nơi khác toàn là giấy tờ sổ sách, nơi đây chứa đầy những bức tranh sống động,
+                            có thể thay đổi hình dạng tùy theo người xem.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-mvc">
+                        <span class="voice-label">Hộ Pháp MVC</span>
+                        <p class="dialogue-content">
+                            Chào mừng đến với thế giới của <span class="emphasis">View Layer</span>.
+                            API của ngươi trả về JSON là rất tốt cho các cổ vật máy móc (Machine Client). Nhưng với
+                            người thường (Human User), họ cần nhìn thấy hình ảnh, màu sắc, văn bản. Họ cần HTML.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử biết HTML! Nhưng HTML là tĩnh mà? Làm sao để hiển thị tên đệ tử thay đổi theo từng
+                            người đăng nhập?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-mvc">
+                        <span class="voice-label">Hộ Pháp MVC</span>
+                        <p class="dialogue-content">
+                            Đó là lý do ta cần một <span class="emphasis">Template Engine</span> - hay Khuôn Đúc Huyễn
+                            Cảnh.
+                            Trong Spring Boot, kẻ mạnh nhất hiện nay là <span class="emphasis">Thymeleaf</span> (Lá Xạ
+                            Hương).
+                            Nó cho phép ngươi viết HTML bình thường, nhưng nhúng thêm "Linh Lực" (Data) từ Java vào để
+                            biến đổi nội dung.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: Tứ Đại Phù Chú Thymeleaf <span class="section-duration">(10
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Tuấn nhi, Thymeleaf hoạt động dựa trên các thuộc tính đặc biệt bắt đầu bằng `th:`. Hãy ghi
+                            nhớ tứ đại phù chú này.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Phù Chú 1: <span class="emphasis">th:text</span> - Thay Thế Văn Bản.
+                            Ví dụ: `<span th:text="${name}">Tên Mẫu</span>`.
+                            Nếu biến `name` từ Controller gửi xuống là "Lâm Tuấn", thì chữ "Tên Mẫu" sẽ biến mất và thay
+                            bằng "Lâm Tuấn".
+                            Dấu `${...}` là biểu thức để lấy giá trị biến (Variable Expression).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Phù Chú 2: <span class="emphasis">th:each</span> - Phân Thân Chi Thuật (Vòng Lặp).
+                            Dùng để hiển thị danh sách.
+                            `tr th:each="disciple : ${disciples}"`
+                            Nó sẽ lặp qua danh sách `disciples`, và với mỗi người, nó tạo ra một dòng `tr` mới.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Giống vòng lặp `for-each` trong Java quá!
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Chính xác. Phù Chú 3: <span class="emphasis">th:if / th:unless</span> - Ẩn Hiện Chi Thuật
+                            (Điều Kiện).
+                            `div th:if="${isAdmin}"`
+                            Thẻ div này chỉ hiện ra nếu biến `isAdmin` là true. `th:unless` thì ngược lại.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Phù Chú 4: <span class="emphasis">th:href / th:src</span> - Liên Kết Tĩnh Động.
+                            Dùng để tạo link hoặc chèn ảnh. Cú pháp `@` được dùng cho URL.
+                            `a th:href="@{/profile/{id}(id=${user.id})}"`
+                            Nó sẽ tự động điền ID vào URL, tạo ra `/profile/123`.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Thật mạnh mẽ! HTML giờ đây đã có sự sống.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: Truyền Linh Lực (Model) <span class="section-duration">(5
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Nhưng Sư Phụ, làm sao Controller đưa dữ liệu xuống cho Thymeleaf dùng ạ?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-mvc">
+                        <span class="voice-label">Hộ Pháp MVC</span>
+                        <p class="dialogue-content">
+                            Chúng ta dùng một túi chứa gọi là <span class="emphasis">Model</span>.
+                            Trong phương thức Controller, ngươi thêm tham số `Model model`.
+                            Sau đó dùng `model.addAttribute("key", value)`.
+                            Cái "key" đó sẽ chính là biến mà Thymeleaf gọi qua `${key}`.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-mvc">
+                        <span class="voice-label">Hộ Pháp MVC</span>
+                        <p class="dialogue-content">
+                            Ví dụ:
+                            `model.addAttribute("disciples", listDisciple);`
+                            `return "disciple-list";`
+                            Thymeleaf sẽ tìm file `templates/disciple-list.html` và render với dữ liệu từ Model.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Đây gọi là <span class="emphasis">Server-Side Rendering (SSR)</span>. Toàn bộ trang HTML
+                            được tạo ra hoàn chỉnh tại Server rồi mới gửi về Browser.
+                            Về sau, khi ngươi học cao hơn, ngươi sẽ biết về Client-Side Rendering (như React, Angular),
+                            nơi Browser tự gọi API JSON và render. Nhưng SSR vẫn rất quan trọng cho SEO và tốc độ lần
+                            đầu tải trang.
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: Tổng Kết <span class="section-duration">(5 phút)</span></h2>
+
+                    <div class="dialogue-block voice-su-phu">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Hôm nay ngươi đã học được cách tạo ra giao diện cho người dùng.
+                            Thymeleaf là một công cụ mạnh, cú pháp tự nhiên (Natural Template), nghĩa là file HTML vẫn
+                            mở được bằng trình duyệt thường ngay cả khi không có Server (chỉ là không có dữ liệu động).
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Đệ tử đã hiểu!
+                            Model là túi đựng.
+                            Thymeleaf là khuôn đúc.
+                            HTML là sản phẩm cuối cùng.
+                            Và Controller là người điều phối quá trình đúc đó.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-divine">
+                        <span class="voice-label">Sư Phụ Cao Nhân</span>
+                        <p class="dialogue-content">
+                            Nhưng Huyễn Cảnh không chỉ để nhìn ngắm. Người dùng còn muốn gửi thông tin ngược lại cho
+                            chúng ta (ví dụ: điền Form đăng ký).
+                            Làm sao để hứng lấy dữ liệu từ Form HTML vào Java Object?
+                            Đó là bài học ngày mai: <span class="emphasis">Data Binding</span>.
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Thuật Ngữ Chương Này</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">Thymeleaf</span>
+                        <span class="term-description">Java Template Engine hiện đại, thay thế JSP. Cú pháp Natural
+                            Expressions.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Model</span>
+                        <span class="term-description">Interface chứa dữ liệu để truyền từ Controller sang View.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Server-Side Rendering (SSR)</span>
+                        <span class="term-description">Kỹ thuật render HTML tại server. Tốt cho SEO.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Variable Expression ${...}</span>
+                        <span class="term-description">Lấy giá trị từ context (Model, Session...).</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">Link Expression @{...}</span>
+                        <span class="term-description">Tạo URL động (context-relative URLs).</span>
+                    </li>
+                </ul>
+
+                <div class="interview-questions">
+                    <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn</h4>
+                    <ol class="question-list">
+                        <li>Thymeleaf khác gì với JSP? (Gợi ý: Natural templates, không cần Servlet container để parse
+                            cơ bản).</li>
+                        <li>Server-Side Rendering (SSR) vs Client-Side Rendering (CSR): Ưu nhược điểm?</li>
+                        <li>Biểu thức `${...}` và `*{...}` trong Thymeleaf khác nhau thế nào?</li>
+                        <li>Làm sao để tái sử dụng một đoạn HTML (như Header/Footer) trong Thymeleaf? (Fragments)</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🔮 Tiếp Theo</h3>
+                <p class="cliffhanger-text">
+                    Hiển thị dữ liệu là một chuyện, nhận dữ liệu từ người dùng lại là chuyện khác. Form HTML gửi dữ liệu
+                    đi đâu? Spring hứng dữ liệu như thế nào?
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="chapter-09.html">Chapter 09: Linh Khí Mô Hình - Model & Data Binding →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="chapter-07.html" class="chapter-nav-link prev">
+                    <span class="label">← Chapter trước</span>
+                    <span class="title">Phù Chú Lộ Trình</span>
+                </a>
+                <a href="chapter-09.html" class="chapter-nav-link next">
+                    <span class="label">Chapter tiếp theo →</span>
+                    <span class="title">Linh Khí Mô Hình</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>

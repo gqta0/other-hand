@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chapter 33: Huyễn Thuật Giả Lập - Học về Integration Test, @SpringBootTest, @MockBean và @WebMvcTest trong Spring Boot Testing">
+    <title>Chapter 33: Huyễn Thuật Giả Lập | Spring Boot Tu Tiên</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/read-mode.css">
+    <link rel="stylesheet" href="../assets/css/dark-mode.css">
+</head>
+
+<body>
+    <div class="reading-progress">
+        <div class="reading-progress-bar"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="site-title"><a href="../index.html">Spring Boot Tu Tiên</a></div>
+            <div class="header-controls">
+                <button class="theme-toggle" aria-label="Chuyển đổi giao diện"></button>
+                <a href="../glossary.html" class="nav-button">📚 Thuật ngữ</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="chapter-container container">
+            <header class="chapter-header">
+                <span class="arc-label">Arc 7: Thử Thách Cuối</span>
+                <h1 class="chapter-title">Chapter 33: Huyễn Thuật Giả Lập</h1>
+                <div class="chapter-meta">
+                    <span>📖 Spring Boot Test & @MockBean</span>
+                    <span>⏱️ 30 phút</span>
+                </div>
+            </header>
+
+            <div class="story-content">
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 1: Khởi Động Thế Giới Ảo (@SpringBootTest) <span
+                            class="section-duration">(8 phút)</span></h2>
+
+                    <div class="dialogue-block voice-testing">
+                        <span class="voice-label">Sư Đệ Minh</span>
+                        <p class="dialogue-content">
+                            Unit Test rất nhanh, nhưng nó có điểm yếu chí mạng: Nó tin tưởng tuyệt đối vào Mock.
+                            Nếu Mock bảo "A gọi B đúng", nhưng thực tế trong Spring, A không thể gọi B (do thiếu Bean,
+                            sai Config), thì Unit Test vẫn xanh, nhưng App chạy lên thì sập.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Vậy ta phải test cả App thật?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-testing">
+                        <span class="voice-label">Sư Đệ Minh</span>
+                        <p class="dialogue-content">
+                            Đúng. Ta dùng <span class="emphasis">@SpringBootTest</span>.
+                            Khi có annotation này, Spring sẽ khởi động toàn bộ ApplicationContext (như lúc chạy thật).
+                            Nó quét, tạo Bean, inject dependency đầy đủ.
+                            Nhưng cái giá phải trả là thời gian khởi động lâu (vài giây đến chục giây).
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 2: Giả Lập Một Phần Tử (@MockBean) <span class="section-duration">(10
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Nhưng đệ tử không muốn kết nối đến Database thật, hay gọi API bên thứ ba (Third-party) trong
+                            lúc test.
+                            Làm sao để vừa chạy Spring, vừa thay thế vài Bean cụ thể bằng đồ giả?
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-testing">
+                        <span class="voice-label">Sư Đệ Minh</span>
+                        <p class="dialogue-content">
+                            Dùng tuyệt chiêu <span class="emphasis">@MockBean</span>.
+                            Nó khác `@Mock` của Mockito nhé.
+                            - `@Mock` (Mockito): Tạo object giả trong môi trường Java thuần.
+                            - `@MockBean` (Spring): Tìm trong Spring Context, GỠ Bean thật ra, LẮP Bean giả vào.
+                            Đây là chiêu "Tráo Long Tráo Phụng". Các bean khác vẫn là thật, chỉ riêng bean bị mock là
+                            giả.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            Vậy đệ tử có thể `@SpringBootTest` + `@MockBean UserRepository`.
+                            Logic Service chạy thật, nhưng khi gọi xuống DB thì gặp Mock.
+                            Quá tuyệt vời!
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 3: Cắt Lớp Thử Nghiệm (Test Slices) <span class="section-duration">(7
+                            phút)</span></h2>
+
+                    <div class="dialogue-block voice-testing">
+                        <span class="voice-label">Sư Đệ Minh</span>
+                        <p class="dialogue-content">
+                            Tuy nhiên, `@SpringBootTest` vẫn quá nặng nề nếu huynh chỉ muốn test mỗi Controller.
+                            Spring cung cấp các "Lát cắt" (Slices) nhẹ hơn:
+                            1. <span class="emphasis">@WebMvcTest</span>: Chỉ khởi động tầng Web (Controller,
+                            Interceptor, Filter). Không khởi động Service hay Repository.
+                            2. <span class="emphasis">@DataJpaTest</span>: Chỉ khởi động tầng Data (Entity, Repository,
+                            DataSource in-memory h2). Không khởi động Web.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-lam-tuan">
+                        <span class="voice-label">Lâm Tuấn</span>
+                        <p class="dialogue-content">
+                            À, dùng dao nhỏ mổ gà, dùng dao to mổ trâu.
+                            Nếu test Controller API, đệ tử sẽ dùng `@WebMvcTest`. Khi đó Service phải dùng `@MockBean`.
+                            Rồi dùng `MockMvc` để giả lập gửi Request HTTP (GET, POST).
+                        </p>
+                    </div>
+
+                    <p class="pause-marker">⋯ ⋯ ⋯</p>
+
+                </section>
+
+                <section class="story-section">
+                    <h2 class="section-title">Phần 4: Tổng Kết <span class="section-duration">(5 phút)</span></h2>
+
+                    <div class="dialogue-block voice-narrator">
+                        <span class="voice-label">Người kể chuyện</span>
+                        <p class="dialogue-content">
+                            Lâm Tuấn đã nắm trong tay các công cụ mạnh mẽ:
+                            - Testing Pyramid: Unit Test nhiều nhất (đáy tháp), Integration Test vừa phải, E2E Test ít
+                            nhất (đỉnh tháp).
+                            - Công cụ: Mockito cho Unit, @SpringBootTest/@MockBean cho Integration.
+                        </p>
+                    </div>
+
+                    <div class="dialogue-block voice-testing">
+                        <span class="voice-label">Sư Đệ Minh</span>
+                        <p class="dialogue-content">
+                            Có một vấn đề cuối cùng. Dùng H2 Database (In-memory) để test Repository rất nhanh, nhưng nó
+                            KHÔNG giống MySQL thật.
+                            Có những câu SQL chạy được trên H2 nhưng lỗi trên MySQL (hoặc ngược lại).
+                            Muốn an tâm tuyệt đối, huynh phải test trên Database thật. Nhưng lại phải sạch sẽ, dùng xong
+                            vứt đi.
+                            Đó là lúc huynh cần đến <span class="emphasis">TestContainers</span>.
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+            <div class="chapter-summary">
+                <h3 class="summary-title">📚 Thuật Ngữ Chương Này</h3>
+                <ul class="glossary-list">
+                    <li class="glossary-item">
+                        <span class="term-name">@SpringBootTest</span>
+                        <span class="term-description">Annotation dùng cho Integration Test. Khởi động toàn bộ Spring
+                            Context. Rất mạnh nhưng chậm.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">@MockBean</span>
+                        <span class="term-description">Annotation của Spring Boot dùng để replace một Bean trong Context
+                            bằng Mockito Mock.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">@WebMvcTest</span>
+                        <span class="term-description">Test Slice dành riêng cho tầng Web (Controller). Chỉ load các
+                            bean liên quan đến Web.</span>
+                    </li>
+                    <li class="glossary-item">
+                        <span class="term-name">MockMvc</span>
+                        <span class="term-description">Công cụ để giả lập HTTP Request gửi đến Controller mà không cần
+                            start Server thật trên port 8080.</span>
+                    </li>
+                </ul>
+
+                <div class="interview-questions">
+                    <h4 class="interview-title">💼 Câu Hỏi Phỏng Vấn</h4>
+                    <ol class="question-list">
+                        <li>Sự khác nhau giữa @Mock và @MockBean? (@Mock dùng cho Unit Test thuần Java. @MockBean dùng
+                            để thay thế Bean trong Spring Context Integration Test).</li>
+                        <li>@WebMvcTest có load Service Bean không? (Không. Bạn phải tự mock Service bằng @MockBean nếu
+                            Controller cần dùng).</li>
+                        <li>Làm sao để test Controller mà không cần start server? (Dùng MockMvc).</li>
+                        <li>Integration Test là gì? (Test sự tương tác giữa các component hoặc với hệ thống bên ngoài
+                            như DB, MQ).</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="cliffhanger">
+                <h3 class="cliffhanger-title">🔮 Tiếp Theo</h3>
+                <p class="cliffhanger-text">
+                    Lâm Tuấn sẽ học cách triệu hồi Docker Container ngay trong code Java để tạo ra một môi trường test
+                    MySQL thật 100%. Đây là kỹ thuật đỉnh cao mà mọi công ty lớn đều dùng.
+                </p>
+                <p class="cliffhanger-next">
+                    <a href="chapter-34.html">Chapter 34: Thử Nghiệm Tích Hợp - Integration Testing with TestContainers
+                        →</a>
+                </p>
+            </div>
+
+            <nav class="chapter-navigation">
+                <a href="chapter-32.html" class="chapter-nav-link prev">
+                    <span class="label">← Chapter trước</span>
+                    <span class="title">Thử Nghiệm Đơn Vị</span>
+                </a>
+                <a href="chapter-34.html" class="chapter-nav-link next">
+                    <span class="label">Chapter tiếp theo →</span>
+                    <span class="title">Thử Nghiệm Tích Hợp</span>
+                </a>
+            </nav>
+
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Spring Boot Tu Tiên Truyện © 2024</p>
+        </div>
+    </footer>
+
+    <div class="floating-actions">
+        <button class="floating-btn" data-action="scroll-top" aria-label="Lên đầu trang" style="opacity: 0;">↑</button>
+    </div>
+
+    <script src="../assets/js/navigation.js"></script>
+    <script src="../assets/js/glossary.js"></script>
+</body>
+
+</html>
