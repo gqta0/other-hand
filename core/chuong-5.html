@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chương 5: Generic Điện Huyền Bí - Java Tu Tiên Ký</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <nav class="chapter-nav">
+        <a href="chuong-4.html">⬅ Chương Trước</a>
+        <a href="index.html">Về Mục Lục ➡</a>
+    </nav>
+
+    <article class="chapter-content">
+        <header>
+            <h1>Chương 5: Generic Điện Huyền Bí</h1>
+        </header>
+
+        <section class="story-content">
+            <h2>Mở Đầu: Cấm Địa Cuối Cùng</h2>
+            <p>Hai tháng trôi qua kể từ khi Minh Đức bước chân vào Java Tông. Hắn đã vượt qua bốn cửa ải: Hiểu về cơ thể
+                JVM, làm chủ pháp bảo Collection, nắm vững Ngũ Đạo Tắc SOLID, và tinh thông tân pháp thuật Java tám.</p>
+            <p>Hôm nay, Sư phụ Vân Cơ dẫn hắn đến một tòa điện nằm trên đỉnh cao nhất của JVM Phong. Tòa điện này được
+                xây bằng đá đen bóng, cánh cửa khắc những ký tự lạ lùng: dấu nhỏ hơn, chữ T, dấu lớn hơn.</p>
+            <p class="dialogue">"Đây là Generic Điện, cấm địa cuối cùng. Bên trong chứa những bí mật tinh tế nhất của
+                ngôn ngữ. Chỉ những ai vượt qua nơi đây mới được xuất sư."</p>
+            <p>Minh Đức nuốt nước bọt, bước vào.</p>
+            <p>Bên trong điện rộng mênh mông. Một bên là hồ nước lấp lánh như gương, trên mặt hồ có những ký tự lơ lửng
+                phát sáng. Một bên là một pho tượng khổng lồ, hình dáng liên tục biến đổi, lúc thì hình hổ, lúc thì hình
+                rồng, lúc lại thành con mèo.</p>
+            <p class="dialogue">"Hồ kia là Văn Tự Linh Trì, nơi lưu giữ String. Pho tượng kia là Vạn Hóa Tượng, đại diện
+                cho Generics. Hãy bắt đầu từ hồ nước."</p>
+
+            <h2>Cảnh 1: Văn Tự Linh Trì - String Pool</h2>
+            <p>Minh Đức bước đến gần mặt hồ. Hắn thấy trên mặt nước có hai tảng đá nổi lơ lửng, trên mỗi tảng khắc chữ
+                "JAVA".</p>
+            <p class="dialogue">"Sư phụ, sao có hai tảng đá giống hệt nhau vậy ạ?"</p>
+            <p class="dialogue">Sư phụ mỉm cười: "Không phải hai tảng đâu. Đó là một tảng duy nhất, nhưng ta nhìn từ hai
+                góc nên tưởng là hai."</p>
+            <p class="dialogue">"Ý sư phụ là sao?"</p>
+            <p class="dialogue">"Đây là bí mật của <span class="technical-term">String Pool</span> <span
+                    class="pronunciation">(đọc là "xtrinh phu")</span>, ta gọi là Văn Tự Linh Trì. Khi ngươi tạo một
+                String bằng cách viết trực tiếp trong dấu ngoặc kép, ví dụ như viết nguyên văn "JAVA", Java sẽ kiểm tra
+                xem trong hồ đã có tảng đá khắc chữ đó chưa."</p>
+            <p class="dialogue">"Nếu đã có, Java không tạo tảng đá mới. Nó chỉ trỏ tay vào tảng đá đã có và nói: Dùng
+                cái này đi."</p>
+            <p class="dialogue">"Nếu chưa có, Java mới tạo tảng đá mới, thả xuống hồ, rồi trỏ vào đó."</p>
+            <p class="dialogue">"Đó là lý do vì sao khi ngươi tạo hai biến, cả hai đều chứa nguyên văn "JAVA", thì cả
+                hai biến đều trỏ đến cùng một tảng đá trong hồ."</p>
+            <p class="dialogue">Minh Đức gật gù: "Vậy là tiết kiệm bộ nhớ!"</p>
+            <p class="dialogue">"Chính xác. Nhưng hãy cẩn thận."</p>
+            <p>Sư phụ chỉ tay vào một tảng đá khác đang trôi nổi ở ngoài hồ, trên bờ cát.</p>
+            <p class="dialogue">"Đây là tảng đá được tạo bằng cách dùng từ khóa new, ví dụ như viết new String rồi
+                truyền vào nguyên văn "JAVA". Nó không nằm trong hồ. Nó nằm ở Heap, tức Đan Điền, giống như Object bình
+                thường."</p>
+            <p class="dialogue">"Dù nội dung giống hệt tảng đá trong hồ, nhưng nó là một tảng đá khác, ở một địa chỉ
+                khác."</p>
+            <p class="dialogue">"Cho nên, nếu ngươi so sánh hai biến bằng dấu bằng kép, một biến trỏ vào hồ, một biến
+                trỏ ra bờ, kết quả sẽ là sai, vì chúng không cùng địa chỉ."</p>
+            <p class="dialogue">Minh Đức giật mình: "Vậy làm sao so sánh nội dung đúng cách?"</p>
+            <p class="dialogue">"Dùng phương thức <span class="technical-term">equals</span> <span
+                    class="pronunciation">(đọc là "i-quồ")</span>. Phương thức này so sánh nội dung bên trong, không so
+                sánh địa chỉ."</p>
+            <p>Ngay lúc đó, Tiểu Bảo từ đâu chạy đến, mặt mũi tèm lem mực:</p>
+            <p class="dialogue">"Sư phụ ơi! Con so sánh String bằng dấu bằng kép, kết quả lúc đúng lúc sai lung tung
+                hết! Con điên mất!"</p>
+            <p class="dialogue">Sư phụ nghiêm giọng: "Đó là vì ngươi so sánh địa chỉ thay vì nội dung. Đôi khi hai
+                String cùng nằm trong Pool nên địa chỉ giống nhau, kết quả đúng. Đôi khi một String được tạo bằng new,
+                nằm ngoài Pool, kết quả sai."</p>
+            <p class="dialogue">"Để trừng phạt, ngươi phải chép phạt một nghìn lần: Luôn dùng equals để so sánh chuỗi!"
+            </p>
+            <p>Tiểu Bảo mếu máo đi lấy giấy bút. Minh Đức tự nhủ sẽ không bao giờ mắc sai lầm tương tự.</p>
+
+            <h2>Cảnh 2: Bất Biến Kim Thân - String Immutability</h2>
+            <p>Sư phụ dẫn Minh Đức đến một bức tường đá khổng lồ, trên khắc những chữ bằng vàng.</p>
+            <p class="dialogue">"String trong Java có đặc tính <span class="technical-term">Immutable</span> <span
+                    class="pronunciation">(đọc là "im-miu-tờ-bồ")</span>, ta gọi là Bất Biến Kim Thân. Một khi đã tạo
+                ra, nội dung của String không thể thay đổi."</p>
+            <p class="dialogue">"Không thể thay đổi? Nhưng con thấy có thể nối chuỗi mà sư phụ?"</p>
+            <p class="dialogue">"Hãy quan sát kỹ."</p>
+            <p>Sư phụ chỉ vào bức tường khắc chữ "Hello".</p>
+            <p class="dialogue">"Bây giờ ta sẽ nối thêm chữ World vào sau."</p>
+            <p>Sư phụ phẩy tay áo. Một tảng đá mới xuất hiện bên cạnh, khắc chữ "Hello World". Nhưng bức tường cũ khắc
+                chữ "Hello" vẫn còn nguyên đó, không hề thay đổi.</p>
+            <p class="dialogue">"Ngươi thấy không? Ta không sửa bức tường cũ. Ta tạo bức tường mới. Bức tường cũ bị bỏ
+                lại, chờ Garbage Collector đến dọn."</p>
+            <p class="dialogue">"Điều này có ý nghĩa gì trong thực tế?"</p>
+            <p class="dialogue">"Nếu ngươi nối chuỗi trong vòng lặp một nghìn lần, ngươi sẽ tạo ra một nghìn bức tường
+                rác. Rất tốn bộ nhớ và chậm."</p>
+            <p class="dialogue">Minh Đức à lên: "Vậy phải làm sao khi cần nối nhiều chuỗi?"</p>
+
+            <h2>Cảnh 3: Hoạt Tự Bút - StringBuilder</h2>
+            <p>Sư phụ rút từ trong tay áo ra một cây bút thần kỳ, phát sáng lung linh.</p>
+            <p class="dialogue">"Đây là <span class="technical-term">StringBuilder</span> <span
+                    class="pronunciation">(đọc là "xtrinh-bin-đơ")</span>, ta gọi là Hoạt Tự Bút. Nó cho phép ngươi viết
+                và sửa nội dung trực tiếp mà không tạo bức tường mới mỗi lần."</p>
+            <p class="dialogue">"StringBuilder bên trong là một mảng ký tự có thể thay đổi. Khi ngươi gọi phương thức
+                append <span class="pronunciation">(đọc là "ơ-pen")</span> để nối thêm chữ, nó ghi thẳng vào mảng đó,
+                không tạo đối tượng mới."</p>
+            <p class="dialogue">"Khi nối xong, ngươi gọi phương thức toString <span class="pronunciation">(đọc là
+                    "tu-xtrinh")</span> để lấy ra một String hoàn chỉnh."</p>
+            <p class="dialogue">"Như vậy, dù ngươi nối một nghìn lần trong vòng lặp, ngươi cũng chỉ tạo một
+                StringBuilder duy nhất và một String cuối cùng duy nhất. Tiết kiệm bộ nhớ và nhanh hơn nhiều."</p>
+            <p class="dialogue">"Còn <span class="technical-term">StringBuffer</span> <span class="pronunciation">(đọc
+                    là "xtrinh-bấp-phơ")</span> thì sao ạ?"</p>
+            <p class="dialogue">"StringBuffer tương tự StringBuilder, nhưng nó synchronized <span
+                    class="pronunciation">(đọc là "xin-crô-nai")</span>, tức có khóa an toàn cho môi trường đa luồng.
+                Nhưng vì có khóa nên nó chậm hơn StringBuilder. Trong chín mươi chín phần trăm trường hợp, ngươi chỉ cần
+                StringBuilder."</p>
+
+            <h2>Cảnh 4: Tại Sao String Lại Bất Biến?</h2>
+            <p>Minh Đức tò mò: "Sư phụ, tại sao Java lại thiết kế String bất biến? Có vẻ bất tiện quá."</p>
+            <p>Sư phụ gật đầu: "Câu hỏi hay. Có nhiều lý do."</p>
+            <p class="dialogue">"Thứ nhất là bảo mật. String thường được dùng làm tham số cho những thao tác nhạy cảm
+                như đường dẫn file, địa chỉ kết nối cơ sở dữ liệu, tên người dùng. Nếu String có thể thay đổi, một kẻ
+                xấu có thể truyền vào một String hợp lệ, qua được bước kiểm tra, rồi sau đó thay đổi nội dung để truy
+                cập tài nguyên trái phép. Với String bất biến, điều này không xảy ra."</p>
+            <p class="dialogue">"Thứ hai là an toàn trong môi trường đa luồng. Vì String không thể thay đổi, nhiều luồng
+                có thể đọc cùng một String mà không lo xung đột. Không cần khóa đồng bộ."</p>
+            <p class="dialogue">"Thứ ba là String Pool. Pool chỉ hoạt động được vì String bất biến. Nếu String có thể
+                thay đổi, một luồng sửa chữ "JAVA" thành "RUBY" thì tất cả các biến khác đang trỏ vào tảng đá đó cũng bị
+                ảnh hưởng. Hệ thống sẽ loạn."</p>
+            <p class="dialogue">"Thứ tư là tối ưu hashCode. Vì String không đổi, Java có thể tính hashCode một lần rồi
+                lưu lại để dùng mãi. Điều này rất quan trọng khi dùng String làm Key trong HashMap. Nếu String có thể
+                thay đổi, hashCode cũng thay đổi, Key sẽ bị mất trong bảng băm."</p>
+            <p class="dialogue">Minh Đức gật đầu liên tục: "Con hiểu rồi! Bất biến không phải bất tiện, mà là thiết kế
+                có chủ đích!"</p>
+
+            <h2>Cảnh 5: Vạn Hóa Tượng - Generics</h2>
+            <p>Rời khỏi hồ nước, Minh Đức đến trước pho tượng biến hình. Lúc này tượng đang có hình một con hổ dữ tợn.
+            </p>
+            <p class="dialogue">"Đây là bài học về <span class="technical-term">Generics</span> <span
+                    class="pronunciation">(đọc là "djen-ne-ríc")</span>, ta gọi là Vạn Hóa Quyết. Pháp thuật cho phép
+                viết code linh hoạt mà vẫn an toàn về kiểu dữ liệu."</p>
+            <p class="dialogue">"Trước khi có Generics, nếu ngươi muốn tạo một cái lồng nhốt thú, ngươi phải khai báo
+                lồng chứa Object. Object là cha của mọi lớp, nên lồng có thể chứa bất cứ thứ gì: Hổ, Báo, Rồng, thậm chí
+                cả con Mèo."</p>
+            <p class="dialogue">"Nhưng khi ngươi lấy thú ra khỏi lồng, ngươi phải ép kiểu. Nếu ngươi nghĩ trong lồng là
+                Hổ nhưng thực ra là Mèo, ngươi sẽ bị lỗi <span class="technical-term">ClassCastException</span> <span
+                    class="pronunciation">(đọc là "clát-cát-ích-xép-sần")</span>, tức Lỗi Ép Kiểu. Đây là tẩu hỏa nhập
+                ma vì không biết mình đang xử lý kiểu gì."</p>
+            <p class="dialogue">"Generics giải quyết vấn đề này. Khi khai báo lồng, ngươi chỉ định rõ lồng này chứa kiểu
+                gì. Ví dụ Lồng dấu nhỏ hơn Hổ dấu lớn hơn. Từ đó, ngươi chỉ được bỏ Hổ vào. Nếu cố bỏ Mèo, trình biên
+                dịch sẽ báo lỗi ngay lập tức, không cần chờ đến khi chạy."</p>
+            <p class="dialogue">"Khi lấy thú ra, ngươi không cần ép kiểu. Java tự hiểu đó là Hổ."</p>
+            <p class="dialogue">"Đó là <span class="technical-term">Type Safety</span> <span class="pronunciation">(đọc
+                    là "tai xây-phi-ti")</span>, tức An Toàn Kiểu, được đảm bảo ngay từ lúc biên dịch."</p>
+
+            <h2>Cảnh 6: Wildcard - Ký Tự Đại Diện</h2>
+            <p>Sư phụ tiếp tục:</p>
+            <p class="dialogue">"Generics còn có khái niệm <span class="technical-term">Wildcard</span> <span
+                    class="pronunciation">(đọc là "guai-cát")</span>, tức Ký Tự Đại Diện, được biểu thị bằng dấu hỏi."
+            </p>
+            <p class="dialogue">"Có ba loại Wildcard chính."</p>
+            <p class="dialogue">"Loại một là Unbounded Wildcard <span class="pronunciation">(đọc là "ân-bao-đít
+                    guai-cát")</span>, viết là dấu nhỏ hơn dấu hỏi dấu lớn hơn. Nó đại diện cho bất kỳ kiểu nào. Dùng
+                khi ngươi không quan tâm kiểu cụ thể."</p>
+            <p class="dialogue">"Loại hai là Upper Bounded Wildcard <span class="pronunciation">(đọc là "áp-pơ bao-đít
+                    guai-cát")</span>, viết là dấu nhỏ hơn dấu hỏi extends T dấu lớn hơn. Nó đại diện cho T hoặc bất kỳ
+                lớp con nào của T. Dùng khi ngươi chỉ muốn đọc dữ liệu từ collection, không ghi."</p>
+            <p class="dialogue">"Loại ba là Lower Bounded Wildcard <span class="pronunciation">(đọc là "lâu-ơ bao-đít
+                    guai-cát")</span>, viết là dấu nhỏ hơn dấu hỏi super T dấu lớn hơn. Nó đại diện cho T hoặc bất kỳ
+                lớp cha nào của T. Dùng khi ngươi muốn ghi dữ liệu vào collection."</p>
+            <p class="dialogue">"Có một nguyên tắc vàng để nhớ: PECS, viết tắt của Producer Extends, Consumer Super
+                <span class="pronunciation">(đọc là "prô-điu-xơ ích-ten, con-xiu-mơ xiu-pơ")</span>. Producer nghĩa là
+                bên cung cấp dữ liệu thì dùng extends. Consumer nghĩa là bên tiêu thụ dữ liệu thì dùng super."</p>
+
+            <h2>Cảnh 7: Hóa Hình Ẩn Tích - Type Erasure</h2>
+            <p>Minh Đức tự tin: "Con đã hiểu Generics! Vậy con có thể dùng Reflection <span class="pronunciation">(đọc
+                    là "ri-phléc-sần")</span> để xem kiểu cụ thể của Generic tại thời điểm chạy không?"</p>
+            <p>Sư phụ cười bí hiểm: "Ngươi không thể."</p>
+            <p class="dialogue">"Sao vậy ạ?"</p>
+            <p class="dialogue">"Vì Generics chỉ tồn tại lúc biên dịch. Khi biên dịch xong, Java xóa sạch thông tin kiểu
+                Generic. Hiện tượng này gọi là <span class="technical-term">Type Erasure</span> <span
+                    class="pronunciation">(đọc là "tai i-rây-giờ")</span>, ta gọi là Hóa Hình Ẩn Tích."</p>
+            <p class="dialogue">"Nghĩa là sao ạ?"</p>
+            <p class="dialogue">"Nghĩa là tại thời điểm chạy, List dấu nhỏ hơn String dấu lớn hơn và List dấu nhỏ hơn
+                Integer dấu lớn hơn đều trở thành List thường. Không còn thông tin String hay Integer nữa."</p>
+            <p class="dialogue">"Sao Java lại thiết kế như vậy?"</p>
+            <p class="dialogue">"Để tương thích ngược với phiên bản cũ. Generics được thêm vào từ Java năm, năm hai
+                nghìn lẻ bốn. Lúc đó đã có hàng triệu dòng code Java sử dụng raw type <span class="pronunciation">(đọc
+                    là "ro tai")</span>, tức kiểu thô không có Generic. Type Erasure cho phép code mới và code cũ chung
+                sống hòa bình."</p>
+            <p class="dialogue">"Nhưng điều này có hệ quả gì?"</p>
+            <p class="dialogue">"Hệ quả thứ nhất: Ngươi không thể tạo mảng của kiểu Generic. Ví dụ không thể viết new T
+                ngoặc vuông mở số mười ngoặc vuông đóng."</p>
+            <p class="dialogue">"Hệ quả thứ hai: Ngươi không thể dùng instanceof với kiểu Generic cụ thể. Ví dụ không
+                thể viết if obj instanceof List String."</p>
+            <p class="dialogue">"Hệ quả thứ ba: Ngươi không thể overload hai phương thức chỉ khác nhau ở kiểu Generic.
+                Ví dụ không thể có cùng lúc phương thức nhận List String và phương thức nhận List Integer, vì sau khi
+                xóa kiểu, cả hai đều là List."</p>
+            <p>Minh Đức thở dài: "Ảo thuật quá! Generics chỉ là ảo ảnh che mắt lập trình viên ở giai đoạn biên dịch, đến
+                khi chạy thì tan biến."</p>
+            <p class="dialogue">"Đúng vậy. Nhưng nhờ ảo ảnh đó, ngươi tránh được rất nhiều lỗi ép kiểu ngớ ngẩn. Type
+                Safety at compile time còn hơn không có gì."</p>
+
+            <h2>Kết: Xuất Sư</h2>
+            <p>Khi mặt trời lặn sau dãy núi JVM Phong, Minh Đức đã hoàn thành tất cả các thử thách. Hắn quỳ trước Sư phụ
+                Vân Cơ trong sân chính của Java Tông.</p>
+            <p class="dialogue">"Minh Đức, ngươi đến đây với một câu hỏi: Tại sao code của ngươi chết? Giờ ngươi đã biết
+                câu trả lời."</p>
+            <p class="dialogue">"Dạ, con biết rồi. Con đã hiểu về cơ thể JVM, biết cách chọn pháp bảo Collection, nắm
+                vững Ngũ Đạo Tắc SOLID để thiết kế code tốt, tinh thông tân pháp thuật Java tám để viết code gọn gàng,
+                và thấu hiểu bản chất của String cùng Generics."</p>
+            <p>Sư phụ gật đầu hài lòng. Lão rút từ trong tay áo ra một chiếc áo phông màu xanh, trên in hình Duke, linh
+                vật của Java.</p>
+            <p class="dialogue">"Ta trao cho ngươi chiếc áo này. Từ nay, ngươi đã là Senior Java Developer."</p>
+            <p>Minh Đức nhận lấy chiếc áo, mắt rưng rưng. Hắn mặc vào, cảm thấy có một luồng năng lượng ấm áp lan tỏa
+                khắp cơ thể.</p>
+            <p>Tiểu Bảo chạy đến, vẫn còn dính mực trên mặt từ lúc chép phạt:</p>
+            <p class="dialogue">"Sư huynh, huynh đi rồi thì ai dạy con đây?"</p>
+            <p class="dialogue">"Đệ cứ tu luyện chăm chỉ. Một ngày nào đó đệ cũng sẽ xuất sư."</p>
+            <p>Sư phụ Vân Cơ đứng lên:</p>
+            <p class="dialogue">"Minh Đức, thế giới bên ngoài còn rất nhiều điều để học. Spring Framework,
+                Microservices, Cloud Computing... Con đường tu luyện còn dài. Nhưng với nội công thâm hậu này, ngươi có
+                thể đi bất cứ đâu."</p>
+            <p>Minh Đức cúi đầu lần cuối, rồi bước xuống núi. Hắn nhìn về phía thành phố phía xa, nơi những tòa nhà cao
+                tầng với đèn sáng rực.</p>
+            <p class="dialogue">"Bug ơi, ta đến đây!"</p>
+            <p>Hắn mỉm cười, bước đi. Hành trình của một Senior Java Developer đích thực mới chỉ bắt đầu.</p>
+            <p style="text-align: center; margin-top: 50px; font-weight: bold; font-size: 24px;">(Hết Phần Một - Java
+                Core)</p>
+
+            <h2>Tâm Pháp Chương Này</h2>
+            <p>Sau khi đọc xong chương này, hãy ghi nhớ:</p>
+            <p>Thứ nhất, String Pool hay Văn Tự Linh Trì là vùng nhớ đặc biệt trong Heap, nơi lưu trữ các String literal
+                duy nhất. Khi tạo String bằng cách viết trực tiếp trong ngoặc kép, String sẽ được đặt vào Pool. Khi tạo
+                bằng new String, String sẽ nằm ở Heap bình thường, ngoài Pool.</p>
+            <p>Thứ hai, luôn dùng phương thức equals để so sánh nội dung của String, không dùng dấu bằng kép.</p>
+            <p>Thứ ba, String là Immutable hay Bất Biến. Mỗi thao tác nối chuỗi đều tạo String mới. Lý do thiết kế bất
+                biến là để bảo mật, an toàn đa luồng, hỗ trợ Pool, và tối ưu hashCode.</p>
+            <p>Thứ tư, dùng StringBuilder khi cần nối nhiều chuỗi trong vòng lặp. StringBuilder nhanh hơn và tiết kiệm
+                bộ nhớ hơn nối String trực tiếp.</p>
+            <p>Thứ năm, Generics hay Vạn Hóa Quyết cho phép viết code linh hoạt mà vẫn an toàn về kiểu. Khai báo kiểu cụ
+                thể giúp tránh lỗi ép kiểu lúc chạy.</p>
+            <p>Thứ sáu, Wildcard có ba loại: Unbounded với dấu hỏi, Upper Bounded với dấu hỏi extends T, và Lower
+                Bounded với dấu hỏi super T. Nguyên tắc PECS: Producer Extends, Consumer Super.</p>
+            <p>Thứ bảy, Type Erasure hay Hóa Hình Ẩn Tích là hiện tượng Java xóa thông tin kiểu Generic khi biên dịch.
+                Tại thời điểm chạy, không còn thông tin kiểu cụ thể. Đây là để tương thích ngược với Java cũ.</p>
+
+            <h2>Câu Hỏi Phỏng Vấn Senior</h2>
+            <p>Trong buổi phỏng vấn, nhà tuyển dụng có thể hỏi:</p>
+            <p><strong>"Tại sao String trong Java là Immutable? Điều này có lợi gì?"</strong></p>
+            <p>Ngươi có thể trả lời:</p>
+            <p>String là Immutable vì nhiều lý do.</p>
+            <p>Thứ nhất là bảo mật. String thường được dùng làm tham số cho các thao tác nhạy cảm như đường dẫn file,
+                URL, tên người dùng. Nếu String có thể thay đổi, kẻ tấn công có thể thay đổi nội dung sau khi qua bước
+                kiểm tra.</p>
+            <p>Thứ hai là an toàn đa luồng. Vì String không thể thay đổi, nhiều luồng có thể đọc cùng một String mà
+                không cần khóa đồng bộ.</p>
+            <p>Thứ ba là String Pool. Pool chỉ hoạt động được vì String bất biến. Nếu String có thể thay đổi, một luồng
+                sửa String sẽ ảnh hưởng đến tất cả các biến khác đang trỏ vào String đó.</p>
+            <p>Thứ tư là tối ưu hashCode. Vì String không đổi, hashCode được tính một lần và cache lại. Điều này rất
+                quan trọng khi dùng String làm Key trong HashMap.</p>
+            <p>Nhà tuyển dụng có thể hỏi tiếp:</p>
+            <p><strong>"Type Erasure là gì? Nó ảnh hưởng thế nào đến Generics?"</strong></p>
+            <p>Ngươi trả lời:</p>
+            <p>Type Erasure là hiện tượng Java xóa thông tin kiểu Generic khi biên dịch. Tại thời điểm chạy, List String
+                và List Integer đều trở thành List thường.</p>
+            <p>Điều này ảnh hưởng như sau: Thứ nhất, không thể tạo mảng của kiểu Generic. Thứ hai, không thể dùng
+                instanceof với kiểu Generic cụ thể. Thứ ba, không thể overload phương thức chỉ khác ở kiểu Generic.</p>
+            <p>Lý do Java thiết kế như vậy là để tương thích ngược với code Java trước phiên bản năm, khi Generics chưa
+                tồn tại.</p>
+            <p>Nhà tuyển dụng gật đầu. Ngươi đã vượt qua cửa ải cuối cùng.</p>
+            <p style="text-align: center; margin-top: 50px; font-weight: bold; font-size: 24px;">(Chúc mừng ngươi đã
+                hoàn thành Java Tu Tiên Ký - Phần Một: Java Core!)</p>
+        </section>
+
+        <footer class="chapter-footer">
+            <div class="key-takeaways">
+                <h3>🎯 Tâm Pháp Chương Này</h3>
+                <p><strong>Key Takeaways:</strong></p>
+                <p>String Pool & Immutability: Optimization & Security.</p>
+                <p>StringBuilder: For loop concatenations.</p>
+                <p>Generics: Compile-time type safety.</p>
+                <p>Type Erasure: Runtime compatibility.</p>
+            </div>
+        </footer>
+    </article>
+
+    <nav class="chapter-nav bottom">
+        <a href="chuong-4.html">⬅ Chương Trước</a>
+        <a href="index.html">Về Mục Lục ➡</a>
+    </nav>
+</body>
+
+</html>

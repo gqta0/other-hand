@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chương 3: Ngũ Đại Đạo Tắc (SOLID) - Java Tu Tiên Ký</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <nav class="chapter-nav">
+        <a href="chuong-2.html">⬅ Chương Trước</a>
+        <a href="chuong-4.html">Chương Sau ➡</a>
+    </nav>
+
+    <article class="chapter-content">
+        <header>
+            <h1>Chương 3: Ngũ Đại Đạo Tắc (SOLID)</h1>
+            <p class="chapter-subtitle">Xây dựng kiến trúc bền vững với 5 nguyên lý thiết kế kinh điển</p>
+        </header>
+
+        <section class="story-content">
+            <h2>Mở Đầu: Đại Hội Võ Lâm & Con Rối SuperGodBot</h2>
+            <p>Một tháng trôi qua. Minh Đức đã không còn là gã "gà mờ" về Collection nữa. Hắn tự tin bước vào sự kiện
+                lớn nhất trong năm của Java Tông: "Đại Hội Code Võ Lâm". Năm nay, đề bài là: "Chế tạo một Con Rối Chiến
+                Đấu (Battle Bot) tự động để thi đấu đối kháng".</p>
+            <p>Minh Đức lao vào phòng luyện khí (IDE), code ngày đêm. Hắn tạo ra một tuyệt tác mang tên
+                <strong>SuperGodBot</strong>. Hắn nhồi nhét tất cả mọi chức năng vào một class duy nhất:
+                <code>SuperGodBot.java</code>. Class này dài tới 5000 dòng, chứa từ việc đi lại, bắn súng, khiên chắn,
+                cho đến... nấu cơm.</p>
+            <p class="dialogue">"Hoàn hảo! Một class cân cả bản đồ!" - Minh Đức đắc ý.</p>
+            <p>Nhưng bi kịch xảy ra vào đúng ngày thi đấu. Trọng tài yêu cầu hắn sửa nhẹ một logic trong việc di chuyển.
+                Minh Đức mở file <code>SuperGodBot.java</code> ra sửa. Vô tình, hắn xóa nhầm một dấu chấm phẩy ở đoạn
+                code... bắn súng nằm ngay bên dưới.</p>
+            <p>Kết quả: Khi lên sàn đấu, con SuperGodBot vừa bước đi một bước thì nổ tung vì lỗi logic. Minh Đức ngồi
+                bệt xuống sàn, khóc không ra nước mắt.</p>
+            <p>Sư Tỷ Thanh Vân, một cao thủ Kim Đan Kỳ về Thiết Kế (Design Patterns), đi ngang qua. Nàng nhặt một mảnh
+                vỡ lên và thở dài:</p>
+            <p class="dialogue">"Nhìn code của đệ kìa. Nó không phải là code, nó là một đĩa mì Ý (Spaghetti Code) trộn
+                với mắm tôm. Đệ đã vi phạm nghiêm trọng <strong>Ngũ Đại Đạo Tắc (SOLID)</strong>."</p>
+
+            <h2>Cảnh 1: Chuyên Tâm Nhất Pháp (Single Responsibility Principle)</h2>
+            <p>Sư Tỷ cầm bản thiết kế <code>SuperGodBot</code> lên:</p>
+            <p class="dialogue">"Đệ nhìn xem. Class này vừa lo đi, vừa lo đánh, vừa lo thủ. Khi đệ sửa phần 'Đi', đệ làm
+                hỏng phần 'Đánh'. Một người ôm quá nhiều việc thì làm việc gì cũng dở."</p>
+            <p class="dialogue">"Đạo tắc thứ nhất: <strong>S - Single Responsibility Principle (Nguyên tắc Đơn
+                    Nhiệm)</strong>. Dịch theo ngôn ngữ tu tiên là <strong>Chuyên Tâm Nhất Pháp</strong>."</p>
+            <p class="dialogue">"Nghĩa là sao ạ?"</p>
+            <p class="dialogue">"Nghĩa là: <strong>Một class chỉ nên có một lý do duy nhất để thay đổi</strong>. Đệ phải
+                tách con quái vật này ra."</p>
+            <p>Sư Tỷ rút kiếm chém xoẹt xoẹt vào bản thiết kế. <code>SuperGodBot</code> bị xẻ ra thành:</p>
+            <ul style="margin-left: 20px;">
+                <li><code>MovementUnit</code> (Chuyên lo di chuyển).</li>
+                <li><code>AttackUnit</code> (Chuyên lo tấn công).</li>
+                <li><code>DefenseUnit</code> (Chuyên lo phòng thủ).</li>
+            </ul>
+            <p class="dialogue">"Bây giờ, nếu trọng tài bắt sửa cách đi, đệ chỉ sửa file <code>MovementUnit</code>. Dù
+                đệ có lỡ tay xóa nhầm gì đó, thì <code>AttackUnit</code> vẫn an toàn. Hiểu chưa?"</p>
+
+            <h2>Cảnh 2: Khai Nhi Bất Phá (Open/Closed Principle)</h2>
+            <p>Sau khi tách class, Minh Đức hí hửng: "Để đệ gắn thêm Súng Laser cho robot!". Hắn mở class
+                <code>AttackUnit</code> ra, sửa đoạn code cũ:</p>
+            <pre><code>// CODE CŨ
+void attack() {
+   if (weapon == SWORD) chem();
+   // Hắn thêm dòng này:
+   else if (weapon == LASER) ban_laser();
+}</code></pre>
+            <p>Sư Tỷ lại cốc đầu hắn:</p>
+            <p class="dialogue">"Sai! Đệ lại vi phạm Đạo tắc thứ hai: <strong>O - Open/Closed Principle (Nguyên tắc
+                    Đóng/Mở)</strong>. Tu tiên gọi là <strong>Khai Nhi Bất Phá</strong>."</p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Open for Extension (Mở cho mở rộng)</strong>: Thoải mái thêm tính năng mới.</li>
+                <li><strong>Closed for Modification (Đóng cho sửa đổi)</strong>: Không được đụng vào code cũ đã chạy ổn
+                    định.</li>
+            </ul>
+            <p class="dialogue">"Đệ cứ 'mổ bụng' class <code>AttackUnit</code> ra khâu vá mỗi khi có vũ khí mới thế này,
+                sớm muộn gì cũng đứt ruột mà chết. Hãy dùng <strong>Interface</strong>."</p>
+            <p>Sư Tỷ sửa lại:</p>
+            <ol style="margin-left: 20px;">
+                <li>Tạo Interface <code>Weapon</code> có hàm <code>use()</code>.</li>
+                <li><code>AttackUnit</code> chỉ giữ một danh sách <code>List&lt;Weapon&gt;</code>.</li>
+                <li>Khi muốn có Laser? Tạo class <code>LaserGun implements Weapon</code>.</li>
+                <li>Khi muốn có Búa? Tạo class <code>Hammer implements Weapon</code>.</li>
+            </ol>
+            <p class="dialogue">"Thấy không? Khi thêm vũ khí mới, đệ chỉ viết class mới, không hề sửa một chữ nào trong
+                code cũ của robot. Đó mới là thượng thừa."</p>
+
+            <h2>Cảnh 3: Truyền Thừa Chân Quyết (Liskov Substitution Principle)</h2>
+            <p>Minh Đức gật gù. Hắn thấy vui vẻ nên tạo thêm một con robot hình con chim, đặt tên là
+                <code>ChimCuRobot</code>, cho nó kế thừa class <code>Robot</code>.</p>
+            <p>Nhưng <code>Robot</code> mặc định có hàm <code>walk()</code> (đi bộ). Con chim thì không biết đi, nên
+                Minh Đức để hàm <code>walk()</code> ném ra một lỗi <code>Exception("Chim không biết đi")</code>.</p>
+            <p>Sư Tỷ nhìn thấy, mặt biến sắc:</p>
+            <p class="dialogue">"Đệ đang phá hoại gia phả! Đây là lỗi vi phạm <strong>L - Liskov Substitution Principle
+                    (Nguyên tắc Thay Thế Liskov)</strong> - <strong>Truyền Thừa Chân Quyết</strong>."</p>
+            <p class="dialogue">"Nguyên tắc này nói rằng: <strong>Class con phải thay thế được class cha mà không làm
+                    hỏng chương trình</strong>."</p>
+            <p class="dialogue">"Hãy tưởng tượng đệ có một đàn <code>Robot</code>. Sư phụ ra lệnh:
+                <code>toàn_đội.walk()</code>. Tất cả đang đi đều, tự nhiên đến con <code>ChimCuRobot</code>, nó lăn đùng
+                ra chết ngắc vì nó không biết đi. Thế là hỏng cả đội hình."</p>
+            <p class="dialogue">"Đừng bao giờ ép con cá leo cây chỉ vì nó kế thừa từ Động Vật. Nếu chim không biết đi,
+                đừng cho nó kế thừa <code>RobotBiếtĐi</code>. Hãy tách ra."</p>
+
+            <h2>Cảnh 4: Tinh Giản Pháp Môn (Interface Segregation Principle)</h2>
+            <p>Rút kinh nghiệm, Minh Đức tạo một Interface to bự tên là <code>SuperSoldier</code>, có đủ các hàm:
+                <code>attack()</code>, <code>defend()</code>, <code>eat()</code>, <code>sleep()</code>.</p>
+            <p>Hắn bắt con <code>RobotDọnRác</code> phải implement interface này. Kết quả: Con robot dọn rác tội nghiệp
+                phải viết hàm <code>attack()</code> (triển khai rỗng) dù nó chẳng bao giờ đánh nhau.</p>
+            <p>Sư Tỷ thở dài:</p>
+            <p class="dialogue">"Đệ lại dính <strong>I - Interface Segregation Principle (Nguyên tắc Phân Tách
+                    Interface)</strong> - <strong>Tinh Giản Pháp Môn</strong>."</p>
+            <p class="dialogue">"Đừng ép một class phải implement những hàm mà nó không dùng. Đừng tạo ra những
+                Interface khổng lồ (God Interface). Hãy chia nhỏ ra. Interface <code>Fighter</code>:
+                <code>attack()</code>, <code>defend()</code>. Interface <code>Worker</code>: <code>work()</code>,
+                <code>eat()</code>."</p>
+            <p class="dialogue">"Con Robot Chiến Đấu sẽ implement <code>Fighter</code>. Con Robot Dọn Rác sẽ implement
+                <code>Worker</code>. Ai cần gì dùng nấy, thanh thản nhẹ nhàng."</p>
+
+            <h2>Cảnh 5: Y Đạo Bất Y Khí (Dependency Inversion Principle)</h2>
+            <p>Cuối cùng, Minh Đức nắp cánh tay khoan cho robot. Hắn hàn chết cánh tay vào thân robot bằng keo 502 (Code
+                cứng: <code>Robot</code> chứa biến <code>DrillArm</code>).</p>
+            <p class="dialogue">"Thay khoan bằng kẹp gắp đi" - Sư phụ bảo.</p>
+            <p class="dialogue">"Không được ạ! Hàn chết rồi! Muốn thay phải cưa tay!" - Minh Đức khóc thét.</p>
+            <p>Sư Tỷ chốt hạ:</p>
+            <p class="dialogue">"Đây là lỗi nặng nhất. <strong>D - Dependency Inversion Principle (Nguyên tắc Đảo Ngược
+                    Phụ Thuộc)</strong> - <strong>Y Đạo Bất Y Khí</strong>."</p>
+            <p class="dialogue">"Cốt lõi là: <strong>Module cấp cao (Robot) không nên phụ thuộc vào module cấp thấp
+                    (Cánh tay khoan cụ thể). Cả hai nên phụ thuộc vào Trừu Tượng (Interface Cánh Tay)</strong>."</p>
+            <p class="dialogue">"Thay vì gắn chết <code>DrillArm</code>, đệ hãy thiết kế một cái khớp nối
+                <code>IArm</code>. Con robot chỉ cần biết nó có một cái
+                <code>IArm`. Hôm nay đệ lắp <code>DrillArm</code>, mai đệ lắp
+                <code>GripArm`, miễn là vừa cái khớp đó. Đó gọi là <strong>Dependency Injection</strong> (Tiêm phụ thuộc)."</p>
+
+            <h2>Kết: Lĩnh Ngộ Đạo Thiết Kế</h2>
+            <p>Minh Đức nhìn lại con SuperGodBot phiên bản 2.0. Nó không còn là một cục sắt nguyên khối nữa, mà là một tập hợp các module linh hoạt, lắp ghép với nhau bằng các khớp nối (Interface) lỏng lẻo nhưng chắc chắn.</p>
+            <ul style="margin-left: 20px;">
+                <li>Muốn nâng cấp? -> Viết class mới (OCP).</li>
+                <li>Hư hỏng? -> Sửa đúng chỗ (SRP).</li>
+                <li>Thay linh kiện? -> Tháo ra lắp vào (DIP).</li>
+            </ul>
+            <p>Tại trận chung kết, robot đối thủ bị lỗi kẹt đạn và đứng im vì code quá rối. Robot của Minh Đức thì ung dung thay súng bằng khiên ngay giữa trận mạc và giành chiến thắng.</p>
+            <p class="dialogue">"Code chạy được là Bạc. Code dễ đọc, dễ sửa, dễ mở rộng mới là Vàng," - Minh Đức lẩm bẩm câu thần chú của Sư Tỷ.</p>
+            <p>Hắn đã vượt qua ải khó nhất: Tư duy thiết kế. Giờ đây, hắn đã sẵn sàng để tiếp cận những tuyệt kỹ võ công hiện đại nhất của Java Tân Thời Đại.</p>
+        </section>
+        
+        <footer class="chapter-footer">
+            <div class="key-takeaways">
+                <h3>🎯 Tâm Pháp Chương Này</h3>
+                <ul>
+                    <li><strong>S (SRP)</strong>: Một class, một nhiệm vụ.</li>
+                    <li><strong>O (OCP)</strong>: Mở cho mở rộng, Đóng cho sửa đổi. Dùng Interface/Abstract class để đa hình.</li>
+                    <li><strong>L (LSP)</strong>: Con phải thay thế được cha. Đừng ném Exception ở hàm của con nếu cha k quy định.</li>
+                    <li><strong>I (ISP)</strong>: Chia nhỏ Interface. Không ép implement hàm thừa.</li>
+                    <li><strong>D (DIP)</strong>: Phụ thuộc vào Interface, không phụ thuộc vào Class cụ thể. Dùng Dependency Injection.</li>
+                </ul>
+            </div>
+            <div class="interview-prep">
+                <h3>💼 Câu Hỏi Phỏng Vấn Senior</h3>
+                <p><strong>Q: Giải thích nguyên tắc Dependency Inversion? Nó khác gì Dependency Injection?</strong></p>
+                <p><strong>A:</strong>
+                    <ul>
+                        <li><strong>Dependency Inversion (DIP)</strong> là một <em>nguyên lý</em> thiết kế: Cấp cao không nên phụ thuộc cấp thấp, cả hai phụ thuộc vào Interface.</li>
+                        <li><strong>Dependency Injection (DI)</strong> là một <em>kỹ thuật</em> (Design Pattern) để thực hiện nguyên lý DIP. Ví dụ: Thay vì <code>new Engine()</code>
+                bên trong class <code>Car</code>, ta truyền <code>Engine</code> vào qua Constructor
+                <code>Car(Engine e)</code>.</li>
+                </ul>
+            </p>
+            <p><strong>Q: Vi phạm Liskov Substitution (LSP) gây hậu quả gì?</strong></p>
+            <p><strong>A:</strong> Gây ra lỗi logic tiềm ẩn (unexpected behavior) khi sử dụng tính đa hình. Code đang
+                chạy đúng với class Cha, tự nhiên thay class Con vào thì crash hoặc chạy sai, làm mất đi tính tin cậy
+                của hệ thống phân cấp thừa kế.</p>
+            </div>
+            </footer>
+    </article>
+
+    <nav class="chapter-nav bottom">
+        <a href="chuong-2.html">⬅ Chương Trước</a>
+        <a href="chuong-4.html">Chương Sau ➡</a>
+    </nav>
+</body>
+
+</html>

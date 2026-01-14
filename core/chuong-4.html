@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chương 4: Thời Đại Tân Pháp - Java Tu Tiên Ký</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <nav class="chapter-nav">
+        <a href="chuong-3.html">⬅ Chương Trước</a>
+        <a href="chuong-5.html">Chương Sau ➡</a>
+    </nav>
+
+    <article class="chapter-content">
+        <header>
+            <h1>Chương 4: Thời Đại Tân Pháp</h1>
+        </header>
+
+        <section class="story-content">
+            <h2>Mở Đầu: Bài Toán Lọc Đệ Tử</h2>
+            <p>Một tháng trôi qua kể từ khi Minh Đức học xong Ngũ Đạo Tắc SOLID. Sư phụ Vân Cơ giao cho hắn một nhiệm vụ
+                mới: Quản lý danh sách mười nghìn đệ tử nhập môn.</p>
+            <p class="dialogue">"Hãy tìm trong danh sách những đệ tử có tên bắt đầu bằng chữ A, trên mười tám tuổi, rồi
+                lấy tên của họ viết in hoa."</p>
+            <p>Minh Đức ngồi xuống, bắt đầu viết. Hắn tạo một vòng lặp <span class="technical-term">for</span> <span
+                    class="pronunciation">(đọc là "pho")</span>, duyệt qua từng đệ tử. Trong vòng lặp, hắn kiểm tra xem
+                tên có bắt đầu bằng chữ A không. Nếu có, hắn lại kiểm tra tuổi có lớn hơn mười tám không. Nếu đúng, hắn
+                lấy tên, chuyển thành chữ in hoa, rồi bỏ vào một danh sách kết quả.</p>
+            <p>Hai mươi dòng lệnh sau, hắn nhìn lại đoạn viết của mình. Nó đúng, nó chạy được, nhưng trông như một mớ
+                bòng bong. Biến tạm tùm lum, vòng lặp lồng nhau, khó đọc muốn nổ đầu.</p>
+            <p>Đang lúc vò đầu bứt tóc, một giọng nói quen thuộc vang lên từ phía sau:</p>
+            <p class="dialogue">"Ái chà, sư đệ viết cái gì mà rối như canh hẹ vậy?"</p>
+            <p>Minh Đức quay đầu lại. Một thanh niên tuấn tú, mặc áo trắng, tay cầm quạt giấy, đang mỉm cười nhìn hắn.
+                Đó là Quang Hải, sư huynh đại đệ tử, cao thủ Java phiên bản tám, vừa đi du học về.</p>
+            <p class="dialogue">"Sư huynh! Huynh đã về!"</p>
+            <p class="dialogue">"Ta vừa từ Oracle Mountain <span class="pronunciation">(đọc là "o-rơ-cồ mau-tần")</span>
+                trở về. Ở đó, ta học được những pháp thuật mới của thời đại. Để ta xem đệ đang làm gì đã."</p>
+            <p>Quang Hải liếc nhìn đoạn viết của Minh Đức, rồi lắc đầu cười:</p>
+            <p class="dialogue">"Thời đại nào rồi mà đệ còn viết kiểu cổ đại thế kia? Để ta dạy đệ những tân pháp
+                thuật."</p>
+
+            <h2>Cảnh 1: Vô Danh Thuật Pháp - Lambda Expression</h2>
+            <p>Sư huynh Quang Hải phẩy quạt, một luồng gió mát thổi qua trang giấy của Minh Đức.</p>
+            <p class="dialogue">"Trước đây, khi muốn định nghĩa một hành vi, đệ phải tạo cả một Class vỏ bọc, hoặc dùng
+                <span class="technical-term">Anonymous Class</span> <span class="pronunciation">(đọc là "ơ-nô-ni-mơt
+                    clát")</span>, tức Lớp Vô Danh. Dài dòng lắm."</p>
+            <p class="dialogue">Minh Đức gật đầu: "Đúng vậy sư huynh. Con phải viết new Comparator <span
+                    class="pronunciation">(đọc là "niu com-pơ-rây-tơ")</span>, rồi mở ngoặc nhọn, rồi viết hàm compare
+                <span class="pronunciation">(đọc là "com-pe")</span>, rồi đóng ngoặc. Dài cả chục dòng chỉ để so sánh
+                hai số!"</p>
+            <p class="dialogue">"Đó là cách của thời xưa. Bây giờ, ta có <span class="technical-term">Lambda
+                    Expression</span> <span class="pronunciation">(đọc là "lam-đa ích-pré-sần")</span>, ta gọi là Vô
+                Danh Thuật Pháp."</p>
+            <p class="dialogue">"Lambda là gì ạ?"</p>
+            <p class="dialogue">"Lambda là cách viết tắt cho một hành vi. Thay vì tạo cả một Class, đệ chỉ cần viết: Dấu
+                ngoặc tròn chứa tham số, rồi mũi tên, rồi phần thân hàm."</p>
+            <p class="dialogue">"Ví dụ, để so sánh hai số a và b, đệ viết: mở ngoặc a phẩy b đóng ngoặc, mũi tên, a trừ
+                b. Xong! Một dòng duy nhất thay cho mười dòng."</p>
+            <p class="dialogue">Minh Đức trố mắt: "Ngắn gọn vậy sao?"</p>
+            <p class="dialogue">"Đúng vậy. Đây là tinh hoa của Vô Danh Thuật Pháp. Ngươi không cần vỏ bọc Class, không
+                cần tên phương thức. Chỉ cần tinh hoa logic bay ra là đủ."</p>
+            <p class="dialogue">"Nhưng làm sao Java biết cái Lambda đó dùng cho cái gì?"</p>
+            <p class="dialogue">"Hay lắm! Đệ hỏi đúng điểm then chốt. Lambda phải được gán cho một <span
+                    class="technical-term">Functional Interface</span> <span class="pronunciation">(đọc là "phăng-sần-nồ
+                    in-tơ-phây")</span>, ta gọi là Khế Ước Đơn Phương."</p>
+
+            <h2>Cảnh 2: Khế Ước Đơn Phương - Functional Interface</h2>
+            <p>Sư huynh Quang Hải giải thích tiếp:</p>
+            <p class="dialogue">"Functional Interface là một Interface chỉ có đúng một phương thức trừu tượng. Một và
+                chỉ một. Không hơn không kém."</p>
+            <p class="dialogue">"Ví dụ, Comparator là một Functional Interface vì nó chỉ có một phương thức compare.
+                Runnable <span class="pronunciation">(đọc là "răn-nơ-bồ")</span> cũng là Functional Interface vì chỉ có
+                phương thức run."</p>
+            <p class="dialogue">"Khi đệ viết Lambda, Java sẽ nhìn vào context <span class="pronunciation">(đọc là
+                    "con-téc")</span> xem Lambda đó được gán cho Interface nào. Rồi Java tự động hiểu: À, cái Lambda này
+                chính là implementation <span class="pronunciation">(đọc là "im-pờ-lờ-men-tây-sần")</span> của phương
+                thức duy nhất trong Interface đó."</p>
+            <p class="dialogue">"Java còn cung cấp sẵn nhiều Functional Interface phổ biến trong gói java chấm util chấm
+                function <span class="pronunciation">(đọc là "gia-va đót iu-tiu đót phăng-sần")</span>."</p>
+            <p class="dialogue">"Đầu tiên là <span class="technical-term">Predicate</span> <span
+                    class="pronunciation">(đọc là "pré-đi-kờt")</span>, nghĩa là Điều Kiện. Nó nhận một thứ gì đó và trả
+                về đúng hoặc sai. Dùng để lọc dữ liệu."</p>
+            <p class="dialogue">"Thứ hai là <span class="technical-term">Function</span> <span
+                    class="pronunciation">(đọc là "phăng-sần")</span>, nghĩa là Hàm Biến Đổi. Nó nhận một thứ và trả về
+                thứ khác. Dùng để chuyển đổi dữ liệu."</p>
+            <p class="dialogue">"Thứ ba là <span class="technical-term">Consumer</span> <span class="pronunciation">(đọc
+                    là "con-xiu-mơ")</span>, nghĩa là Người Tiêu Thụ. Nó nhận một thứ nhưng không trả về gì. Dùng để xử
+                lý dữ liệu mà không cần kết quả."</p>
+            <p class="dialogue">"Thứ tư là <span class="technical-term">Supplier</span> <span class="pronunciation">(đọc
+                    là "xơ-plai-ơ")</span>, nghĩa là Người Cung Cấp. Nó không nhận gì nhưng trả về một thứ. Dùng để tạo
+                dữ liệu."</p>
+            <p class="dialogue">Minh Đức gật gù: "Con hiểu rồi! Lambda và Functional Interface đi đôi với nhau. Lambda
+                là cách viết tắt để tạo instance <span class="pronunciation">(đọc là "in-xtần")</span> của Functional
+                Interface."</p>
+            <p class="dialogue">"Chính xác!"</p>
+
+            <h2>Cảnh 3: Vạn Lưu Quy Tông - Stream API</h2>
+            <p>Sư huynh Quang Hải nhìn vào bài toán lọc đệ tử của Minh Đức:</p>
+            <p class="dialogue">"Bây giờ, ta sẽ cho đệ thấy sức mạnh thực sự của tân pháp thuật. Hãy quên vòng lặp for
+                đi."</p>
+            <p class="dialogue">"Quên for ạ? Vậy làm sao duyệt qua danh sách?"</p>
+            <p class="dialogue">"Đệ không cần quan tâm đến việc duyệt. Hãy nghĩ theo kiểu khác: Dữ liệu là một dòng
+                sông, và đệ chỉ cần đặt các bộ lọc trên đường đi."</p>
+            <p>Sư huynh phẩy quạt, một dòng nước xanh biếc hiện ra giữa không trung.</p>
+            <p class="dialogue">"Đây là <span class="technical-term">Stream</span> <span class="pronunciation">(đọc là
+                    "xtrim")</span>, ta gọi là Vạn Lưu Quy Tông. Stream là một dòng chảy dữ liệu, cho phép đệ xử lý tập
+                hợp theo cách khai báo, không phải ra lệnh từng bước."</p>
+            <p class="dialogue">"Có ba phần chính trong một Stream Pipeline <span class="pronunciation">(đọc là
+                    "pai-plai")</span>, tức Đường Ống Dữ Liệu."</p>
+            <p class="dialogue">"Phần một là <span class="technical-term">Source</span> <span class="pronunciation">(đọc
+                    là "xọt")</span>, tức Nguồn. Đây là nơi dữ liệu bắt nguồn. Đệ có thể tạo Stream từ một Collection
+                bằng cách gọi phương thức stream."</p>
+            <p class="dialogue">"Phần hai là <span class="technical-term">Intermediate Operations</span> <span
+                    class="pronunciation">(đọc là "in-tơ-mi-đi-ết o-pơ-rây-sần")</span>, tức Thao Tác Trung Gian. Đây là
+                các bộ lọc và biến đổi giữa đường. Chúng trả về một Stream mới. Ví dụ như filter để lọc, map để biến
+                đổi, sorted để sắp xếp."</p>
+            <p class="dialogue">"Phần ba là <span class="technical-term">Terminal Operation</span> <span
+                    class="pronunciation">(đọc là "tơ-mi-nồ o-pơ-rây-sần")</span>, tức Thao Tác Kết Thúc. Đây là nơi dữ
+                liệu được thu hoạch. Ví dụ như collect để gom vào Collection, forEach để xử lý từng phần tử, count để
+                đếm."</p>
+            <p class="dialogue">"Bây giờ, ta sẽ giải bài toán của đệ bằng Stream."</p>
+            <p class="dialogue">"Bước một: Lấy danh sách đệ tử, gọi phương thức stream để mở cổng xả nước."</p>
+            <p class="dialogue">"Bước hai: Gọi filter với điều kiện tên bắt đầu bằng chữ A. Dữ liệu nào không thỏa mãn
+                sẽ bị chặn lại."</p>
+            <p class="dialogue">"Bước ba: Gọi filter một lần nữa với điều kiện tuổi lớn hơn mười tám."</p>
+            <p class="dialogue">"Bước bốn: Gọi map để biến đổi mỗi đệ tử thành tên của họ viết in hoa."</p>
+            <p class="dialogue">"Bước năm: Gọi collect để gom tất cả tên vào một List mới."</p>
+            <p class="dialogue">"Năm bước, viết liền nhau trên ba dòng, đọc xuôi như văn nói: Lấy danh sách, lọc tên A,
+                lọc tuổi, lấy tên in hoa, gom lại."</p>
+            <p class="dialogue">Minh Đức há hốc mồm: "Hai mươi dòng của con biến thành ba dòng! Mà còn dễ đọc hơn!"</p>
+            <p class="dialogue">"Đó là sức mạnh của Vạn Lưu Quy Tông. Mọi xử lý đều quy về một dòng chảy. Đệ không cần
+                quan tâm chi tiết từng bước lặp, chỉ cần nói đệ muốn gì, Stream tự lo phần còn lại."</p>
+
+            <h2>Cảnh 4: Lười Biếng Là Mạnh - Lazy Evaluation</h2>
+            <p>Tiểu Bảo đang ngồi gần đó, nghe lỏm bài giảng. Hắn hào hứng chạy đến:</p>
+            <p class="dialogue">"Sư huynh, cho con thử với!"</p>
+            <p>Hắn bắt đầu viết. Lấy danh sách, gọi stream, gọi filter, gọi map. Xong rồi hắn dừng lại, hớn hở:</p>
+            <p class="dialogue">"Con xong rồi!"</p>
+            <p class="dialogue">Sư huynh Quang Hải nhíu mày: "Đệ chưa xong. Đệ quên gọi Terminal Operation."</p>
+            <p class="dialogue">"Terminal gì cơ ạ?"</p>
+            <p class="dialogue">"Terminal Operation, như collect hay forEach. Nếu không có nó, Stream sẽ không chạy."
+            </p>
+            <p class="dialogue">"Hả? Nhưng con đã viết filter và map rồi mà?"</p>
+            <p class="dialogue">"Đó chỉ là xây dựng đường ống thôi. Nước chưa chảy. Stream dùng kỹ thuật gọi là <span
+                    class="technical-term">Lazy Evaluation</span> <span class="pronunciation">(đọc là "lay-di
+                    i-va-liu-ây-sần")</span>, tức Đánh Giá Lười Biếng."</p>
+            <p class="dialogue">Tiểu Bảo tròn mắt: "Lười biếng?"</p>
+            <p class="dialogue">"Đúng vậy. Các Intermediate Operations không thực thi ngay. Chúng chỉ ghi nhớ xem có
+                những thao tác gì. Chỉ khi đệ gọi Terminal Operation, Stream mới bắt đầu chảy và thực hiện tất cả các
+                bước."</p>
+            <p class="dialogue">"Nghĩa là... nếu con không gọi collect, thì tất cả filter và map của con chỉ nằm đó...
+                không chạy gì cả?"</p>
+            <p class="dialogue">"Chính xác! Ngươi chưa mở van xả thì nước chưa chảy đâu con ạ."</p>
+            <p class="dialogue">Tiểu Bảo gãi đầu: "Ủa, sao phải lười biếng vậy sư huynh?"</p>
+            <p class="dialogue">"Vì lười biếng là để tối ưu. Giả sử đệ có một triệu phần tử, nhưng đệ chỉ cần lấy mười
+                phần tử đầu tiên thỏa mãn điều kiện. Nếu không lười biếng, Stream sẽ xử lý cả triệu phần tử rồi mới cắt
+                lấy mười. Nhưng nhờ lười biếng, Stream có thể dừng sớm ngay khi đủ mười, không cần xử lý những phần tử
+                còn lại. Đây gọi là <span class="technical-term">Short-Circuiting</span> <span
+                    class="pronunciation">(đọc là "sọt xơ-kít-tinh")</span>, tức Đoản Mạch."</p>
+
+            <h2>Cảnh 5: Hư Vô Pháp Giới - Optional</h2>
+            <p>Bài học tiếp theo, sư huynh Quang Hải giao cho Minh Đức một nhiệm vụ:</p>
+            <p class="dialogue">"Hãy tìm trong danh sách một đệ tử tên là Trương Tam."</p>
+            <p>Minh Đức viết nhanh. Hắn duyệt danh sách, tìm thấy thì trả về, không thấy thì trả về null <span
+                    class="pronunciation">(đọc là "nâu")</span>, tức giá trị trống.</p>
+            <p>Hắn chạy thử. Kết quả trả về null. Hắn quên check <span class="pronunciation">(đọc là "trếc")</span>, cứ
+                thế gọi phương thức lấy tên của kết quả.</p>
+            <p>Bùm! <span class="technical-term">NullPointerException</span> <span class="pronunciation">(đọc là
+                    "nâu-poi-tơ ích-xép-sần")</span>! Lỗi Trỏ Không!</p>
+            <p class="dialogue">Minh Đức ôm đầu: "Chết rồi! Lại lỗi này!"</p>
+            <p class="dialogue">Sư huynh cười: "NullPointerException là bóng ma ám ảnh mọi lập trình viên Java. Nhưng từ
+                Java tám, ta có vũ khí để đối phó: <span class="technical-term">Optional</span> <span
+                    class="pronunciation">(đọc là "óp-sần-nồ")</span>, ta gọi là Hư Vô Pháp Giới."</p>
+            <p class="dialogue">"Optional là gì ạ?"</p>
+            <p class="dialogue">"Optional là một cái hộp. Hộp này có thể chứa một giá trị, hoặc có thể rỗng. Thay vì trả
+                về một đối tượng hoặc null, đệ trả về Optional của đối tượng."</p>
+            <p class="dialogue">"Khi nhận được Optional, người dùng bắt buộc phải kiểm tra xem hộp có rỗng không trước
+                khi mở. Có nhiều cách kiểm tra:"</p>
+            <p class="dialogue">"Cách một: Gọi isPresent <span class="pronunciation">(đọc là "ít-pré-zần")</span> để hỏi
+                xem hộp có đồ không, rồi mới gọi get để lấy."</p>
+            <p class="dialogue">"Cách hai: Gọi ifPresent <span class="pronunciation">(đọc là "íp-pré-zần")</span> và
+                truyền vào một Lambda. Nếu có đồ thì Lambda sẽ được gọi với đồ đó."</p>
+            <p class="dialogue">"Cách ba: Gọi orElse <span class="pronunciation">(đọc là "o-éo")</span> và truyền vào
+                giá trị dự phòng. Nếu hộp rỗng thì trả về giá trị dự phòng, không bị lỗi."</p>
+            <p class="dialogue">"Cách bốn: Gọi orElseThrow <span class="pronunciation">(đọc là "o-éo-thâu")</span> để
+                ném ra exception <span class="pronunciation">(đọc là "ích-xép-sần")</span> tùy chọn nếu hộp rỗng."</p>
+            <p class="dialogue">Minh Đức à lên: "Vậy thay vì trả về null rồi quên check, con trả về Optional. Người dùng
+                nhìn vào biết ngay là 'ồ, có thể không có giá trị', và phải xử lý trường hợp đó."</p>
+            <p class="dialogue">"Chính xác. Optional là cái rương bảo hộ, buộc đệ phải cẩn thận trước khi đụng tay vào
+                hư không."</p>
+
+            <h2>Cảnh 6: Truyền Tâm Ấn - Method Reference</h2>
+            <p>Quay lại bài toán Stream, Minh Đức viết đoạn map để chuyển tên thành in hoa. Hắn viết: mở ngoặc s đóng
+                ngoặc mũi tên s chấm toUpperCase mở đóng ngoặc tròn.</p>
+            <p class="dialogue">Sư huynh Quang Hải liếc nhìn:</p>
+            <p class="dialogue">"Đoạn Lambda của đệ có thể viết ngắn hơn."</p>
+            <p class="dialogue">"Ngắn hơn sao được nữa ạ?"</p>
+            <p class="dialogue">"Khi Lambda chỉ gọi đúng một phương thức có sẵn, đệ có thể dùng <span
+                    class="technical-term">Method Reference</span> <span class="pronunciation">(đọc là "mé-thớt
+                    ré-phờ-rần")</span>, ta gọi là Truyền Tâm Ấn."</p>
+            <p class="dialogue">"Thay vì viết mở ngoặc s đóng ngoặc mũi tên s chấm toUpperCase, đệ chỉ cần viết: String
+                hai chấm toUpperCase."</p>
+            <p class="dialogue">"Hai cái dấu hai chấm liền nhau là ký hiệu đặc biệt của Method Reference. Nó chỉ thẳng
+                vào phương thức mà không cần qua trung gian Lambda."</p>
+            <p class="dialogue">Minh Đức thử viết lại: "String hai chấm toUpperCase... Ồ, ngắn gọn hơn thật!"</p>
+            <p class="dialogue">"Có bốn loại Method Reference:"</p>
+            <p class="dialogue">"Loại một: Reference đến phương thức static. Ví dụ Integer hai chấm parseInt."</p>
+            <p class="dialogue">"Loại hai: Reference đến phương thức của một instance cụ thể. Ví dụ System chấm out hai
+                chấm println."</p>
+            <p class="dialogue">"Loại ba: Reference đến phương thức của một đối tượng tùy ý của một kiểu cụ thể. Ví dụ
+                String hai chấm toUpperCase. Ở đây, String là kiểu, và toUpperCase sẽ được gọi trên mỗi String đi qua."
+            </p>
+            <p class="dialogue">"Loại bốn: Reference đến constructor. Ví dụ ArrayList hai chấm new. Điều này tương đương
+                với Lambda tạo ArrayList mới."</p>
+
+            <h2>Cảnh 7: Parallel Stream - Song Song Thần Công</h2>
+            <p>Sư huynh Quang Hải tiếp tục:</p>
+            <p class="dialogue">"Stream còn có một chiêu thức mạnh mẽ nữa: <span class="technical-term">Parallel
+                    Stream</span> <span class="pronunciation">(đọc là "pa-ra-leo xtrim")</span>, ta gọi là Song Song
+                Thần Công."</p>
+            <p class="dialogue">"Thay vì xử lý dữ liệu tuần tự từng phần tử, Parallel Stream chia dữ liệu thành nhiều
+                phần và xử lý đồng thời trên nhiều luồng."</p>
+            <p class="dialogue">"Để kích hoạt, đệ chỉ cần thay stream bằng parallelStream khi tạo nguồn. Hoặc gọi phương
+                thức parallel trên Stream đã có."</p>
+            <p class="dialogue">Minh Đức hào hứng: "Hay quá! Vậy là nhanh gấp mấy lần?"</p>
+            <p class="dialogue">Sư huynh lắc đầu: "Không phải lúc nào cũng nhanh hơn. Parallel Stream dùng <span
+                    class="technical-term">ForkJoinPool</span> <span class="pronunciation">(đọc là
+                    "phóc-gioi-phu")</span> để chia việc. Có overhead <span class="pronunciation">(đọc là
+                    "ô-vơ-hét")</span>, tức chi phí chia và gộp."</p>
+            <p class="dialogue">"Nếu dữ liệu nhỏ, chi phí chia gộp còn lớn hơn lợi ích song song, thì Parallel Stream
+                lại chậm hơn."</p>
+            <p class="dialogue">"Nếu thao tác là I/O <span class="pronunciation">(đọc là "ai-ô")</span>, như đọc file
+                hoặc gọi mạng, các luồng sẽ bị chờ, không tận dụng được lợi thế song song."</p>
+            <p class="dialogue">"Nếu nguồn dữ liệu là LinkedList, việc chia dữ liệu rất khó, hiệu quả kém. ArrayList thì
+                chia dễ hơn."</p>
+            <p class="dialogue">"Quy tắc là: Parallel Stream mạnh khi dữ liệu lớn, thao tác tốn CPU, và nguồn dễ chia.
+                Còn lại, dùng Stream tuần tự cho an toàn."</p>
+
+            <h2>Cảnh 8: Tính Năng Java Mới - Records và Sealed Classes</h2>
+            <p>Sư huynh Quang Hải còn giới thiệu thêm những tính năng mới từ Java mười bốn đến mười bảy.</p>
+            <p class="dialogue">"Đầu tiên là <span class="technical-term">Record</span> <span class="pronunciation">(đọc
+                    là "ré-cọt")</span>, ta gọi là Bản Ghi. Đây là cách định nghĩa một Class dữ liệu cực kỳ ngắn gọn."
+            </p>
+            <p class="dialogue">"Trước đây, để tạo một Class chứa hai trường name và age, đệ phải viết constructor,
+                getter, equals, hashCode, toString. Cả năm chục dòng."</p>
+            <p class="dialogue">"Với Record, đệ chỉ cần viết: public record Person mở ngoặc String name phẩy int age
+                đóng ngoặc. Một dòng duy nhất! Java tự động tạo tất cả những thứ còn lại."</p>
+            <p class="dialogue">"Record là Immutable <span class="pronunciation">(đọc là "im-miu-tờ-bồ")</span>, tức Bất
+                Biến. Sau khi tạo ra, không thể thay đổi giá trị."</p>
+            <p class="dialogue">"Tiếp theo là <span class="technical-term">Sealed Classes</span> <span
+                    class="pronunciation">(đọc là "xi-ồ clát-sít")</span>, ta gọi là Lớp Niêm Phong. Đây là cách kiểm
+                soát ai được phép kế thừa một Class."</p>
+            <p class="dialogue">"Ví dụ, đệ có Class Shape. Đệ muốn chỉ có Circle, Rectangle, Square được kế thừa Shape.
+                Không ai khác được phép. Đệ khai báo Shape là sealed, rồi liệt kê các Class được phép."</p>
+            <p class="dialogue">"Điều này giúp đệ kiểm soát chặt chẽ hệ thống thừa kế, tránh việc ai đó tạo SubClass
+                lung tung phá vỡ thiết kế."</p>
+
+            <h2>Kết: Tân Thời Đại</h2>
+            <p>Minh Đức nhìn lại đoạn viết mới của mình. Ba dòng thay cho hai mươi dòng. Đẹp, gọn gàng, đọc xuôi như văn
+                nói.</p>
+            <p class="dialogue">"Sư huynh, Java không còn là ngôn ngữ dài dòng văn tự như người đời chê bai nữa!"</p>
+            <p class="dialogue">"Đúng vậy. Java đang lột xác. Lambda, Stream, Optional, Record... Đây là sức mạnh của
+                <span class="technical-term">Functional Programming</span> <span class="pronunciation">(đọc là
+                    "phăng-sần-nồ prô-gram-minh")</span>, tức Lập Trình Hàm, được đưa vào ngôn ngữ hướng đối tượng."</p>
+            <p class="dialogue">"Nhưng nhớ kỹ: Pháp thuật mới không thay thế tất cả. Đôi khi vòng lặp for vẫn dễ đọc hơn
+                Stream phức tạp. Hãy dùng công cụ phù hợp cho từng tình huống."</p>
+            <p>Sư phụ Vân Cơ xuất hiện từ trong sương mù:</p>
+            <p class="dialogue">"Tốt lắm các đệ tử. Quang Hải đã truyền thụ tốt. Minh Đức đã tiếp thu nhanh. Còn một
+                chặng đường nữa: Hiểu về bản chất của chuỗi ký tự và kiểu dữ liệu linh hoạt. Hãy chuẩn bị cho bài học
+                cuối cùng tại Generic Điện."</p>
+
+            <h2>Tâm Pháp Chương Này</h2>
+            <p>Sau khi đọc xong chương này, hãy ghi nhớ:</p>
+            <p>Thứ nhất, Lambda Expression hay Vô Danh Thuật Pháp là cách viết tắt để tạo instance của Functional
+                Interface. Cú pháp là dấu ngoặc tròn chứa tham số, mũi tên, phần thân hàm.</p>
+            <p>Thứ hai, Functional Interface hay Khế Ước Đơn Phương là Interface chỉ có một phương thức trừu tượng. Các
+                interface phổ biến là Predicate, Function, Consumer, Supplier.</p>
+            <p>Thứ ba, Stream API hay Vạn Lưu Quy Tông cho phép xử lý tập dữ liệu theo cách khai báo. Có ba phần: Source
+                tạo nguồn, Intermediate Operations là các bộ lọc và biến đổi, Terminal Operation là nơi thu hoạch kết
+                quả.</p>
+            <p>Thứ tư, Stream dùng Lazy Evaluation. Các Intermediate Operations không chạy cho đến khi có Terminal
+                Operation.</p>
+            <p>Thứ năm, Optional hay Hư Vô Pháp Giới là hộp chứa giá trị có thể rỗng. Dùng để tránh NullPointerException
+                bằng cách buộc người dùng kiểm tra trước khi lấy giá trị.</p>
+            <p>Thứ sáu, Method Reference hay Truyền Tâm Ấn là cách viết tắt cho Lambda khi Lambda chỉ gọi một phương
+                thức có sẵn. Dùng hai dấu hai chấm liền nhau.</p>
+            <p>Thứ bảy, Parallel Stream xử lý dữ liệu song song, nhưng chỉ hiệu quả khi dữ liệu lớn, thao tác tốn CPU,
+                và nguồn dễ chia.</p>
+
+            <h2>Câu Hỏi Phỏng Vấn Senior</h2>
+            <p>Trong buổi phỏng vấn, nhà tuyển dụng có thể hỏi:</p>
+            <p><strong>"Stream có phải là Collection không? Sự khác biệt là gì?"</strong></p>
+            <p>Ngươi có thể trả lời:</p>
+            <p>Stream không phải Collection. Collection là cấu trúc lưu trữ dữ liệu trong bộ nhớ. Stream là luồng xử lý
+                dữ liệu, không lưu trữ.</p>
+            <p>Khác biệt thứ nhất: Collection có thể duyệt nhiều lần. Stream chỉ dùng một lần, sau khi có Terminal
+                Operation thì không dùng lại được.</p>
+            <p>Khác biệt thứ hai: Collection là Eager, dữ liệu có sẵn trong bộ nhớ. Stream là Lazy, chỉ xử lý khi cần.
+            </p>
+            <p>Khác biệt thứ ba: Collection luôn hữu hạn. Stream có thể vô hạn, ví dụ như Stream tạo từ hàm generate
+                hoặc iterate.</p>
+            <p>Nhà tuyển dụng có thể hỏi tiếp:</p>
+            <p><strong>"Khi nào Parallel Stream chậm hơn Stream tuần tự?"</strong></p>
+            <p>Ngươi trả lời:</p>
+            <p>Parallel Stream chậm hơn khi: Dữ liệu nhỏ vì overhead chia gộp lớn hơn lợi ích song song. Thao tác là I/O
+                vì các luồng sẽ bị chờ. Nguồn dữ liệu khó chia như LinkedList hoặc Stream từ iterate. Cần duy trì thứ tự
+                vì forEachOrdered phải chờ các luồng hoàn thành theo thứ tự.</p>
+            <p>Nhà tuyển dụng gật đầu. Ngươi đã vượt qua cửa ải thứ tư.</p>
+        </section>
+
+        <footer class="chapter-footer">
+            <div class="key-takeaways">
+                <h3>🎯 Tâm Pháp Chương Này</h3>
+                <p><strong>Key Takeaways:</strong></p>
+                <p>Lambda: Concise behavior definition.</p>
+                <p>Functional Interface: Single abstract method (SAM).</p>
+                <p>Stream API: Declarative data processing pipeline.</p>
+                <p>Optional: Null safety wrapper.</p>
+                <p>Method Reference: Shorthand for Lambdas.</p>
+            </div>
+        </footer>
+    </article>
+
+    <nav class="chapter-nav bottom">
+        <a href="chuong-3.html">⬅ Chương Trước</a>
+        <a href="chuong-5.html">Chương Sau ➡</a>
+    </nav>
+</body>
+
+</html>

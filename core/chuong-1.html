@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chương 1: Thiên Đạo & Khởi Nguyên - Java Tu Tiên Ký</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <nav class="chapter-nav">
+        <a href="index.html">⬅ Về Mục Lục</a>
+        <a href="chuong-2.html">Chương Sau ➡</a>
+    </nav>
+
+    <article class="chapter-content">
+        <header>
+            <h1>Chương 1: Thiên Đạo & Khởi Nguyên</h1>
+        </header>
+
+        <section class="story-content">
+            <h2>Mở Đầu: Kiếp Nạn Đêm Trăng</h2>
+            <p>Đêm hôm ấy, trăng tròn vằng vặc soi xuống tòa nhà văn phòng hai mươi tầng giữa lòng thành phố. Tầng mười
+                bảy, phòng họp lớn, Trần Minh Đức đang đứng trước màn hình trình chiếu, mồ hôi ướt đẫm lưng áo sơ mi
+                trắng.</p>
+            <p>Đây là buổi demo quan trọng nhất trong sự nghiệp ba năm làm lập trình viên của hắn. Khách hàng là một tập
+                đoàn tài chính lớn, hợp đồng trị giá hàng tỷ đồng. Sếp trưởng phòng ngồi ở góc phòng, mặt căng như dây
+                đàn. Phó Giám đốc bên phía khách hàng đeo kính gọng vàng, tay cầm bút ghi chép từng chi tiết.</p>
+            <p class="dialogue">"Thưa quý vị, hệ thống quản lý giao dịch của chúng tôi có thể xử lý hàng triệu request
+                mỗi ngày..." - Minh Đức đang thao thao bất tuyệt thì bỗng nhiên màn hình đỏ lòm.</p>
+            <p>Dòng chữ hiện lên như một lời nguyền: <span class="technical-term">Java Heap Space Error</span>, đọc theo
+                tiếng Việt là "gia-va híp sờ-pây-xờ e-rơ". Dịch nôm na là "Lỗi Vùng Nhớ Đống Đầy". Hệ thống sập. Hoàn
+                toàn. Không báo trước.</p>
+            <p>Phó Giám đốc kính vàng đặt bút xuống, lắc đầu. Sếp trưởng phòng che mặt bằng hai tay. Minh Đức đứng đó,
+                miệng há hốc như cá mắc cạn, không hiểu chuyện gì vừa xảy ra.</p>
+            <p class="dialogue">"Anh Đức... tôi nghĩ chúng ta cần dừng buổi demo ở đây."</p>
+            <p>Ba năm. Ba năm hắn code đủ thứ dự án. Viết hàng nghìn dòng lệnh. Nhưng hắn chưa bao giờ thực sự hiểu điều
+                cơ bản nhất: Tại sao code của hắn đôi khi tự nhiên chết?</p>
+            <p>Đêm đó, Minh Đức ngồi một mình trong quán cà phê vỉa hè, ly đen đá chảy nước, nhìn màn hình laptop với
+                đôi mắt vô hồn. Hắn gõ Google: "Tại sao Java bị Out of Memory Error" và nhận được hàng triệu kết quả.
+                Nhưng đọc mãi vẫn không hiểu.</p>
+            <p>Đúng lúc đó, một tin nhắn lạ hiện lên. Người gửi không tên, chỉ có một dòng chữ:</p>
+            <p class="dialogue">"Ngươi muốn hiểu Thiên Đạo của Java? Hãy đến đỉnh JVM Phong, tìm Java Tông."</p>
+            <p>Minh Đức nhìn tin nhắn, cười khẩy. Chắc là spam. Nhưng có điều gì đó thôi thúc hắn. Có lẽ là sự tuyệt
+                vọng. Có lẽ là niềm tin rằng phải có cách nào đó để thoát khỏi kiếp "thợ code" mãi mãi không hiểu mình
+                đang làm gì.</p>
+            <p>Hắn gập laptop, khoác ba lô lên vai, và bước vào đêm tối.</p>
+
+            <h2>Cảnh 1: Cổng Tam Quan Và Vị Sư Phụ Bí Ẩn</h2>
+            <p>Núi JVM Phong cao ngất, mây mù bao phủ quanh năm. Minh Đức leo đến hụt hơi, chân run rẩy, môi khô nẻ. Hắn
+                không hiểu sao mình lại tin vào một tin nhắn lạ, nhưng giờ đã đến đây rồi, không lẽ quay về?</p>
+            <p>Khi sương mù tan bớt, trước mặt hắn hiện ra một cổng sơn môn đồ sộ. Hai trụ cổng bằng đá xanh, trên khắc
+                những ký tự nhị phân không không một một <span class="pronunciation">(đọc là "zê-rô zê-rô oan
+                    oan")</span>, tức là mã số không không một một, xếp thành hàng dọc như những dòng kinh văn cổ. Phía
+                trên vòm cổng là ba chữ lớn: "JAVA TÔNG".</p>
+            <p>Một giọng nói trầm ấm vang lên từ phía sau cổng:</p>
+            <p class="dialogue">"Kẻ nào dám quấy rầy chốn tu luyện thanh tĩnh của ta?"</p>
+            <p>Từ trong sương bước ra một lão giả. Râu tóc bạc phơ như mây, nhưng đôi mắt sáng rực như màn hình Retina
+                <span class="pronunciation">(đọc là "rét-ti-na")</span> độ phân giải 4K. Lão mặc áo choàng đen, trên
+                ngực thêu một con rồng đang ôm lấy chữ "J" màu đỏ.</p>
+            <p class="dialogue">"Đệ tử Trần Minh Đức!" - Minh Đức quỳ sụp xuống, giọng run run. "Xin sư phụ nhận con làm
+                đệ tử. Con... con code bị lỗi hoài mà không hiểu tại sao."</p>
+            <p>Lão giả vuốt râu, ánh mắt như nhìn thấu tâm can:</p>
+            <p class="dialogue">"Ta là Vân Cơ, Trưởng Lão Java Tông. Ngươi muốn ta dạy ngươi điều gì?"</p>
+            <p class="dialogue">"Dạ... con muốn hiểu tại sao code của con chạy dưới máy con thì ngon, mà lên máy khách
+                hàng thì chết."</p>
+            <p>Sư phụ Vân Cơ bật cười ha ha. Tiếng cười vang vọng khắp núi non, làm lũ chim đậu trên cành bay tán loạn.
+            </p>
+            <p class="dialogue">"Ha ha ha! Câu hỏi kinh điển! Mọi kẻ phàm phu đều hỏi câu này. Được rồi, ta sẽ dạy
+                ngươi. Nhưng trước tiên, ngươi phải hiểu một điều: Muốn trị bệnh, phải hiểu cơ thể. Muốn viết code chạy
+                được, phải hiểu JVM."</p>
+            <p>Minh Đức ngớ ra: <span class="dialogue">"JVM là gì ạ?"</span></p>
+            <p class="dialogue">"JVM là <span class="technical-term">Java Virtual Machine</span> <span
+                    class="pronunciation">(đọc là "gia-va vơ-chu-ồ mơ-sin")</span>, dịch ra là Máy Ảo Java. Nhưng ở Java
+                Tông, ta gọi nó là Cơ Thể Tu Tiên Giả."</p>
+            <p class="dialogue">"Dạ, cơ thể... tu tiên giả?"</p>
+            <p class="dialogue">"Đúng vậy. Con người có xương cốt, kinh mạch, đan điền. JVM cũng có cấu trúc tương tự.
+                Nếu không hiểu cơ thể, sao biết đau ở đâu? Nếu không hiểu JVM, sao biết lỗi ở chỗ nào?"</p>
+
+            <h2>Cảnh 2: Thuật Dẫn Khí Nhập Thể</h2>
+            <p>Sư phụ Vân Cơ dẫn Minh Đức vào sân chính của Java Tông. Nơi đây rộng rãi, có những đệ tử khác đang ngồi
+                thiền định, tay bắt ấn quyết lạ lùng.</p>
+            <p class="dialogue">"Bây giờ, ta sẽ dạy ngươi bước đầu tiên: Thuật Dẫn Khí Nhập Thể."</p>
+            <p>Sư phụ phẩy tay áo, một luồng khí xanh biếc hiện ra giữa không trung, cuộn thành hình cuốn sách.</p>
+            <p class="dialogue">"Khi ngươi viết code, ngươi tạo ra những file có đuôi chấm java <span
+                    class="pronunciation">(đọc là "đót gia-va")</span>. Đây chỉ là nguyên liệu thô, giống như thảo dược
+                chưa chế biến. Muốn cơ thể hấp thụ được, phải luyện thành đan dược."</p>
+            <p class="dialogue">"Dạ, luyện thành đan dược là sao ạ?"</p>
+            <p class="dialogue">"Trình biên dịch, hay còn gọi là <span class="technical-term">Compiler</span> <span
+                    class="pronunciation">(đọc là "com-pai-lơ")</span>, sẽ biến file chấm java thành file chấm class
+                <span class="pronunciation">(đọc là "đót class")</span>. File chấm class chứa <span
+                    class="technical-term">Bytecode</span> <span class="pronunciation">(đọc là "bai-côt")</span>, tức là
+                mã trung gian mà JVM có thể hiểu được. Đây mới là đan dược có thể uống."</p>
+            <p>Minh Đức gật gù, tuy chưa hiểu hết nhưng cố gắng ghi nhớ.</p>
+            <p class="dialogue">"Nhưng có đan dược rồi, làm sao đưa vào cơ thể?"</p>
+            <p>Sư phụ chỉ vào luồng khí xanh đang bay lượn:</p>
+            <p class="dialogue">"Đây là lúc <span class="technical-term">ClassLoader</span> <span
+                    class="pronunciation">(đọc là "clát-lâu-đơ")</span> xuất hiện. Ta gọi hắn là Người Dẫn Khí.
+                ClassLoader có nhiệm vụ tìm kiếm file chấm class, kiểm tra xem có đúng pháp thuật không, rồi nạp vào
+                vùng nhớ của JVM. Quá trình này gọi là <span class="technical-term">Class Loading</span> <span
+                    class="pronunciation">(đọc là "clát lâu-đinh")</span>, tức Nạp Lớp."</p>
+            <p class="dialogue">"Con hiểu rồi! Giống như ăn thuốc vậy!"</p>
+            <p class="dialogue">"Đúng. Nhưng có điều ngươi phải nhớ: Không phải lúc nào cũng nuốt trôi. Nếu ClassLoader
+                không tìm thấy file, hắn sẽ hét lên: <span class="technical-term">ClassNotFoundException</span> <span
+                    class="pronunciation">(đọc là "clát nót-phao e-xép-sần")</span>! Dịch là Lỗi Không Tìm Thấy Lớp. Đây
+                là tẩu hỏa nhập ma do bí kíp thất lạc."</p>
+            <p>Sư phụ giơ tay lên, một luồng sáng đỏ bùng lên rồi tắt ngấm.</p>
+            <p class="dialogue">"<span class="technical-term">NoClassDefFoundError</span> <span
+                    class="pronunciation">(đọc là "nô clát đét-phao e-rơ")</span> cũng tương tự, nhưng nghiêm trọng hơn.
+                Nghĩa là bí kíp có đó, nhưng bị hư hỏng, không luyện được."</p>
+            <p>Minh Đức rùng mình. Hắn từng gặp lỗi này nhiều lần mà không hiểu tại sao. Giờ thì hắn bắt đầu thấy ánh
+                sáng.</p>
+
+            <h2>Cảnh 3: Ba Tầng Dẫn Khí - Hệ Thống ClassLoader</h2>
+            <p>Sư phụ tiếp tục:</p>
+            <p class="dialogue">"Trong Java Tông, có ba vị Dẫn Khí Sư chính, xếp theo thứ bậc từ cao xuống thấp."</p>
+            <p class="dialogue">"Đầu tiên là <span class="technical-term">Bootstrap ClassLoader</span> <span
+                    class="pronunciation">(đọc là "bu-xtráp clát-lâu-đơ")</span>, ta gọi là Thủy Tổ Dẫn Khí. Vị này là
+                tổ tiên của mọi ClassLoader, được viết bằng ngôn ngữ C, không phải Java. Thủy Tổ chuyên nạp các bí kíp
+                căn bản nhất của Java Tông như java chấm lang <span class="pronunciation">(đọc là "gia-va đót
+                    lang")</span>, java chấm util <span class="pronunciation">(đọc là "gia-va đót iu-tiu")</span>. Đây
+                là nền tảng của mọi nền tảng."</p>
+            <p class="dialogue">"Tiếp theo là <span class="technical-term">Platform ClassLoader</span> <span
+                    class="pronunciation">(đọc là "plát-phom clát-lâu-đơ")</span>, ta gọi là Trung Tầng Dẫn Khí. Vị này
+                nạp các module nền tảng của JDK."</p>
+            <p class="dialogue">"Cuối cùng là <span class="technical-term">Application ClassLoader</span> <span
+                    class="pronunciation">(đọc là "áp-pli-kây-sần clát-lâu-đơ")</span>, ta gọi là Phàm Nhân Dẫn Khí. Đây
+                là vị mà đệ tử như ngươi tiếp xúc nhiều nhất. Hắn nạp code do ngươi viết, và các thư viện bên ngoài."
+            </p>
+            <p>Minh Đức giơ tay:</p>
+            <p class="dialogue">"Thưa sư phụ, ba vị này làm việc như thế nào ạ?"</p>
+            <p class="dialogue">"Hay lắm! Ngươi đã hỏi đúng điểm mấu chốt. Họ tuân theo nguyên tắc Ủy Quyền Thác Tầng,
+                tiếng Anh gọi là <span class="technical-term">Delegation Model</span> <span class="pronunciation">(đọc
+                    là "đê-li-gây-sần mo-đồ")</span>."</p>
+            <p class="dialogue">"Nghĩa là sao ạ?"</p>
+            <p class="dialogue">"Nghĩa là: Khi Phàm Nhân Dẫn Khí nhận được mẫu lệnh nạp một lớp, hắn không dám tự ý làm.
+                Hắn phải hỏi cấp trên trước. Cấp trên lại hỏi cấp trên nữa. Cứ thế cho đến Thủy Tổ. Nếu Thủy Tổ nói 'ta
+                không có bí kíp này', mới chuyển ngược xuống cho cấp dưới xử lý."</p>
+            <p class="dialogue">"Vì sao phải làm phức tạp vậy ạ?"</p>
+            <p class="dialogue">"Để bảo vệ hệ thống! Tưởng tượng nếu một kẻ gian tạo ra bí kíp giả mạo tên là java chấm
+                lang chấm String <span class="pronunciation">(đọc là "gia-va đót lang đót Xtrinh")</span>, cố gắng thay
+                thế bí kíp gốc. Nếu không có nguyên tắc Ủy Quyền, bí kíp giả có thể lọt vào hệ thống. Nhưng với nguyên
+                tắc này, Thủy Tổ Dẫn Khí luôn được hỏi trước, và Thủy Tổ chỉ nạp bí kíp từ nguồn chính thống."</p>
+            <p class="dialogue">"Ồ! Hay quá!"</p>
+            <p>Ngay lúc đó, một tiếng gọi vang lên từ phía sau:</p>
+            <p class="dialogue">"Sư phụ ơi! Sư phụ ơi!"</p>
+            <p>Một thiếu niên mặt non choẹt chạy đến, thở hổn hển. Đây là Tiểu Bảo, sư đệ nhỏ tuổi nhất Java Tông, nổi
+                tiếng hay hỏi những câu ngây ngô.</p>
+            <p class="dialogue">"Sư phụ, con nghe nói có ông <span class="technical-term">Garbage Collector</span> <span
+                    class="pronunciation">(đọc là "gác-bít cơ-léc-tơ")</span> chuyên đi dọn rác trong tông môn. Con muốn
+                xin đi làm thêm với ông ấy để kiếm tiền tiêu vặt. Sư phụ giới thiệu con với ông ấy được không?"</p>
+            <p>Sư phụ Vân Cơ và Minh Đức nhìn nhau, rồi cùng bật cười nghiêng ngả. Tiểu Bảo đứng đó, mặt ngơ ngác không
+                hiểu mình nói sai gì.</p>
+
+            <h2>Cảnh 4: Lạc Vào Đan Điền - Vùng Nhớ Heap</h2>
+            <p>Sau khi dứt cơn cười, sư phụ nói:</p>
+            <p class="dialogue">"Đủ rồi, để ta cho các ngươi thấy thứ quan trọng nhất: Đan Điền của JVM."</p>
+            <p>Sư phụ đặt hai tay lên vai Minh Đức và Tiểu Bảo. Một luồng sáng bao trùm cả ba người.</p>
+            <p>Khi mở mắt ra, Minh Đức kinh ngạc tột độ. Hắn đang đứng giữa một không gian rộng lớn vô tận. Khắp nơi là
+                những quả cầu năng lượng đủ màu sắc, to nhỏ khác nhau, đang bay lượn lờ đờ hoặc di chuyển vun vút. Mặt
+                đất phát sáng lung linh như được lát bằng pha lê.</p>
+            <p class="dialogue">"Chào mừng đến với <span class="technical-term">Heap Memory</span> <span
+                    class="pronunciation">(đọc là "híp mem-mơ-ri")</span>, hay ta gọi là Đan Điền. Đây là vùng nhớ lớn
+                nhất và quan trọng nhất trong cơ thể JVM."</p>
+            <p class="dialogue">Tiểu Bảo háo hức: "Những quả cầu kia là gì vậy sư phụ?"</p>
+            <p class="dialogue">"Đó là các <span class="technical-term">Object</span> <span class="pronunciation">(đọc
+                    là "óp-jét")</span>, tức Đối Tượng. Mỗi khi ngươi dùng từ khóa <span
+                    class="technical-term">new</span> <span class="pronunciation">(đọc là "niu")</span> trong code, một
+                Object mới sẽ được sinh ra ở đây. Ví dụ khi ngươi viết 'new Student' <span class="pronunciation">(đọc là
+                    "niu xtiu-đần")</span>, một quả cầu đại diện cho đối tượng Học Sinh sẽ xuất hiện trong Đan Điền."
+            </p>
+            <p>Minh Đức nhìn quanh, thấy Đan Điền được chia làm hai khu vực rõ rệt. Một bên ồn ào náo nhiệt, quả cầu
+                sinh ra rồi vỡ tan liên tục. Một bên thì yên tĩnh trầm mặc, các quả cầu to lớn lững lờ trôi.</p>
+            <p class="dialogue">"Sao lại chia làm hai thế sư phụ?"</p>
+            <p class="dialogue">"Đó là quy luật sinh lão bệnh tử. Khu vực ồn ào kia gọi là <span
+                    class="technical-term">Young Generation</span> <span class="pronunciation">(đọc là "iâng
+                    djen-nơ-rây-sần")</span>, ta gọi là Vùng Trẻ Thọ. Đây là nơi các Object mới sinh ra. Đa số chúng rất
+                đoản mệnh, dùng xong một cái là chết ngay. Ví dụ như các biến tạm trong vòng lặp của ngươi."</p>
+            <p>Sư phụ chỉ tay sang vùng yên tĩnh:</p>
+            <p class="dialogue">"Còn kia là <span class="technical-term">Old Generation</span> <span
+                    class="pronunciation">(đọc là "ôn djen-nơ-rây-sần")</span>, ta gọi là Vùng Lão Thành. Những Object
+                nào sống sót qua nhiều lần thanh trừng ở Vùng Trẻ Thọ sẽ được thăng cấp chuyển sang đây. Chúng thường là
+                những dữ liệu quan trọng, tồn tại lâu dài."</p>
+            <p class="dialogue">Tiểu Bảo nhảy cả lên: "Con muốn được vào Vùng Lão Thành! Nghe oai quá!"</p>
+            <p class="dialogue">"Ha ha, muốn vào đó, ngươi phải sống sót qua mười lăm lần Đại Thanh Trừng! Không dễ
+                đâu."</p>
+            <p>Minh Đức bỗng rùng mình. Hắn nhớ lại lỗi <span class="technical-term">Out of Memory Error</span> <span
+                    class="pronunciation">(đọc là "ao-óp-mem-mơ-ri e-rơ")</span> đêm hôm trước.</p>
+            <p class="dialogue">"Sư phụ, vậy nếu... Đan Điền bị đầy thì sao?"</p>
+            <p>Sư phụ sa sầm mặt mày:</p>
+            <p class="dialogue">"Nếu ngươi cứ tham lam, tạo ra quá nhiều Object mà không chịu giải phóng, Đan Điền sẽ
+                phình to, phình to mãi... cho đến khi nổ tung! Đó chính là lỗi <span
+                    class="technical-term">OutOfMemoryError</span> mà ngươi gặp phải. Linh khí loạn lạc, chương trình
+                chết bất đắc kỳ tử."</p>
+            <p>Minh Đức toát mồ hôi hột. Hóa ra bấy lâu nay, hắn đã tàn phá Đan Điền của mình mà không biết.</p>
+
+            <h2>Cảnh 5: Kinh Mạch Vận Hành - Vùng Nhớ Stack</h2>
+            <p class="dialogue">"Rời khỏi Đan Điền, ta hãy đến xem Kinh Mạch."</p>
+            <p>Cảnh vật thay đổi. Minh Đức thấy mình đang đứng trước những đường ống trong suốt, chằng chịt như mạng
+                nhện. Bên trong có các luồng sáng chạy dọc rất nhanh.</p>
+            <p class="dialogue">"Đây là <span class="technical-term">Stack Memory</span> <span
+                    class="pronunciation">(đọc là "xtác mem-mơ-ri")</span>, ta gọi là Kinh Mạch. Nếu Đan Điền là nơi
+                chứa dữ liệu, thì Kinh Mạch là nơi vận hành chiêu thức."</p>
+            <p class="dialogue">"Chiêu thức là gì ạ?"</p>
+            <p class="dialogue">"Chiêu thức chính là các phương thức, hay còn gọi là Method <span
+                    class="pronunciation">(đọc là "mé-thớt")</span>. Mỗi khi ngươi gọi một phương thức, một luồng khí
+                gọi là <span class="technical-term">Stack Frame</span> <span class="pronunciation">(đọc là "xtác
+                    phrêm")</span> sẽ được đẩy vào Kinh Mạch. Phương thức này gọi phương thức kia, các luồng khí cứ
+                chồng lên nhau."</p>
+            <p class="dialogue">"Rồi khi nào thì tan?"</p>
+            <p class="dialogue">"Khi phương thức chạy xong, luồng khí đó sẽ tan biến, trả lại chỗ trống. Cứ như vậy, vào
+                sau ra trước, kiểu xếp chồng mà tiếng Anh gọi là LIFO <span class="pronunciation">(đọc là
+                    "lai-phô")</span>, viết tắt của Last In First Out."</p>
+            <p class="dialogue">Tiểu Bảo nhảy lên: "Giống như xếp chén vậy! Chén nào đặt lên sau thì phải lấy ra trước!"
+            </p>
+            <p class="dialogue">"Chính xác! Nhưng hãy cẩn thận. Kinh Mạch có giới hạn. Nếu ngươi gọi phương thức đệ quy
+                mà quên điều kiện dừng, tức là phương thức A gọi phương thức A, gọi mãi gọi mãi..."</p>
+            <p class="dialogue">Minh Đức tái mặt: "Thì các luồng khí sẽ chồng cao lên mãi...?"</p>
+            <p class="dialogue">"Chính xác! Đến mức Kinh Mạch chịu không nổi, nó sẽ vỡ tung. Đó là tẩu hỏa nhập ma mang
+                tên <span class="technical-term">StackOverflowError</span> <span class="pronunciation">(đọc là
+                    "xtác-ô-vơ-phlâu e-rơ")</span>, dịch là Lỗi Tràn Ngăn Xếp."</p>
+            <p class="dialogue">"Vậy khác gì với lỗi Đan Điền Vỡ ạ?"</p>
+            <p class="dialogue">"Hay lắm! Nhớ kỹ: Đan Điền vỡ là do tham chứa đồ, tạo quá nhiều Object. Kinh Mạch vỡ là
+                do tham luyện chiêu, gọi phương thức quá sâu không dừng."</p>
+
+            <h2>Cảnh 6: Đại Thanh Trừng - Garbage Collection</h2>
+            <p>Bỗng nhiên, tiếng còi báo động vang lên inh ỏi. Đèn đỏ nhấp nháy khắp nơi. Minh Đức hoảng hốt:</p>
+            <p class="dialogue">"Chuyện gì vậy sư phụ? Địch tấn công ạ?"</p>
+            <p>Sư phụ bình thản:</p>
+            <p class="dialogue">"Không, đến giờ dọn vệ sinh rồi. Hãy quan sát <span class="technical-term">Garbage
+                    Collection</span> <span class="pronunciation">(đọc là "gác-bít cơ-léc-sần")</span>, ta gọi là Thuật
+                Tẩy Tủy, hay còn gọi là Đại Thanh Trừng."</p>
+            <p>Minh Đức thấy một luồng ánh sáng vàng rực rỡ xuất hiện từ trên cao. Luồng sáng quét qua Vùng Trẻ Thọ. Đi
+                đến đâu, những quả cầu đen xì tức là những Object không còn được ai sử dụng lập tức tan biến thành khói
+                bụi. Không gian trở nên thoáng đãng sạch sẽ.</p>
+            <p class="dialogue">"JVM có một cơ chế tự động tuyệt vời. Nó giống như một đội vệ sinh cần mẫn, chuyên đi
+                tìm những Object bị bỏ rơi để tiêu hủy, lấy lại đất cho Đan Điền."</p>
+            <p class="dialogue">"Object bị bỏ rơi là sao ạ?"</p>
+            <p class="dialogue">"Là những Object không còn biến nào trỏ tới. Ví dụ ngươi tạo một Object mới nhưng rồi
+                biến đó bị gán sang Object khác, hoặc biến đó ra khỏi phạm vi sử dụng. Object cũ lúc đó trở thành rác."
+            </p>
+            <p class="dialogue">Tiểu Bảo chỉ vào luồng sáng vàng: "Vậy đó chính là ông Garbage Collector mà con muốn xin
+                việc hả sư phụ?"</p>
+            <p class="dialogue">Sư phụ phì cười: "Đó không phải một người, mà là một thuật pháp được JVM tự động kích
+                hoạt. Ngươi không xin việc làm thêm với thuật pháp được đâu, ngốc ạ."</p>
+            <p>Nhưng Minh Đức nhận ra một điều lạ. Khi luồng sáng vàng quét qua, mọi hoạt động khác dường như khựng lại
+                một chút. Những quả cầu đang bay bỗng đứng im.</p>
+            <p class="dialogue">"Sư phụ, sao tất cả lại đứng im thế kia?"</p>
+            <p class="dialogue">"Đó là cái giá phải trả. Để dọn dẹp sạch sẽ mà không quét nhầm đồ tốt, Garbage Collector
+                đôi khi phải hô 'Tất cả đứng im!' Hiện tượng này gọi là <span class="technical-term">Stop the
+                    World</span> <span class="pronunciation">(đọc là "xtóp đơ guốc")</span>, tức Ngưng Đọng Thế Giới."
+            </p>
+            <p class="dialogue">"Nghe oai vậy?"</p>
+            <p class="dialogue">"Nghe thì oai, nhưng thực tế là ứng dụng của ngươi bị khựng lại trong chốc lát. Nếu Đan
+                Điền quá bẩn, phải dọn lâu, thì ứng dụng bị lag <span class="pronunciation">(đọc là "lác")</span>, giật
+                cục, người dùng khó chịu."</p>
+            <p>Minh Đức lẩm bẩm: "Thảo nào! Con cứ thấy server thỉnh thoảng lại đơ ra vài giây rồi lại chạy tiếp. Hóa ra
+                là do Đại Thanh Trừng!"</p>
+
+            <h2>Cảnh 7: Các Môn Phái Tẩy Tủy</h2>
+            <p>Sư phụ dẫn hai đệ tử vào một đại sảnh lớn bên trong núi. Nơi đây có nhiều pho tượng đá, mỗi pho mang dáng
+                vẻ khác nhau.</p>
+            <p class="dialogue">"Đây là Điện Các Môn Phái Tẩy Tủy. Mỗi pho tượng đại diện cho một thuật toán Garbage
+                Collection khác nhau."</p>
+            <p>Sư phụ chỉ vào pho tượng đầu tiên, một kiếm khách độc hành trông rất cô đơn:</p>
+            <p class="dialogue">"Đây là <span class="technical-term">Serial GC</span> <span class="pronunciation">(đọc
+                    là "si-ri-ồ dji-xi")</span>, ta gọi là Cô Độc Kiếm Khách. Hắn làm việc một mình trên một luồng duy
+                nhất. Khi hắn dọn dẹp, toàn bộ thế giới phải dừng lại. Thích hợp cho những ứng dụng nhỏ, máy yếu."</p>
+            <p>Pho tượng thứ hai là một đoàn quân đông đảo:</p>
+            <p class="dialogue">"Đây là <span class="technical-term">Parallel GC</span> <span class="pronunciation">(đọc
+                    là "pa-ra-leo dji-xi")</span>, ta gọi là Quần Hùng Hội. Giống Cô Độc Kiếm Khách nhưng mang theo một
+                đội quân, nhiều luồng cùng làm việc. Dọn nhanh hơn nhưng vẫn phải dừng thế giới. Đây là thuật pháp mặc
+                định của Java phiên bản tám."</p>
+            <p>Pho tượng thứ ba là một vị phi hành kiếm khách đang lướt trên mây:</p>
+            <p class="dialogue">"Đây là CMS, viết tắt của <span class="technical-term">Concurrent Mark Sweep</span>
+                <span class="pronunciation">(đọc là "con-ka-rần mác xuýp")</span>, ta gọi là Phi Hành Kiếm. Vị này cố
+                gắng dọn dẹp trong khi ứng dụng vẫn đang chạy, giảm thiểu thời gian đứng im. Tuy nhiên, sau một thời
+                gian dễ sinh ra tình trạng phân mảnh, giống như sàn nhà dọn xong mà vẫn còn nhiều khe hở."</p>
+            <p>Pho tượng thứ tư là một vị tướng chia thiên hạ thành nhiều vùng:</p>
+            <p class="dialogue">"Đây là <span class="technical-term">G1 GC</span> <span class="pronunciation">(đọc là
+                    "dji-oan dji-xi")</span>, ta gọi là Thiên Địa Phân Vùng. Vị này chia Đan Điền thành hàng nghìn vùng
+                nhỏ gọi là Region <span class="pronunciation">(đọc là "ri-giần")</span>. Mỗi vùng có thể là Trẻ Thọ hoặc
+                Lão Thành. Khi dọn, vị này ưu tiên dọn những vùng có nhiều rác nhất trước, nên gọi là Garbage First. Đây
+                là thuật pháp mặc định từ Java phiên bản chín."</p>
+            <p>Cuối cùng là hai pho tượng song sinh, dáng vẻ nhanh như chớp:</p>
+            <p class="dialogue">"Đây là <span class="technical-term">ZGC</span> <span class="pronunciation">(đọc là "zét
+                    dji-xi")</span> và <span class="technical-term">Shenandoah</span> <span class="pronunciation">(đọc
+                    là "sen-nan-đô-a")</span>, ta gọi là Thần Tốc Song Kiệt. Hai vị này có thể dọn dẹp với thời gian
+                đứng im cực ngắn, dưới mười mili-giây, bất kể Đan Điền to đến đâu. Đây là tuyệt đỉnh công phu của thời
+                hiện đại."</p>
+            <p class="dialogue">Minh Đức như được mở mang tầm mắt: "Vậy chọn vị nào để dùng ạ?"</p>
+            <p class="dialogue">"Tùy thuộc vào đặc điểm ứng dụng. Cần xử lý khối lượng lớn, không quan tâm đôi chút lag
+                thì dùng Quần Hùng Hội. Cần lag ít, Đan Điền không quá lớn thì dùng Thiên Địa Phân Vùng. Cần lag cực
+                thấp, Đan Điền khổng lồ thì dùng Thần Tốc Song Kiệt."</p>
+
+            <h2>Cảnh 8: Luyện Hóa Thuật - JIT Compilation</h2>
+            <p>Sau khi tham quan Điện Các Môn Phái, sư phụ dẫn hai đệ tử đến một căn phòng đỏ rực ánh lửa.</p>
+            <p class="dialogue">"Đây là Luyện Hóa Lò. Nơi biến đổi chiêu thức từ dạng thô thành dạng tinh chế."</p>
+            <p class="dialogue">"Dạng thô là gì ạ?"</p>
+            <p class="dialogue">"Là Bytecode mà ta đã nói. Bytecode giống như một bản nhạc viết trên giấy. JVM muốn chơi
+                nhạc, phải có cách đọc bản nhạc đó."</p>
+            <p class="dialogue">"Ban đầu, JVM dùng <span class="technical-term">Interpreter</span> <span
+                    class="pronunciation">(đọc là "in-tơ-prét-tơ")</span>, ta gọi là Người Đọc Chậm. Vị này đọc từng
+                dòng Bytecode, thực thi ngay. Ưu điểm là khởi động nhanh, nhưng chạy lâu dài thì chậm vì phải đọc đi đọc
+                lại."</p>
+            <p class="dialogue">"Sau đó, <span class="technical-term">JIT Compiler</span> <span
+                    class="pronunciation">(đọc là "djít com-pai-lơ")</span> xuất hiện. JIT là viết tắt của Just In Time,
+                nghĩa là Đúng Lúc. Vị này quan sát xem đoạn code nào được gọi nhiều, gọi là Hot Spot <span
+                    class="pronunciation">(đọc là "hót xpót")</span> tức Điểm Nóng, rồi biên dịch hẳn thành <span
+                    class="technical-term">Machine Code</span> <span class="pronunciation">(đọc là "mơ-sin côt")</span>
+                tức Mã Máy và lưu lại. Từ đó về sau, khi chạy đoạn đó, chỉ cần thực thi code đã biên dịch sẵn, cực kỳ
+                nhanh."</p>
+            <p class="dialogue">Tiểu Bảo hỏi: "Giống như luyện chiêu thức đến mức thành bản năng hả sư phụ? Ban đầu phải
+                nghĩ từng bước, sau này ra đòn không cần nghĩ?"</p>
+            <p class="dialogue">"Chính xác! Và JIT còn biết tối ưu hóa. Ví dụ có kỹ thuật gọi là <span
+                    class="technical-term">Inlining</span> <span class="pronunciation">(đọc là "in-lai-ninh")</span>,
+                tức Nhúng Hàm. Thay vì gọi một hàm nhỏ nhiều lần, JIT nhúng thẳng code của hàm đó vào chỗ gọi, tiết kiệm
+                chi phí."</p>
+            <p class="dialogue">"Hoặc kỹ thuật <span class="technical-term">Escape Analysis</span> <span
+                    class="pronunciation">(đọc là "ét-kêp ơ-na-li-xít")</span>, tức Phân Tích Thoát. JIT phân tích xem
+                một Object có 'thoát' ra khỏi phạm vi phương thức không. Nếu không thoát, JIT có thể để Object đó trên
+                Kinh Mạch thay vì Đan Điền, giảm tải cho Thuật Tẩy Tủy."</p>
+            <p>Minh Đức cảm thấy khai sáng: "Thảo nào Java ngày nay nhanh gần bằng C, C Plus Plus <span
+                    class="pronunciation">(đọc là "xi plớt plớt")</span>! Là nhờ JIT Compiler tối ưu!"</p>
+
+            <h2>Kết: Lĩnh Ngộ Đầu Tiên</h2>
+            <p>Trở về thực tại trước cổng Tam Quan, Minh Đức quỳ sụp xuống. Mọi thứ đã sáng tỏ như ban ngày.</p>
+            <p class="dialogue">"Sư phụ, con hiểu rồi! Cái lỗi Out of Memory Error ở công ty... là do con dùng một cái
+                Static Map <span class="pronunciation">(đọc là "xtá-tít mép")</span> để lưu cache <span
+                    class="pronunciation">(đọc là "kát")</span> người dùng. Cứ mỗi lần có user mới, con lại thêm vào đó
+                mà không bao giờ xóa đi. Cái Map đó có tham chiếu từ biến static, nên Thuật Tẩy Tủy không dám dọn. Nó cứ
+                lớn mãi lớn mãi cho đến khi Đan Điền Lão Thành bùng nổ!"</p>
+            <p>Sư phụ gật đầu hài lòng:</p>
+            <p class="dialogue">"Đúng thế. Ngươi đã tạo ra một lỗ đen trong Đan Điền. Garbage Collector dù có tài thánh
+                cũng không dám dọn thứ mà ngươi vẫn đang nắm giữ."</p>
+            <p class="dialogue">"Vậy con phải làm gì để sửa ạ?"</p>
+            <p class="dialogue">"Có nhiều cách. Xóa những entry không cần thiết sau khi dùng. Hoặc dùng loại tham chiếu
+                yếu gọi là <span class="technical-term">Weak Reference</span> <span class="pronunciation">(đọc là "guých
+                    rét-phờ-rần")</span> để Garbage Collector có thể dọn khi cần. Hoặc dùng công cụ phân tích như
+                VisualVM <span class="pronunciation">(đọc là "vi-zu-ồ vi-em")</span> để xem bộ nhớ đang được dùng thế
+                nào."</p>
+            <p>Minh Đức cảm thấy nhẹ nhõm vô cùng. Lần đầu tiên trong ba năm làm nghề, hắn cảm thấy mình thực sự hiểu
+                thứ mình đang làm.</p>
+            <p class="dialogue">Tiểu Bảo chen vào: "Ây, vậy là sư huynh Minh Đức biết sửa lỗi rồi à? Bữa nào sư huynh
+                dạy con với!"</p>
+            <p class="dialogue">"Ha ha, để ta dạy đệ cái cơ bản đã. Đệ mới nhập môn mà."</p>
+            <p>Sư phụ Vân Cơ đứng dậy, vẻ mặt nghiêm nghị:</p>
+            <p class="dialogue">"Hiểu về cơ thể rồi, giờ phải học cách dùng pháp bảo. Bài học tiếp theo: <span
+                    class="technical-term">Collection Framework</span> <span class="pronunciation">(đọc là "cơ-léc-sần
+                    phrêm-guốc")</span>, tức Bộ Sưu Tập Pháp Bảo. Hãy xuống núi và thu thập cho ta một trăm loại linh
+                dược. Nhưng cẩn thận, dùng sai túi đựng là trượt chân xuống vực đấy."</p>
+            <p>Sư phụ ném cho Minh Đức một chiếc túi vải cũ kỹ. Minh Đức hớn hở nhận lấy. Hành trình tu tiên của hắn mới
+                chỉ bắt đầu, nhưng hắn biết, mình đã không còn là tên "thợ code" ngây ngô ngày hôm qua nữa.</p>
+        </section>
+
+        <footer class="chapter-footer">
+            <div class="key-takeaways">
+                <h3>🎯 Tâm Pháp Chương Này</h3>
+                <p>Độc giả thân mến, sau khi đọc xong chương này, hãy ghi nhớ những điểm then chốt sau:</p>
+                <p>Thứ nhất, JVM tức Java Virtual Machine hay Máy Ảo Java, là cơ thể của mọi ứng dụng Java. Nó gồm ba
+                    phần chính: Hệ Thống Dẫn Khí để nạp code, Ngũ Tạng Lục Phủ để lưu trữ dữ liệu, và Luyện Hóa Lò để
+                    thực thi.</p>
+                <p>Thứ hai, Heap Memory tức Đan Điền là nơi chứa mọi Object. Nó chia thành Vùng Trẻ Thọ cho Object mới
+                    sinh và Vùng Lão Thành cho Object sống lâu.</p>
+                <p>Thứ ba, Stack Memory tức Kinh Mạch là nơi vận hành các phương thức. Mỗi lần gọi phương thức tạo một
+                    Stack Frame mới.</p>
+                <p>Thứ tư, Garbage Collection tức Thuật Tẩy Tủy tự động dọn dẹp Object không dùng. Nhưng nó có thể gây
+                    ra hiện tượng Stop the World.</p>
+                <p>Thứ năm, lỗi OutOfMemoryError là do Đan Điền đầy, thường vì tạo quá nhiều Object hoặc giữ tham chiếu
+                    không cần thiết. Lỗi StackOverflowError là do Kinh Mạch tràn, thường do đệ quy vô hạn.</p>
+            </div>
+            <div class="interview-prep">
+                <h3>💼 Câu Hỏi Phỏng Vấn Senior</h3>
+                <p>Nếu một ngày nào đó, ngươi bước vào phòng phỏng vấn cho vị trí Senior Java Developer, nhà tuyển dụng
+                    có thể hỏi:</p>
+                <p><strong>"Hãy giải thích sự khác biệt giữa Stack và Heap trong JVM. Khi nào thì xảy ra
+                        OutOfMemoryError, khi nào thì StackOverflowError?"</strong></p>
+                <p>Ngươi có thể trả lời như thế này:</p>
+                <p>Heap là vùng nhớ dùng chung cho tất cả các luồng, nơi lưu trữ các Object được tạo bằng từ khóa new.
+                    Heap được quản lý bởi Garbage Collector. Khi Heap đầy và không thể giải phóng thêm bộ nhớ,
+                    OutOfMemoryError xảy ra. Nguyên nhân thường do tạo quá nhiều Object hoặc giữ tham chiếu đến Object
+                    không còn cần.</p>
+                <p>Stack là vùng nhớ riêng cho từng luồng, lưu trữ các biến cục bộ và thông tin gọi phương thức theo
+                    kiểu vào sau ra trước. Khi một phương thức được gọi, một Stack Frame mới được đẩy vào. Khi phương
+                    thức kết thúc, Frame đó bị loại bỏ. StackOverflowError xảy ra khi ngăn xếp tràn, thường do gọi đệ
+                    quy quá sâu mà không có điều kiện dừng.</p>
+                <p>Tóm lại, Heap lo việc lưu trữ dữ liệu, Stack lo việc vận hành chiêu thức. Hiểu rõ điều này là nền
+                    tảng để debug và tối ưu ứng dụng Java.</p>
+            </div>
+        </footer>
+    </article>
+
+    <nav class="chapter-nav bottom">
+        <a href="index.html">⬅ Về Mục Lục</a>
+        <a href="chuong-2.html">Chương Sau ➡</a>
+    </nav>
+</body>
+
+</html>

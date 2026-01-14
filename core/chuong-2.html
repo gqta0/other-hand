@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chương 2: Pháp Khí & Trật Tự - Java Tu Tiên Ký</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <nav class="chapter-nav">
+        <a href="chuong-1.html">⬅ Chương Trước</a>
+        <a href="chuong-3.html">Chương Sau ➡</a>
+    </nav>
+
+    <article class="chapter-content">
+        <header>
+            <h1>Chương 2: Pháp Khí & Trật Tự</h1>
+        </header>
+
+        <section class="story-content">
+            <h2>Mở Đầu: Nhiệm Vụ Thu Thập Linh Dược</h2>
+            <p>Sáng sớm hôm sau, khi sương mù còn đọng trên những tán cây cổ thụ quanh Java Tông, Sư phụ Vân Cơ đã gọi
+                Minh Đức dậy.</p>
+            <p class="dialogue">"Hôm nay, ngươi sẽ xuống núi lần đầu tiên."</p>
+            <p class="dialogue">Minh Đức hào hứng: "Dạ, đi đâu ạ?"</p>
+            <p class="dialogue">"Dược Vương Cốc. Nơi đây có hàng nghìn loại linh dược quý hiếm. Nhiệm vụ của ngươi là
+                thu thập một nghìn loại khác nhau để đem về cho tông môn luyện đan."</p>
+            <p class="dialogue">"Một nghìn loại?!" - Minh Đức trợn tròn mắt. "Vậy con đựng vào đâu ạ?"</p>
+            <p>Sư phụ ném cho hắn một cái bao tải khổng lồ bằng vải thô. Bao tải này có kích thước cố định, đựng được
+                chừng năm trăm thứ.</p>
+            <p class="dialogue">"Đây là <span class="technical-term">Array</span> <span class="pronunciation">(đọc là
+                    "ơ-rây")</span>, pháp bảo xưa nhất của giới lập trình. Ngươi hãy dùng nó."</p>
+            <p>Minh Đức nhận lấy, cảm thấy có gì đó không ổn nhưng không dám hỏi. Hắn khoác bao tải lên vai, bắt đầu
+                xuống núi.</p>
+
+            <h2>Cảnh 1: Thảm Họa Bao Tải Array</h2>
+            <p>Dược Vương Cốc xanh mướt như một thiên đường thảo mộc. Minh Đức bắt đầu hái linh dược và nhét vào bao
+                tải. Cỏ Máu Rồng, Nấm Linh Chi, Hoa Tuyết Sơn... Hắn hái được hơn ba trăm loại thì phát hiện vấn đề.</p>
+            <p>Bao tải Array chỉ đựng được năm trăm thứ, nhưng hắn cần một nghìn.</p>
+            <p class="dialogue">"Chết rồi! Phải làm sao?"</p>
+            <p>Hắn cố nhét thêm nhưng bao tải không chịu. Miệng bao tải khóa chặt, từ chối nhận thêm bất kỳ thứ gì. Đây
+                là điểm yếu chí mạng của Array: Kích thước cố định, khai báo bao nhiêu là bấy nhiêu, không thể thay đổi.
+            </p>
+            <p>Không những thế, khi Minh Đức muốn kiểm tra xem mình đã hái cây Cỏ Máu Rồng chưa, hắn phải thò tay vào
+                bao tải, mò từng cây một để so sánh. Năm trăm cây, hắn mò năm trăm lần. Mệt muốn chết.</p>
+            <p>Đang lúc ngồi thở dốc bên bờ suối, một bóng người quen thuộc xuất hiện.</p>
+            <p class="dialogue">"Ha ha ha! Ngươi vẫn dùng cái bao tải cổ lỗ sĩ đó à?"</p>
+            <p>Sư phụ Vân Cơ đứng trên tảng đá, cười ha hả.</p>
+            <p class="dialogue">"Sư phụ! Sao người ở đây?"</p>
+            <p class="dialogue">"Ta theo dõi ngươi từ sáng. Đến giờ dạy bài học thứ hai rồi: Pháp Bảo Thu Tập."</p>
+
+            <h2>Cảnh 2: Giới Thiệu Collection Framework</h2>
+            <p>Sư phụ phẩy tay áo, một bức họa khổng lồ hiện ra giữa không trung. Trên đó là bản đồ gia phả của dòng họ
+                Pháp Bảo Thu Tập.</p>
+            <p class="dialogue">"Đây là <span class="technical-term">Collection Framework</span> <span
+                    class="pronunciation">(đọc là "cơ-léc-sần phrêm-guốc")</span>, tức Bộ Khung Pháp Bảo Thu Tập. Không
+                phải một món đồ đơn lẻ, mà là cả một hệ thống được tổ chức bài bản."</p>
+            <p>Minh Đức nhìn vào bản đồ, thấy ở trên cùng là một cái tên: <span class="technical-term">Iterable</span>
+                <span class="pronunciation">(đọc là "ai-tơ-rơ-bồ")</span>, tức Có Thể Duyệt. Từ đó phân nhánh xuống
+                <span class="technical-term">Collection</span> <span class="pronunciation">(đọc là "cơ-léc-sần")</span>,
+                tức Bộ Sưu Tập. Rồi từ Collection lại chia thành ba nhánh lớn: <span class="technical-term">List</span>
+                <span class="pronunciation">(đọc là "lít")</span>, <span class="technical-term">Set</span> <span
+                    class="pronunciation">(đọc là "xét")</span>, và <span class="technical-term">Queue</span> <span
+                    class="pronunciation">(đọc là "kiu")</span>.</p>
+            <p class="dialogue">"Mỗi nhánh có đặc điểm riêng."</p>
+            <p class="dialogue">"<span class="technical-term">List</span>, ta gọi là Linh Châu Xâu Chuỗi, có đặc tính
+                giữ thứ tự và cho phép trùng lặp. Ngươi bỏ cây thuốc vào trước thì nó nằm trước, bỏ sau thì nằm sau."
+            </p>
+            <p class="dialogue">"<span class="technical-term">Set</span>, ta gọi là Bách Bảo Nang, có đặc tính không cho
+                phép trùng lặp. Mỗi thứ chỉ xuất hiện một lần."</p>
+            <p class="dialogue">"<span class="technical-term">Queue</span>, ta gọi là Truyền Công Đội, có đặc tính vào
+                trước ra trước, giống như xếp hàng mua vé."</p>
+            <p class="dialogue">"Ngoài ra còn có <span class="technical-term">Map</span> <span
+                    class="pronunciation">(đọc là "mép")</span>, ta gọi là Huyền Thiên Bảo Giám. Tuy không thuộc họ
+                Collection trực tiếp, nhưng cũng là pháp bảo quan trọng. Map lưu theo cặp Khóa và Giá Trị."</p>
+            <p>Minh Đức gật gù, cố gắng ghi nhớ.</p>
+
+            <h2>Cảnh 3: ArrayList - Linh Châu Trận</h2>
+            <p>Sư phụ rút từ trong tay áo ra một chiếc hộp bằng gỗ quý, bên trong có nhiều ngăn nhỏ đánh số thứ tự.</p>
+            <p class="dialogue">"Đây là <span class="technical-term">ArrayList</span> <span class="pronunciation">(đọc
+                    là "ơ-rây-lít")</span>, ta gọi là Linh Châu Trận. Nó giống như cái bao tải Array của ngươi, nhưng có
+                phép thuật tự động mở rộng."</p>
+            <p class="dialogue">"Tự động mở rộng là sao ạ?"</p>
+            <p class="dialogue">"Khi ngươi tạo ArrayList mới, nó mặc định có mười ngăn. Khi ngươi nhét đầy mười ngăn rồi
+                vẫn muốn nhét thêm, Linh Châu Trận sẽ tự động tạo một chiếc hộp mới lớn gấp rưỡi, tức mười lăm ngăn. Rồi
+                nó copy toàn bộ đồ từ hộp cũ sang hộp mới, vứt hộp cũ đi."</p>
+            <p class="dialogue">"Hay quá! Vậy con không lo hết chỗ nữa!"</p>
+            <p class="dialogue">"Đúng. Nhưng có điểm cần lưu ý. Mỗi lần mở rộng như thế tốn công sức. Nếu ngươi biết
+                trước cần một nghìn ngăn, hãy khai báo ngay từ đầu: một nghìn. Đừng để ArrayList phải mở rộng nhiều lần,
+                phí sức."</p>
+            <p class="dialogue">"Vậy Linh Châu Trận có điểm mạnh gì ạ?"</p>
+            <p class="dialogue">"Điểm mạnh nhất là truy cập nhanh. Mỗi ngăn có số thứ tự. Muốn lấy cây thuốc ở ngăn số
+                năm trăm, ngươi chỉ cần thò tay vào đúng ngăn đó, lấy ra ngay. Không cần tìm kiếm. Tốc độ này ta gọi là
+                O một <span class="pronunciation">(đọc là "ô oan")</span>, nghĩa là nhanh như chớp."</p>
+            <p class="dialogue">"Còn điểm yếu?"</p>
+            <p class="dialogue">"Điểm yếu là chèn và xóa ở giữa. Nếu ngươi muốn nhét thêm một cây thuốc vào ngăn số hai
+                trăm, ngươi phải đẩy tất cả những thứ từ ngăn hai trăm trở đi lùi ra phía sau một bước. Tám trăm ngăn
+                phải dịch chuyển. Mệt lắm. Tốc độ này ta gọi là O n <span class="pronunciation">(đọc là "ô en")</span>,
+                nghĩa là chậm như sên bò."</p>
+
+            <h2>Cảnh 4: LinkedList - Liên Hoàn Khấu</h2>
+            <p>Sư phụ lại rút ra một chuỗi hạt dài, mỗi hạt kết nối với hạt trước và hạt sau bằng sợi dây mảnh.</p>
+            <p class="dialogue">"Đây là <span class="technical-term">LinkedList</span> <span class="pronunciation">(đọc
+                    là "lin-kờ-đờ-lít")</span>, ta gọi là Liên Hoàn Khấu. Cấu trúc khác hẳn Linh Châu Trận."</p>
+            <p class="dialogue">"Trông giống chuỗi tràng hạt của Tiểu Bảo hay đeo!"</p>
+            <p class="dialogue">"Đúng vậy. Mỗi hạt là một nút, tiếng Anh gọi là <span class="technical-term">Node</span>
+                <span class="pronunciation">(đọc là "nốt")</span>. Mỗi Node chứa ba thứ: Dữ liệu của nó, địa chỉ của
+                Node phía trước, và địa chỉ của Node phía sau. Chúng nối với nhau thành chuỗi."</p>
+            <p class="dialogue">"Điểm mạnh của Liên Hoàn Khấu là chèn và xóa nhanh. Muốn nhét một hạt vào giữa chuỗi?
+                Chỉ cần cắt dây nối, gắn hạt mới vào, nối lại. Không cần đẩy bất cứ thứ gì. Tốc độ O một."</p>
+            <p class="dialogue">"Còn điểm yếu?"</p>
+            <p class="dialogue">"Điểm yếu là truy cập chậm. Muốn lấy hạt thứ năm trăm? Ngươi phải bắt đầu từ hạt đầu
+                tiên, lần theo sợi dây, đếm một, hai, ba... cho đến năm trăm. Không có cách nào nhảy thẳng vào như Linh
+                Châu Trận. Tốc độ O n."</p>
+            <p>Minh Đức nghe xong, mắt sáng lên:</p>
+            <p class="dialogue">"Con hiểu rồi! Nếu cần đọc dữ liệu nhiều, dùng Linh Châu Trận tức ArrayList. Nếu cần
+                chèn xóa ở giữa nhiều, dùng Liên Hoàn Khấu tức LinkedList!"</p>
+            <p class="dialogue">"Cơ bản là vậy. Nhưng thực tế thì..."</p>
+            <p>Sư phụ dừng lại, vẻ mặt bí hiểm.</p>
+            <p class="dialogue">"Thực tế thì sao ạ?"</p>
+            <p class="dialogue">"Thực tế thì gần như lúc nào ta cũng dùng ArrayList."</p>
+            <p class="dialogue">"Hả? Sao vậy ạ?"</p>
+            <p class="dialogue">"Vì có một yếu tố ẩn mà sách vở ít nhắc đến: <span class="technical-term">CPU
+                    Cache</span> <span class="pronunciation">(đọc là "xi-pi-iu kát")</span>, tức Bộ Nhớ Đệm của Bộ Xử
+                Lý."</p>
+            <p class="dialogue">"ArrayList lưu dữ liệu liền nhau trong bộ nhớ. Khi CPU đọc một phần tử, nó thường đọc
+                luôn cả mấy phần tử kế bên vào cache. Nên lần đọc tiếp theo nhanh hơn."</p>
+            <p class="dialogue">"LinkedList thì các Node nằm rải rác khắp bộ nhớ. CPU phải nhảy lung tung để đọc, gây ra
+                hiện tượng <span class="technical-term">Cache Miss</span> <span class="pronunciation">(đọc là "kát
+                    mít")</span>, tức Lỡ Cache. Rất chậm."</p>
+            <p class="dialogue">"Cho nên, trừ khi ngươi cần chèn xóa ở đầu chuỗi rất nhiều, hoặc cần implement <span
+                    class="pronunciation">(đọc là "im-pờ-lờ-men")</span> một hàng đợi Queue, thì mới cân nhắc dùng
+                LinkedList. Còn lại, cứ ArrayList là an toàn."</p>
+
+            <h2>Cảnh 5: Thảm Họa Liên Hoàn Khấu</h2>
+            <p>Minh Đức nghe xong bài giảng, háo hức muốn thử nghiệm. Nhưng vì nghe đến "chèn nhanh", hắn vội vàng chọn
+                LinkedList để đựng linh dược.</p>
+            <p class="dialogue">"Con sẽ dùng Liên Hoàn Khấu! Hái xong ném vào, nhanh gọn!"</p>
+            <p>Sư phụ lắc đầu nhưng không nói gì, để hắn tự học.</p>
+            <p>Minh Đức hái thuốc suốt buổi sáng. Hái xong cây nào ném vào Liên Hoàn Khấu cây đó. Đến trưa, hắn đã thu
+                thập được chín trăm loại. Hào hứng báo cáo với sư phụ.</p>
+            <p class="dialogue">"Sư phụ, con xong rồi! Giờ con sẽ kiểm kê."</p>
+            <p class="dialogue">Sư phụ gật đầu: "Tốt. Lấy cho ta cây thuốc ở vị trí thứ chín trăm chín mươi chín."</p>
+            <p>Minh Đức bắt đầu đếm. Hạt một, hạt hai, hạt ba... Mồ hôi nhỏ giọt. Hạt một trăm, hạt hai trăm... Mặt trời
+                đứng bóng. Hạt năm trăm, hạt sáu trăm... Mặt trời nghiêng về tây.</p>
+            <p class="dialogue">Cuối cùng hắn tìm được: "Đây ạ! Nấm Ngọc Tỷ!"</p>
+            <p class="dialogue">"Được rồi. Giờ lấy cho ta cây ở vị trí thứ chín trăm chín mươi tám."</p>
+            <p>Minh Đức tái mặt. Hắn lại phải đếm từ đầu. Một, hai, ba...</p>
+            <p>Đến khi mặt trời lặn, hắn mới lấy được ba cây theo yêu cầu của sư phụ. Người đã mệt rã rời, tay run lẩy
+                bẩy.</p>
+            <p class="dialogue">"Ngươi định đếm đến kiếp sau à?" - Sư phụ quát lớn.</p>
+            <p class="dialogue">"Con... con sai rồi sư phụ!" - Minh Đức quỳ sụp xuống.</p>
+            <p class="dialogue">"Sai lầm của ngươi là dùng LinkedList cho việc truy cập ngẫu nhiên, tiếng Anh gọi là
+                <span class="technical-term">Random Access</span> <span class="pronunciation">(đọc là "ran-đờm
+                    ác-xét")</span>. LinkedList chỉ mạnh khi chèn xóa ở đầu hoặc cuối. Còn đọc ở giữa thì chậm như rùa
+                bò."</p>
+            <p>Minh Đức ghi nhớ bài học xương máu: Đọc nhiều dùng ArrayList, chèn xóa nhiều ở đầu cuối mới cân nhắc
+                LinkedList.</p>
+
+            <h2>Cảnh 6: Bách Bảo Nang - HashSet</h2>
+            <p>Sau thảm họa Liên Hoàn Khấu, Minh Đức chuyển sang dùng ArrayList. Hắn hái thêm linh dược cho đủ một nghìn
+                loại. Nhưng khi kiểm tra, hắn phát hiện vấn đề mới.</p>
+            <p class="dialogue">"Sư phụ, con hái được một nghìn hai trăm cây, nhưng yêu cầu là một nghìn loại KHÁC NHAU.
+                Chắc có nhiều cây bị trùng!"</p>
+            <p class="dialogue">"Vậy ngươi định làm thế nào?"</p>
+            <p class="dialogue">Minh Đức suy nghĩ: "Con sẽ lấy từng cây ra, so sánh với tất cả những cây đã kiểm tra.
+                Nếu chưa có thì giữ lại, có rồi thì bỏ đi."</p>
+            <p class="dialogue">Sư phụ lắc đầu: "Ngươi có một nghìn hai trăm cây. Mỗi cây phải so sánh với tối đa một
+                nghìn hai trăm cây khác. Tổng cộng ngươi phải so sánh gần một triệu rưỡi lần. Đến kiếp sau cũng chưa
+                xong."</p>
+            <p class="dialogue">"Vậy phải làm sao ạ?"</p>
+            <p>Sư phụ rút từ trong tay áo ra một chiếc túi nhỏ xíu bằng lụa đỏ.</p>
+            <p class="dialogue">"Đây là <span class="technical-term">HashSet</span> <span class="pronunciation">(đọc là
+                    "hét-xét")</span>, ta gọi là Bách Bảo Nang. Túi thần kỳ này có phép thuật đặc biệt: Nó không bao giờ
+                chứa hai thứ giống nhau."</p>
+            <p class="dialogue">"Hay quá! Nhưng làm sao nó biết thứ nào giống thứ nào?"</p>
+            <p class="dialogue">"Mỗi vật phẩm đều có một dấu ấn riêng gọi là <span class="technical-term">Hash
+                    Code</span> <span class="pronunciation">(đọc là "hét côt")</span>, tức Mã Băm. Ngươi có thể tưởng
+                tượng đó là mùi hương riêng biệt của mỗi loại linh dược."</p>
+            <p class="dialogue">"Khi ngươi ném một cây thuốc vào Bách Bảo Nang, túi sẽ ngửi mùi của nó trước. Nếu trong
+                túi đã có thứ gì đó có mùi giống hệt, túi sẽ từ chối nhận. Nếu chưa có, túi mới cho vào."</p>
+            <p class="dialogue">"Tốc độ kiểm tra cực nhanh, vì túi không cần so sánh từng cây. Nó chỉ cần ngửi mùi, rồi
+                nhìn vào đúng một ngăn tương ứng với mùi đó để kiểm tra. Tốc độ trung bình là O một."</p>
+            <p class="dialogue">Minh Đức reo lên: "Con hiểu rồi! Con sẽ ném tất cả một nghìn hai trăm cây vào Bách Bảo
+                Nang. Những cây trùng sẽ tự động bị loại. Cuối cùng trong túi chỉ còn các cây khác nhau!"</p>
+            <p class="dialogue">"Chính xác."</p>
+            <p>Minh Đức thử ngay. Hắn ném linh dược vào HashSet. Phựt phựt phựt. Những cây trùng bị văng ra ngoài. Chỉ
+                trong chốc lát, hắn đã có một bộ sưu tập chín trăm tám mươi lăm loại linh dược độc nhất vô nhị.</p>
+            <p class="dialogue">"Chín trăm tám mươi lăm? Vẫn thiếu mười lăm loại ạ?"</p>
+            <p class="dialogue">"Vậy thì đi hái thêm. Nhưng lần này ngươi hái xong ném thẳng vào HashSet. Nếu bị văng ra
+                nghĩa là đã có rồi. Nếu được nhận vào nghĩa là loại mới."</p>
+
+            <h2>Cảnh 7: Trò Đùa Của Tiểu Bảo</h2>
+            <p>Đang lúc Minh Đức hào hứng dùng HashSet, Tiểu Bảo từ đâu chạy đến, mặt mày tươi rói.</p>
+            <p class="dialogue">"Sư huynh ơi! Con cũng có HashSet nè!"</p>
+            <p class="dialogue">"Đệ dùng để đựng gì vậy?"</p>
+            <p class="dialogue">"Để đựng người yêu cũ!"</p>
+            <p>Minh Đức và sư phụ đều sững người.</p>
+            <p class="dialogue">"Hả?"</p>
+            <p class="dialogue">"Đúng rồi mà! Con nghe nói HashSet không chứa trùng lặp, nên con dùng nó để quản lý danh
+                sách người yêu cũ. Như vậy bảo đảm mỗi em chỉ xuất hiện trong đời con một lần, không bao giờ quay lại!"
+            </p>
+            <p class="dialogue">Sư phụ Vân Cơ cố nhịn cười: "Ý tưởng hay đấy. Nhưng đệ có thắc mắc gì không?"</p>
+            <p class="dialogue">"Có ạ! Con bỏ vào đó hai người tên Tiểu Hồng. Nhưng hai Tiểu Hồng này khác nhau, một
+                người tóc dài, một người tóc ngắn. Vậy mà HashSet vẫn giữ cả hai!"</p>
+            <p class="dialogue">"À, đó là vì ngươi chưa dạy cho HashSet cách phân biệt người yêu. Mặc định, HashSet dùng
+                địa chỉ bộ nhớ để phân biệt. Hai cô Tiểu Hồng tuy tên giống nhau nhưng là hai Object khác nhau trong bộ
+                nhớ, nên HashSet nghĩ là khác nhau."</p>
+            <p class="dialogue">"Vậy phải làm sao?"</p>
+            <p class="dialogue">"Ngươi phải dạy cho Object Người Yêu biết cách so sánh bằng cách viết lại hai phương
+                thức: <span class="technical-term">equals</span> <span class="pronunciation">(đọc là "i-quồ")</span> và
+                <span class="technical-term">hashCode</span>. Nếu ngươi quy định hai người có cùng tên là giống nhau,
+                HashSet mới hiểu."</p>
+            <p class="dialogue">Tiểu Bảo gãi đầu: "Phức tạp quá. Thôi con ế vậy cho khỏe."</p>
+            <p>Cả ba người cười nghiêng ngả. Đây là bài học quan trọng mà nhiều lập trình viên hay quên: Khi dùng
+                HashSet hoặc HashMap với Object tự định nghĩa, phải viết lại equals và hashCode để xác định tiêu chí so
+                sánh.</p>
+
+            <h2>Cảnh 8: Huyền Thiên Bảo Giám - HashMap</h2>
+            <p>Linh dược đã đủ một nghìn loại. Nhưng Minh Đức gặp vấn đề mới: Hắn không biết công dụng của từng loại.
+            </p>
+            <p class="dialogue">"Sư phụ, con có cả nghìn loại linh dược nhưng không biết cây nào dùng để làm gì. Khi cần
+                tìm cây chữa đau bụng, con phải lục tung cả đống này."</p>
+            <p class="dialogue">"Vậy là ngươi cần một cuốn sổ tra cứu."</p>
+            <p>Sư phụ rút ra một tấm gương cổ, viền bằng vàng, mặt gương trong suốt như không có gì.</p>
+            <p class="dialogue">"Đây là <span class="technical-term">HashMap</span> <span class="pronunciation">(đọc là
+                    "hét-mép")</span>, ta gọi là Huyền Thiên Bảo Giám. Đây là pháp bảo tra cứu thần tốc."</p>
+            <p class="dialogue">"HashMap lưu theo cặp Key-Value <span class="pronunciation">(đọc là "ki-va-liu")</span>,
+                tức Khóa và Giá Trị. Khóa là thứ ngươi dùng để tra cứu, Giá Trị là thứ ngươi muốn tìm."</p>
+            <p class="dialogue">"Ví dụ: Khóa là tên linh dược, Giá Trị là công dụng. Ngươi hô lên 'Cỏ Máu Rồng', gương
+                lập tức hiện ra 'Hồi phục sinh lực'. Nhanh như chớp mắt."</p>
+            <p class="dialogue">"Sao nó nhanh vậy ạ?"</p>
+            <p class="dialogue">"Vì HashMap cũng dùng Hash Code như HashSet. Khi ngươi đặt một cặp Khóa - Giá Trị vào,
+                HashMap tính Hash Code của Khóa, rồi đặt giá trị vào đúng ngăn tương ứng. Khi tra cứu, nó tính Hash Code
+                một lần nữa, nhảy thẳng vào ngăn đó, lấy ra ngay. Tốc độ O một."</p>
+            <p class="dialogue">"Còn nếu hai Khóa khác nhau lại có Hash Code giống nhau thì sao?"</p>
+            <p class="dialogue">Sư phụ mỉm cười: "Hay lắm! Ngươi đã hỏi đúng điểm quan trọng. Hiện tượng đó gọi là <span
+                    class="technical-term">Hash Collision</span> <span class="pronunciation">(đọc là "hét
+                    cơ-lít-giần")</span>, tức Xung Đột Băm."</p>
+            <p class="dialogue">"Trong trường hợp đó, HashMap sẽ để nhiều cặp Khóa - Giá Trị vào cùng một ngăn. Từ Java
+                phiên bản tám trở đi, nếu một ngăn có quá nhiều thứ, thường là tám, HashMap sẽ chuyển ngăn đó từ dạng
+                danh sách thành dạng cây đỏ đen, tiếng Anh gọi là <span class="technical-term">Red-Black Tree</span>
+                <span class="pronunciation">(đọc là "rét-blắc tri")</span>. Cây này giúp tìm kiếm nhanh hơn ngay cả khi
+                có nhiều xung đột."</p>
+            <p class="dialogue">"Còn một khái niệm nữa là <span class="technical-term">Load Factor</span> <span
+                    class="pronunciation">(đọc là "lốt phe-tơ")</span>, tức Hệ Số Tải. Mặc định là không phẩy bảy lăm.
+                Nghĩa là khi HashMap đầy bảy mươi lăm phần trăm, nó sẽ tự động mở rộng, tạo bảng mới lớn gấp đôi và phân
+                phối lại tất cả các cặp Khóa - Giá Trị. Quá trình này gọi là Rehash <span class="pronunciation">(đọc là
+                    "ri-hét")</span>."</p>
+            <p class="dialogue">"Nếu ngươi biết trước sẽ có một triệu phần tử, hãy khai báo dung lượng phù hợp ngay từ
+                đầu để tránh nhiều lần Rehash tốn công."</p>
+
+            <h2>Cảnh 9: Các Anh Em Họ Hàng Của HashMap</h2>
+            <p>Sư phụ tiếp tục:</p>
+            <p class="dialogue">"HashMap có nhiều anh em họ hàng. <span class="technical-term">LinkedHashMap</span>
+                <span class="pronunciation">(đọc là "lin-kờ-đờ hét-mép")</span> giống HashMap nhưng nhớ thứ tự chèn.
+                Ngươi bỏ cặp nào vào trước, khi duyệt nó sẽ ra trước."</p>
+            <p class="dialogue">"LinkedHashMap còn có thể dùng để xây dựng <span class="technical-term">LRU Cache</span>
+                <span class="pronunciation">(đọc là "eo-a-riu kát")</span>, tức Bộ Nhớ Đệm Loại Bỏ Ít Dùng Nhất. Khi
+                cache đầy, nó tự động xóa phần tử ít được truy cập nhất."</p>
+            <p class="dialogue">"<span class="technical-term">TreeMap</span> <span class="pronunciation">(đọc là
+                    "tri-mép")</span> thì sắp xếp các Khóa theo thứ tự. Bên trong nó dùng cây đỏ đen. Tốc độ chậm hơn
+                HashMap một chút, là O logarit n <span class="pronunciation">(đọc là "ô lốc en")</span>, nhưng bù lại dữ
+                liệu luôn có thứ tự."</p>
+            <p class="dialogue">"TreeMap hữu ích khi ngươi cần tìm Khóa lớn hơn hoặc nhỏ hơn một giá trị nào đó."</p>
+
+            <h2>Cảnh 10: Pháp Bảo Đa Luồng - ConcurrentHashMap</h2>
+            <p class="dialogue">"Còn một pháp bảo đặc biệt nữa:" - Sư phụ nói nghiêm nghị. "<span
+                    class="technical-term">ConcurrentHashMap</span> <span class="pronunciation">(đọc là "con-ka-rần
+                    hét-mép")</span>, dành cho môi trường đa luồng."</p>
+            <p class="dialogue">"Đa luồng là sao ạ?"</p>
+            <p class="dialogue">"Là khi nhiều người cùng truy cập một pháp bảo cùng lúc. Giống như nhiều đệ tử cùng lúc
+                thò tay vào một cái túi để lấy đồ và bỏ đồ vào."</p>
+            <p class="dialogue">"HashMap bình thường không an toàn trong môi trường này. Hai người cùng sửa một ngăn có
+                thể gây ra hỗn loạn dữ liệu, thậm chí khiến chương trình bị kẹt vô hạn."</p>
+            <p class="dialogue">"ConcurrentHashMap được thiết kế đặc biệt để xử lý vấn đề này. Từ Java phiên bản tám, nó
+                dùng kỹ thuật khóa ở mức Node, tiếng Anh gọi là Node-level Locking <span class="pronunciation">(đọc là
+                    "nốt le-vồ lóc-kinh")</span>. Chỉ khóa đúng cái ngăn đang được sửa, không khóa cả bảng. Như vậy
+                nhiều người có thể đọc và ghi cùng lúc ở các ngăn khác nhau, hiệu suất cao hơn nhiều."</p>
+            <p class="dialogue">"Khi nào thì dùng ConcurrentHashMap ạ?"</p>
+            <p class="dialogue">"Khi ứng dụng của ngươi có nhiều luồng cùng truy cập một Map. Ví dụ như web server <span
+                    class="pronunciation">(đọc là "guép xớ-vơ")</span> phục vụ hàng nghìn người dùng cùng lúc."</p>
+
+            <h2>Kết: Lĩnh Ngộ Đạo Cụ</h2>
+            <p>Khi mặt trời khuất sau dãy núi, Minh Đức đã hoàn thành nhiệm vụ. Một nghìn loại linh dược khác nhau được
+                phân loại gọn gàng.</p>
+            <p class="dialogue">"Hôm nay ngươi học được gì?" - Sư phụ hỏi.</p>
+            <p>Minh Đức đứng thẳng người, trả lời dõng dạc:</p>
+            <p class="dialogue">"Thưa sư phụ, con học được rằng code chạy được chưa đủ. Phải chọn đúng cấu trúc dữ liệu
+                mới là cao thủ. Dùng sai Collection giống như dùng dao mổ trâu để gọt hoa quả, vừa mệt vừa lâu."</p>
+            <p class="dialogue">"ArrayList dùng khi đọc nhiều. LinkedList chỉ dùng khi cần chèn xóa ở đầu cuối rất
+                nhiều. HashSet dùng khi cần loại bỏ trùng lặp. HashMap dùng khi cần tra cứu theo Khóa. ConcurrentHashMap
+                dùng trong môi trường đa luồng."</p>
+            <p class="dialogue">Sư phụ gật đầu hài lòng:</p>
+            <p class="dialogue">"Tốt lắm. Ngươi đã nắm được cách dùng pháp bảo. Nhưng có pháp bảo tốt chưa đủ. Còn phải
+                biết cách thiết kế sao cho code gọn gàng, dễ bảo trì, dễ mở rộng."</p>
+            <p class="dialogue">"Đó là đạo lý của SOLID Đài, nơi lưu giữ Ngũ Đại Đạo Tắc. Hãy chuẩn bị tinh thần. Bài
+                học tiếp theo sẽ khó hơn nhiều."</p>
+            <p class="dialogue">Minh Đức cúi đầu: "Dạ, con sẵn sàng!"</p>
+
+            <h2>Tâm Pháp Chương Này</h2>
+            <p>Sau khi đọc xong chương này, hãy ghi nhớ:</p>
+            <p>Thứ nhất, Collection Framework là hệ thống pháp bảo có tổ chức, gồm List, Set, Queue và Map.</p>
+            <p>Thứ hai, ArrayList hay Linh Châu Trận mạnh về truy cập ngẫu nhiên với tốc độ O một, yếu về chèn xóa ở
+                giữa với tốc độ O n.</p>
+            <p>Thứ ba, LinkedList hay Liên Hoàn Khấu mạnh về chèn xóa với tốc độ O một, yếu về truy cập ngẫu nhiên với
+                tốc độ O n. Trong thực tế, hầu như lúc nào cũng nên dùng ArrayList vì lợi thế về CPU Cache.</p>
+            <p>Thứ tư, HashSet hay Bách Bảo Nang đảm bảo không có phần tử trùng lặp. Khi dùng với Object tự định nghĩa,
+                phải viết lại equals và hashCode.</p>
+            <p>Thứ năm, HashMap hay Huyền Thiên Bảo Giám lưu theo cặp Khóa - Giá Trị, tra cứu nhanh với tốc độ O một.
+                Load Factor mặc định là không phẩy bảy lăm. Từ Java tám, khi một ngăn có nhiều hơn tám phần tử, nó
+                chuyển thành cây đỏ đen.</p>
+            <p>Thứ sáu, ConcurrentHashMap dành cho môi trường đa luồng, an toàn và hiệu suất cao hơn so với dùng
+                synchronized HashMap.</p>
+
+            <h2>Câu Hỏi Phỏng Vấn Senior</h2>
+            <p>Trong buổi phỏng vấn, nhà tuyển dụng có thể hỏi:</p>
+            <p><strong>"HashMap hoạt động như thế nào bên trong? Khi nào xảy ra Hash Collision và Java xử lý thế
+                    nào?"</strong></p>
+            <p>Ngươi có thể trả lời:</p>
+            <p>HashMap bên trong là một mảng các Bucket. Khi đặt một cặp Key-Value vào, HashMap tính hashCode của Key,
+                rồi dùng phép tính để xác định chỉ số của Bucket tương ứng. Cặp Key-Value được đặt vào Bucket đó.</p>
+            <p>Hash Collision xảy ra khi hai Key khác nhau có cùng chỉ số Bucket. Khi đó, HashMap lưu các cặp Key-Value
+                vào cùng một Bucket. Trước Java tám, mỗi Bucket là một danh sách liên kết. Tìm kiếm trong Bucket mất O
+                n. Từ Java tám, nếu một Bucket có nhiều hơn tám phần tử, HashMap chuyển Bucket đó thành cây đỏ đen, giảm
+                thời gian tìm kiếm xuống O logarit n.</p>
+            <p>Load Factor quyết định khi nào HashMap mở rộng. Mặc định là không phẩy bảy lăm, nghĩa là khi đầy bảy mươi
+                lăm phần trăm, HashMap sẽ Rehash, tạo mảng mới lớn gấp đôi và phân phối lại tất cả phần tử.</p>
+            <p>Nhà tuyển dụng gật đầu. Ngươi đã vượt qua cửa ải thứ hai.</p>
+            <p style="text-align: center; margin-top: 50px; font-weight: bold; font-size: 24px;">(Hết Chương 2 - Còn
+                tiếp Chương 3: Ngũ Đại Đạo Tắc)</p>
+        </section>
+
+        <footer class="chapter-footer">
+            <div class="key-takeaways">
+                <h3>🎯 Tâm Pháp Chương Này</h3>
+                <p><strong>Key Takeaways:</strong></p>
+                <p>ArrayList: O(1) read, O(n) remove/insert middle.</p>
+                <p>LinkedList: O(1) insert/remove ends, O(n) read.</p>
+                <p>HashSet: Unique items only.</p>
+                <p>HashMap: Key-Value, O(1) lookup.</p>
+            </div>
+        </footer>
+    </article>
+
+    <nav class="chapter-nav bottom">
+        <a href="chuong-1.html">⬅ Chương Trước</a>
+        <a href="chuong-3.html">Chương Sau ➡</a>
+    </nav>
+</body>
+
+</html>
