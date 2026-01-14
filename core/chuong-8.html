@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chương 8: Bí Kíp Trận Pháp - Java Tu Tiên Ký</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <nav class="chapter-nav">
+        <a href="chuong-7.html">⬅ Chương Trước</a>
+        <a href="index.html">Về Mục Lục ➡</a>
+    </nav>
+
+    <article class="chapter-content">
+        <header>
+            <h1>Chương 8: Bí Kíp Trận Pháp - Kiến Trúc Vĩ Đại</h1>
+        </header>
+
+        <section class="story-content">
+            <h2>Mở Đầu: Tàng Kinh Các - Tầng Thượng Thừa</h2>
+            <p>Sau khi đã làm chủ được Đa Phân Thân, Minh Đức được Sư phụ Vân Cơ dẫn lên tầng cao nhất của Tàng Kinh
+                Các. Nơi đây không chứa các chiêu thức võ công riêng lẻ như "Đấm", "Đá" (Syntax, Loop, Condition) mà
+                chứa các bản vẽ trận đồ khổng lồ (Design Patterns).</p>
+            <p class="dialogue">"Con đã biết cách đánh nhau (Coding). Nhưng để cầm quân đánh trận lớn (Building
+                Systems), con cần phải biết Binh Pháp (Architecture). Nếu không, code của con sẽ chỉ là một đống hỗn
+                độn, sửa chỗ này hỏng chỗ kia, gọi là 'Mì Ý' (Spaghetti Code)."</p>
+            <p class="dialogue">"Hôm nay, ta sẽ truyền cho con những Trận Pháp thượng thừa nhất, giúp con nhìn thấu cấu
+                trúc của cả Đại Lục Java."</p>
+
+            <h2>Cảnh 1: Liên Hoàn Trận - Chain of Responsibility</h2>
+            <p>Kẻ địch (Request) sắp tấn công vào Tông Môn. Minh Đức định lao ra đánh chặn. Sư phụ ngăn lại:</p>
+            <p class="dialogue">"Một mình con không thể xử lý hết mọi kẻ địch. Có kẻ mang đá độc, có kẻ mang lửa, có kẻ
+                chỉ là dân thường đi lạc. Hãy thiết lập 'Liên Hoàn Trận' - <strong>Chain of Responsibility</strong>
+                <span class="pronunciation">(đọc là trên-ợp-ri-spon-xi-bi-li-ti)</span>."</p>
+            <p>Sư phụ bày ra 5 cửa ải liên tiếp:
+                <br>1. <strong>Hào Nước</strong>: Kiểm tra vé vào cửa (Authentication). Không có vé -> Đuổi về.
+                <br>2. <strong>Tường Thành</strong>: Kiểm tra quyền hạn (Authorization). Vé thường mà đòi vào khu VIP ->
+                Đuổi.
+                <br>3. <strong>Cổng Sắt</strong>: Kiểm tra hành lý (Validation). Mang hàng cấm -> Tịch thu.
+                <br>4. <strong>Lính Gác</strong>: Ghi chép nhật ký (Logging). Ghi lại ai đã vào lúc mấy giờ.
+                <br>5. <strong>Chó Nghiệp Vụ</strong>: Xử lý chính (Business Logic).
+            </p>
+            <p>Mỗi ải chỉ làm đúng một việc và quyết định: Cho qua (pass) hay Chặn lại (block).</p>
+            <p class="dialogue">Minh Đức ngộ ra: "Pháp bảo <span class="technical-term">Servlet Filter</span> <span
+                    class="pronunciation">(đọc là sớc-v-lẹt phiêu-tơ)</span> và bức tường lửa <span
+                    class="technical-term">Spring Security</span> <span class="pronunciation">(đọc là spring
+                    se-kiu-ri-ti)</span> chính là vận hành theo trận pháp này! Nhờ chia nhỏ trách nhiệm, ta có thể thêm
+                bớt các ải tùy ý mà không phải đập đi xây lại cả cái cổng."</p>
+
+            <h2>Cảnh 2: Lệnh Bài - Command Pattern</h2>
+            <p>Minh Đức muốn điều khiển một đội quân người máy (Robot) để xây nhà. Ban đầu, hắn đứng hét trực tiếp:
+                "Robot A, tiến lên!", "Robot B, đặt gạch!".</p>
+            <p>Nhưng khi hắn bị viêm họng không hét được, đội quân đứng im. Hoặc khi hắn muốn rút lại lệnh "Robot B, đặt
+                gạch" (Undo) vì đặt nhầm, robot không biết làm sao.</p>
+            <p class="dialogue">Sư phụ đưa cho hắn một xấp "Lệnh Bài" - <strong>Command Pattern</strong> <span
+                    class="pronunciation">(đọc là com-man pát-tần)</span>.</p>
+            <p class="dialogue">"Thay vì ra lệnh bằng mồm (Direct Method Call), hãy viết lệnh vào một cái thẻ bài
+                (Object). Trên thẻ ghi rõ: Ai làm? Làm gì? Tham số thế nào?"</p>
+            <p>Minh Đức viết lệnh: <span class="technical-term">new TienLenCommand(robotA, 10_buoc)</span>. Hắn ném thẻ
+                bài vào một cái Hòm Công Văn (Queue). Một viên quan quản lý sẽ lần lượt bốc thẻ bài ra và hô: "Thực
+                thi!".</p>
+            <p>Điều kỳ diệu xảy ra:
+                <br>1. <strong>Decouple</strong> (Tách biệt): Minh Đức (Sender) không cần biết robot (Receiver) hoạt
+                động thế nào. Hắn chỉ việc ném thẻ.
+                <br>2. <strong>Undo/Redo</strong>: Vì mỗi lệnh là một thẻ bài, viên quan có thể giữ lại các thẻ đã dùng.
+                Khi Minh Đức hô "Hoàn tác", viên quan chỉ cần lấy thẻ bài cũ ra chạy ngược lại (gọi hàm `undo`).
+                <br>3. <strong>Delay</strong>: Hắn có thể ném thẻ bài vào hòm buổi sáng, nhưng dặn viên quan tối mới
+                thực thi. (Job Queue).
+            </p>
+
+            <h2>Cảnh 3: Cầu Nối - Bridge Pattern</h2>
+            <p>Minh Đức muốn rèn vũ khí cho Tông Môn. Có 2 loại vũ khí: <strong>Kiếm</strong> và <strong>Đao</strong>.
+                <br>Lại có 2 loại phép thuật (Enchant): <strong>Lửa</strong> và <strong>Băng</strong>.
+            </p>
+            <p>Theo tư duy kế thừa thông thường, Minh Đức tạo ra 4 class:
+                <br>1. `KiemLua`
+                <br>2. `KiemBang`
+                <br>3. `DaoLua`
+                <br>4. `DaoBang`
+            </p>
+            <p class="dialogue">Sư phụ lắc đầu: "Nếu ta thêm vũ khí <strong>Thương</strong>, và thêm phép
+                <strong>Điện</strong>, con sẽ phải tạo bao nhiêu class?"
+                <br>Minh Đức nhẩm tính: "3 loại vũ khí nhân 3 loại phép... là 9 class. Nếu 10 loại vũ khí, 10 loại
+                phép... là 100 class! Chết mất!"
+            </p>
+            <p class="dialogue">Sư phụ dạy trận pháp "Cầu Nối" - <strong>Bridge Pattern</strong> <span
+                    class="pronunciation">(đọc là brít-d pát-tần)</span>.</p>
+            <p class="dialogue">"Hãy tách 'Vũ Khí' (Abstraction) và 'Phép Thuật' (Implementation) ra thành hai nhánh
+                riêng biệt. Đừng hàn chết chúng vào nhau."</p>
+            <p>- Nhánh 1: Interface `VuKhi` (cầm một tham số `PhepThuat`).
+                <br>- Nhánh 2: Interface `PhepThuat`.
+            </p>
+            <p>Khi cần Kiếm Lửa, con chỉ cần lắp: <span class="technical-term">new Kiem(new Lua())</span>.
+                <br>Khi cần Thương Điện, con lắp: <span class="technical-term">new Thuong(new Dien())</span>.
+            </p>
+            <p class="dialogue">"Số lượng Class bây giờ chỉ là 3 + 3 = 6, thay vì 3 x 3 = 9. Phép cộng luôn nhỏ hơn phép
+                nhân. Đây là bí quyết để tránh 'Bùng nổ Class' (Class Explosion)."</p>
+
+            <h2>Cảnh 4: Bản Chất Của Spring - Proxy & AOP</h2>
+            <p>Sư phụ dẫn Minh Đức đến gian phòng bí mật nhất, nơi chứa "Trái Tim" của Java Đại Lục thời hiện đại -
+                <strong>Spring Framework</strong>.</p>
+            <p class="dialogue">"Minh Đức, con có thắc mắc tại sao khi con đánh dấu <span
+                    class="technical-term">@Transactional</span> <span class="pronunciation">(đọc là ét
+                    tran-sác-sần-nồ)</span> lên một hàm, tự nhiên hàm đó có khả năng tự mở kết nối Database, tự Commit
+                khi xong, và tự Rollback khi lỗi không?"</p>
+            <p class="dialogue">"Con cứ nghĩ đó là phép màu của Spring."</p>
+            <p class="dialogue">"Không có phép màu nào cả. Đó là <strong>Proxy Pattern</strong> <span
+                    class="pronunciation">(đọc là proóc-xi pát-tần)</span> - Người Đại Diện."</p>
+            <p>Sư phụ vẽ lên không trung một mô hình.</p>
+            <p class="dialogue">"Khi con xin Spring một đối tượng `UserService`, Spring không đưa cho con `UserService`
+                thật. Nó lén tạo ra một hình nhân thế mạng (Proxy) bọc lấy `UserService` thật."</p>
+            <p class="dialogue">"Khi con gọi hàm `userService.register()`, thực chất con đang gọi vào thằng Proxy.
+                <br>1. Proxy chặn lại: 'Khoan! Để ta mở Transaction đã'.
+                <br>2. Sau đó Proxy mới gọi `realUserService.register()`.
+                <br>3. Khi hàm thật chạy xong, Proxy lại chặn: 'Xong rồi hả? Để ta Commit Transaction'.
+                <br>4. Nếu hàm thật ném lỗi, Proxy bắt lấy: 'Lỗi à? Ta Rollback đây'."
+            </p>
+            <p class="dialogue">"Kỹ thuật chèn code vào đầu và cuối hàm mà không sửa code của hàm đó gọi là
+                <strong>AOP</strong> (Aspect Oriented Programming - Lập trình hướng khía cạnh). Và Proxy chính là tu vi
+                cốt lõi để làm được điều này."</p>
+
+            <h2>Cảnh 5: Vị Thần Kiến Trúc - Architectural Thinking</h2>
+            <p>Sư phụ dẫn Minh Đức lên đỉnh tháp, nhìn xuống toàn cảnh hệ thống code của mình.</p>
+            <p class="dialogue">"Trước đây, con nhìn code như những dòng chữ rời rạc. Giờ con hãy nhìn nó như những khối
+                kiến trúc."</p>
+            <p>Minh Đức nhìn xuống và thấy:
+                <br>- <strong>Tầng Controller</strong> như những quầy tiếp tân, chỉ đón khách, không nấu ăn.
+                <br>- <strong>Tầng Service</strong> như nhà bếp, nơi chế biến món ăn (Business Logic).
+                <br>- <strong>Tầng Repository</strong> như kho nguyên liệu, nơi duy nhất được đụng vào CSDL.
+                <br>- <strong>DTO (Data Transfer Object)</strong> là những cái khay để bưng bê thức ăn giữa các tầng.
+                Tuyệt đối không được bưng cả tảng thịt sống (Entity) lên bàn khách (Controller).
+            </p>
+            <p class="dialogue">"Tại sao phải chia tầng?" - Sư phụ hỏi.</p>
+            <p class="dialogue">"Để 'Chia Để Trị' (Separation of Concerns). Nếu thay đổi Database, con chỉ cần sửa tầng
+                Repository, nhà bếp và quầy tiếp tân không bị ảnh hưởng."</p>
+            <p class="dialogue">Sư phụ mỉm cười: "Chính xác. Con đã đắc đạo. Con không còn là Thợ Code (Coder) nữa, con
+                đã bắt đầu tư duy như một Kiến Trúc Sư (Architect)."</p>
+
+            <h2>Kết: Hạ Sơn</h2>
+            <p>Sư phụ Vân Cơ trao cho Minh Đức tấm lệnh bài "Senior Java Developer".</p>
+            <p class="dialogue">"Con đã học đủ: Từ Dẫn Khí (Core), Pháp Khí (Collections), Đạo Tắc (SOLID), Tân Thời Đại
+                (Java 8+), Dòng Chảy (Stream), Phân Thân (Concurrency), đến Binh Pháp (Design Patterns). Hãy xuống núi
+                và giúp đời."</p>
+            <p class="dialogue">Minh Đức bái tạ sư phụ, lòng tràn đầy nhiệt huyết. Hắn biết, con đường tu luyện công
+                nghệ không bao giờ có điểm dừng, nhưng với nền tảng vững chắc này, không bug nào có thể làm khó hắn,
+                không hệ thống nào hắn không thể dựng xây.</p>
+
+            <h2>Câu Hỏi Phỏng Vấn Senior - Boss cuối</h2>
+            <p>(Trước khi xuống núi, Sư phụ đặt ra 3 câu hỏi cuối cùng để kiểm chứng bản lĩnh.)</p>
+
+            <p><strong>Câu 1: "Tại sao Spring Bean mặc định là Singleton? Có phải vì nó áp dụng Singleton Pattern không?
+                    Nếu dùng Prototype thì sao?"</strong></p>
+            <p><em>Gợi ý trả lời:</em>
+                <br>
+                Spring Bean là Singleton (đơn nhất) trong phạm vi của Spring Context (Container), không hoàn toàn giống
+                Singleton Pattern của GOF (đơn nhất trong ClassLoader).
+                <br>
+                Mặc định là Singleton vì hiệu năng: Chỉ tạo 1 lần, dùng lại mãi mãi. Đa số các Service, Controller là
+                "Stateless" (không lưu trạng thái riêng), nên dùng chung được.
+                <br>
+                Dùng <strong>Prototype</strong> (mỗi lần gọi tạo mới) khi Bean đó có chứa trạng thái riêng (Stateful)
+                không an toàn luồng, nhưng rất hiếm gặp và tốn tài nguyên.
+            </p>
+
+            <p><strong>Câu 2: "Trong Proxy Pattern (CGLIB vs JDK Dynamic Proxy), sự khác biệt là gì? Tại sao đôi khi
+                    @Transactional không hoạt động khi gọi hàm trong cùng một class (Self-invocation)?"</strong></p>
+            <p><em>Gợi ý trả lời:</em>
+                <br>
+                - JDK Dynamic Proxy: Chỉ bọc được các class có implement Interface.
+                <br>
+                - CGLIB: Bọc được cả class thường bằng cách tạo class con (extends).
+                <br>
+                - <strong>@Transactional</strong> không chạy khi gọi nội bộ (`this.methodB()`) vì con đang gọi trực tiếp
+                vào đối tượng thật (`this`), bỏ qua thằng Proxy đứng ngoài. Proxy không bắt được lệnh gọi nên không mở
+                Transaction được. Giải pháp: Inject chính mình vào mình hoặc dùng AspectJ.
+            </p>
+
+            <p><strong>Câu 3: "Hãy phân tích ưu nhược điểm của Microservices so với Monolith dựa trên tư duy 'Bridge
+                    Pattern' và 'Chain of Responsibility'?"</strong></p>
+            <p><em>Gợi ý trả lời:</em>
+                <br>
+                - Monolith giống như một thanh kiếm đúc liền khối. Chắc chắn, gọi hàm nhanh (như Chain of Responsibility
+                trong cùng 1 process). Nhưng muốn sửa cán kiếm thì phải nung chảy cả lưỡi kiếm (Deploy lại toàn bộ).
+                <br>
+                - Microservices giống như Bridge Pattern quy mô lớn. Các bộ phận tách rời, nối với nhau bằng cầu nối
+                (Network/API). Linh hoạt, sửa từng phần dễ. Nhưng cây cầu (Network) rất mong manh, dễ đứt (Latency,
+                Failure), và quản lý giao tiếp giữa các phần rất phức tạp.
+            </p>
+
+            <p>Minh Đức mỉm cười, trả lời trôi chảy. Hắn quay lưng bước xuống núi, để lại bóng lưng vững chãi của một
+                cao thủ Java thực thụ.</p>
+            <p style="text-align: center; margin-top: 50px; font-weight: bold; font-size: 24px;">(Hết Truyện - Chúc các
+                bạn tu luyện thành công!)</p>
+        </section>
+
+        <footer class="chapter-footer">
+            <div class="key-takeaways">
+                <h3>🎯 Tâm Pháp Chương Này</h3>
+                <p><strong>Key Takeaways:</strong></p>
+                <p>Chain of Responsibility: Servlet Filters.</p>
+                <p>Proxy: The magic behind Spring AOP & Transaction.</p>
+                <p>Command: Undo/Redo & Decoupling.</p>
+                <p>Bridge: Solving Class Explosion.</p>
+            </div>
+        </footer>
+    </article>
+
+    <nav class="chapter-nav bottom">
+        <a href="chuong-7.html">⬅ Chương Trước</a>
+        <a href="index.html">Về Mục Lục ➡</a>
+    </nav>
+</body>
+
+</html>

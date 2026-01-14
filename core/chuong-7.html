@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chương 7: Đa Phân Thân Chi Thuật - Java Tu Tiên Ký</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <nav class="chapter-nav">
+        <a href="chuong-6.html">⬅ Chương Trước</a>
+        <a href="chuong-8.html">Chương Sau ➡</a>
+    </nav>
+
+    <article class="chapter-content">
+        <header>
+            <h1>Chương 7: Đa Phân Thân Chi Thuật</h1>
+        </header>
+
+        <section class="story-content">
+            <h2>Mở Đầu: Tâm Cảnh Chi Giới</h2>
+            <p>Sau khi lĩnh hội được Vô Tận Lưu ở Stream Giang, Minh Đức cảm thấy nội lực của mình đã tăng tiến vượt
+                bậc. Tuy nhiên, Sư phụ Vân Cơ vẫn chưa cho hắn xuống núi.</p>
+            <p class="dialogue">"Code chạy nhanh (Stream) vẫn chưa đủ. Nó phải chạy đúng khi có hàng ngàn người cùng lúc
+                tác động vào. Hãy theo ta vào Tâm Cảnh Chi Giới."</p>
+            <p>Sư phụ đưa Minh Đức đến một không gian kỳ lạ, nơi thời gian trôi đi thất thường, lúc nhanh lúc chậm. Xung
+                quanh là những ảo ảnh của chính Minh Đức đang làm việc hỗn loạn.</p>
+            <p class="dialogue">"Đây là nơi mô phỏng bộ nhớ và thời gian của máy chủ (Server). Mỗi ảo ảnh kia là một
+                Phân Thân (Thread). Chúng đang tranh giành nhau tài nguyên, dẫm đạp lên chân nhau mà chạy. Hôm nay, ta
+                sẽ dạy ngươi thuật Đa Phân Thân ở cảnh giới cao nhất: Khống chế Thời Không và Ký Ức."</p>
+
+            <h2>Cảnh 1: Ký Ức Ấn - Java Memory Model</h2>
+            <p>Minh Đức quan sát hai phân thân A và B. Phân thân A đang cầm một lá cờ lệnh màu đỏ. Nhiệm vụ của nó là
+                đổi cờ sang màu xanh để báo hiệu cho phân thân B dừng lại.</p>
+            <p>Minh Đức thấy rõ ràng phân thân A đã đổi cờ sang xanh. Nhưng lạ thay, phân thân B đứng ngay cạnh vẫn cứ
+                cắm đầu chạy, như thể nó vẫn nhìn thấy cờ màu đỏ.</p>
+            <p class="dialogue">"Tại sao vậy Sư phụ? B rõ ràng đứng ngay cạnh A mà không thấy cờ đổi màu?"</p>
+            <p class="dialogue">"Đó là vì mỗi phân thân đều có một vùng ký ức riêng, gọi là 'Tiểu Ký Ức' (CPU Cache).
+                Khi A đổi màu cờ, nó mới chỉ đổi trong túi áo của nó (Local Cache) chứ chưa kịp đưa ra bàn chung (Main
+                Memory). B thì cứ nhìn vào túi áo của mình, thấy cờ vẫn đỏ nên cứ chạy mãi."</p>
+            <p class="dialogue">"Đây là vấn đề về 'Tầm Nhìn' (Visibility) trong Java Memory Model <span
+                    class="pronunciation">(đọc là gia-va me-mơ-ri mô-đồ)</span>."</p>
+            <p>Sư phụ rút ra một con dấu phát sáng, in chữ V lên trán của cả A và B. Lập tức, khi A đổi cờ, lá cờ trong
+                túi B cũng đổi màu theo. B dừng lại ngay.</p>
+            <p class="dialogue">"Con dấu này gọi là <span class="technical-term">volatile</span> <span
+                    class="pronunciation">(đọc là vo-la-tai)</span>, hay 'Ký Ức Ấn'. Nó ra lệnh cho các phân thân:
+                'Không được tin vào trí nhớ tạm thời. Muốn đọc hay ghi gì, phải nhìn thẳng vào sự thật ở bàn chung (Main
+                Memory)'."</p>
+            <p class="dialogue">"Ngoài ra, nó còn tạo ra một hàng rào bảo vệ gọi là 'Memory Barrier' <span
+                    class="pronunciation">(đọc là me-mơ-ri ba-ri-ơ)</span>. Nó cấm Tiên Đế (CPU) tự ý xáo trộn thứ tự
+                các hành động (Instruction Reordering) quanh con dấu này. Đây là quy tắc vàng 'Happens-Before': Hành
+                động sửa cờ của A chắc chắn phải xảy ra trước hành động đọc cờ của B."</p>
+            <p class="dialogue">Minh Đức ngộ ra: "Thảo nào nhiều khi con dùng biến <span class="technical-term">boolean
+                    stop = false</span> để dừng thread mà nó không chịu dừng. Hóa ra là thiếu ấn <span
+                    class="technical-term">volatile</span>!"</p>
+
+            <h2>Cảnh 2: Khóa Thần Thông - Lock Internals</h2>
+            <p>Tiểu Bảo chạy đến, tay cầm một cái khóa to tướng xích vào cửa kho lương thực.</p>
+            <p class="dialogue">"Sư huynh, đệ dùng <span class="technical-term">synchronized</span> <span
+                    class="pronunciation">(đọc là xin-crô-nai)</span> để khóa cửa. An toàn tuyệt đối! Không ai tranh
+                giành được!"</p>
+            <p>Nhưng Minh Đức thấy mỗi lần Tiểu Bảo mở khóa hoặc đóng khóa, cả không gian rung chuyển ầm ầm, tốn bao
+                nhiêu năng lượng. Các phân thân xếp hàng dài dằng dặc chờ đến lượt, mặt mày cau có.</p>
+            <p class="dialogue">Sư phụ lắc đầu: "Khoá của ngươi quá nặng nề (Heavyweight Lock). Ngươi đang nhờ Lính
+                Triều Đình (OS Kernel) xuống quản lý việc xếp hàng. Mỗi lần gọi lính tốn rất nhiều công sức (Context
+                Switch)."</p>
+            <p class="dialogue">"Hãy nhìn vào bên trong ổ khóa (Object Header)." Sư phụ chỉ tay, ổ khóa phóng to ra,
+                hiện lên những ký tự cổ gọi là 'Mark Word'.</p>
+            <p class="dialogue">"JVM thông minh hơn ngươi tưởng. Nó có cơ chế 'Leo Thang Khóa' (Lock Escalation)."</p>
+            <p class="dialogue">"Cấp 1: <strong>Biased Locking</strong> <span class="pronunciation">(đọc là bai-át
+                    lóc-kinh)</span> - Khóa Thiên Vị. Khi chỉ có một mình ngươi ra vào kho, JVM không khóa thật. Nó chỉ
+                dán tên ngươi lên cửa. Lần sau ngươi vào, thấy tên mình thì cứ vào luôn, không tốn chút sức lực nào.
+                Nhanh như không khóa."</p>
+            <p class="dialogue">"Cấp 2: <strong>Lightweight Locking</strong> <span class="pronunciation">(đọc là
+                    lai-guệt lóc-kinh)</span> - Khóa Nhẹ. Khi có thêm một người nữa đến tranh, nhưng tranh chấp không
+                gay gắt (ngươi vừa ra thì hắn vào). JVM dùng chiêu CAS (Compare-And-Swap) để giải quyết. Hai bên tự thỏa
+                thuận nhanh gọn, không cần gọi lính triều đình."</p>
+            <p class="dialogue">"Cấp 3: <strong>Heavyweight Locking</strong> <span class="pronunciation">(đọc là
+                    hé-vi-guệt lóc-kinh)</span> - Khóa Nặng. Chỉ khi tranh chấp quá dữ dội, nhiều người cùng lao vào một
+                lúc, JVM mới cực chẳng đã phải biến thành khóa nặng, nhờ hệ điều hành can thiệp cho mọi người vào hàng
+                ngủ chờ (Block)."</p>
+            <p class="dialogue">"Vì vậy," Sư phụ kết luận, "Đừng sợ dùng <span
+                    class="technical-term">synchronized</span>. Trong hầu hết trường hợp không có tranh chấp cao, nó rất
+                nhẹ nhờ cơ chế Thiên Vị và Khóa Nhẹ. Chỉ khi nào thực sự cần những tính năng cao cấp như 'Thử Khóa'
+                (`tryLock`) hay 'Khóa Công Bằng' (Fairness), ta mới dùng đến thanh kiếm <span
+                    class="technical-term">ReentrantLock</span> <span class="pronunciation">(đọc là ri-en-trần
+                    lóc)</span>."</p>
+
+            <h2>Cảnh 3: Hội Đồng Trưởng Lão - Thread Pool Internals</h2>
+            <p>Minh Đức được giao quyền quản lý một đội quân phân thân để xây dựng thành trì. Ban đầu, cứ có việc là hắn
+                tạo phân thân mới (<span class="technical-term">new Thread</span>). Việc xong lại hủy đi. Chẳng mấy
+                chốc, tài nguyên cạn kiệt vì chi phí "sinh đẻ" và "tang lễ" cho phân thân quá lớn.</p>
+            <p>Sư phụ dạy hắn lập ra một "Hội Đồng Trưởng Lão" để quản lý nhân sự, gọi là
+                <strong>ThreadPoolExecutor</strong> <span class="pronunciation">(đọc là thret-phu ích-di-kiu-tơ)</span>.
+            </p>
+            <p class="dialogue">"Ngươi cần nắm vững 7 tham số cốt tử của Hội Đồng này để điều binh khiển tướng."</p>
+            <p>1. <span class="technical-term">corePoolSize</span> <span class="pronunciation">(đọc là
+                    co-phu-sai)</span>: Số lượng Trưởng Lão thường trực. Kể cả khi không có việc, họ vẫn ngồi đó chờ
+                lệnh, không bị sa thải. Đây là lực lượng nòng cốt.</p>
+            <p>2. <span class="technical-term">maxPoolSize</span> <span class="pronunciation">(đọc là
+                    max-phu-sai)</span>: Tổng số nhân sự tối đa (bao gồm cả Trưởng Lão và Lính Thời Vụ). Khi việc nộp
+                vào quá nhiều, ngươi có thể tuyển thêm lính thời vụ, nhưng không được vượt quá số này.</p>
+            <p>3. <span class="technical-term">BlockingQueue</span> <span class="pronunciation">(đọc là blốc-kinh
+                    kiu)</span>: Hàng Đợi Hồ Sơ. Khi các Trưởng Lão đang bận, hồ sơ công việc mới sẽ được xếp vào đây
+                chờ.</p>
+            <p class="dialogue">Minh Đức thắc mắc: "Vậy quy trình tuyển dụng thế nào ạ?"</p>
+            <p class="dialogue">"Nghe kỹ đây. Khi có việc mới đến:
+                <br>- Đầu tiên, giao cho <strong>Trưởng Lão</strong> (Core Pool).
+                <br>- Nếu Trưởng Lão bận hết, nhét việc vào <strong>Hàng Đợi</strong> (Queue).
+                <br>- Nếu Hàng Đợi đầy (với loại hàng đợi có giới hạn), lúc đó mới tuyển thêm <strong>Lính Thời
+                    Vụ</strong> (tăng thread lên đến Max Pool).
+                <br>- Nếu Lính Thời Vụ cũng tuyển hết mức rồi mà việc vẫn đến, thì kích hoạt cơ chế <strong>Từ
+                    Chối</strong> (Rejection Policy)."
+            </p>
+            <p class="dialogue">"Tiểu Bảo hôm nọ mắc sai lầm chết người là dùng <span
+                    class="technical-term">LinkedBlockingQueue</span> <span class="pronunciation">(đọc là lin-kựt
+                    blốc-kinh kiu)</span> mà không giới hạn sức chứa. Hậu quả là khi việc ùa đến quá nhanh, Hàng Đợi
+                phình to vô hạn, ăn hết sạch bộ nhớ (RAM), gây sập hệ thống (OOM). Mà vì Hàng Đợi không bao giờ đầy, nên
+                Lính Thời Vụ không bao giờ được tuyển thêm. Chỉ có vài mống Trưởng Lão làm việc đến chết."</p>
+            <p class="dialogue">"Hãy nhớ: Luôn giới hạn kích thước Hàng Đợi (ví dụ dùng <span
+                    class="technical-term">ArrayBlockingQueue</span>). Và phải chọn chính sách Từ Chối phù hợp: Đuổi
+                khách về (<span class="technical-term">Abort</span>), hay bắt khách tự làm lấy (<span
+                    class="technical-term">CallerRuns</span>)."</p>
+
+            <h2>Cảnh 4: Kết Giới Bất Đồng Bộ - CompletableFuture</h2>
+            <p>Công việc xây thành ngày càng phức tạp. Minh Đức có 3 nhiệm vụ:
+                <br>1. Sai đệ tử A đi mua gạch.
+                <br>2. Sai đệ tử B đi trộn vữa.
+                <br>3. Khi có cả gạch và vữa thì đệ tử C mới xây tường.
+            </p>
+            <p>Dùng cách cũ (<span class="technical-term">Future.get</span>), Minh Đức phải đứng chờ A về, rồi đứng chờ
+                B về, rồi mới sai C đi. Thời gian chờ đợi thật lãng phí.</p>
+            <p>Sư phụ trao cho hắn pháp bảo <strong>CompletableFuture</strong> <span class="pronunciation">(đọc là
+                    com-plít-tơ-bồ phiu-chơ)</span>, hay "Tương Lai Chi Thuật".</p>
+            <p class="dialogue">"Với pháp bảo này, ngươi chỉ cần ra lệnh một lần: 'A đi mua gạch, B đi trộn vữa. Hai đứa
+                xong thì tự động kích hoạt C xây tường'. Ngươi không cần đứng chờ (Non-blocking). Ngươi có thể đi uống
+                trà."</p>
+            <p class="dialogue">"Pháp bảo này có những chiêu thức liên hoàn mạnh mẽ:
+                <br>- <span class="technical-term">thenApply</span> <span class="pronunciation">(đọc là
+                    đen-ơ-plai)</span>: Có kết quả thì làm tiếp việc X.
+                <br>- <span class="technical-term">thenCompose</span> <span class="pronunciation">(đọc là
+                    đen-com-pâu)</span>: Xong việc X thì kích hoạt tiếp một chuỗi nhiệm vụ Y (phẳng hóa dòng chảy tương
+                lai).
+                <br>- <span class="technical-term">allOf</span> <span class="pronunciation">(đọc là ô-ọp)</span>: Chờ
+                tất cả 100 nhiệm vụ con xong hết thì mới làm bước chốt hạ.
+                <br>- <span class="technical-term">exceptionally</span> <span class="pronunciation">(đọc là
+                    ích-xép-sần-nơ-li)</span>: Nếu giữa đường có đứa nào gặp tai nạn, tự động kích hoạt phương án cứu
+                hộ, không làm sập cả dây chuyền."
+            </p>
+            <p>Minh Đức áp dụng ngay. Hắn thiết lập một mạng lưới nhiệm vụ chằng chịt nhưng tự động vận hành trơn tru.
+                Hắn ngồi uống trà, nhìn thành trì tự mọc lên như có phép lạ.</p>
+
+            <h2>Cảnh 5: Hư Ảnh Phân Thân - Virtual Threads</h2>
+            <p>Minh Đức đang đắc ý thì Sư phụ dội một gáo nước lạnh:
+                <br>"Thành trì này nhỏ thì được. Nhưng nếu ngươi phải phục vụ một triệu người dân cùng lúc (1 triệu
+                Concurrent Request) thì sao?"
+            </p>
+            <p>Minh Đức tính toán: "Mỗi người dân cần một Phân Thân (Thread) phục vụ. Một Thread tốn khoảng 1MB bộ nhớ.
+                Một triệu Thread cần... 1TB RAM! Không máy chủ nào chịu nổi!"</p>
+            <p>Sư phụ mỉm cười, ánh mắt rực sáng:
+                <br>"Đó là giới hạn của thời đại cũ. Chào mừng đến với Kỷ Nguyên Mới (Java 21) với <strong>Virtual
+                    Threads</strong> <span class="pronunciation">(đọc là vơ-ùa thret)</span> - Hư Ảnh Phân Thân."
+            </p>
+            <p class="dialogue">"Thay vì dùng Phân Thân Thật (Platform Thread) đắt đỏ gắn liền với Hệ Điều Hành, ta tạo
+                ra các Hư Ảnh siêu nhẹ. Một triệu Hư Ảnh này chỉ cần vài Phân Thân Thật cõng trên lưng (Carrier
+                Thread)."</p>
+            <p class="dialogue">"Khi một Hư Ảnh gặp việc phải chờ (như chờ mua gạch), nó tự động tách khỏi Phân Thân
+                Thật, bay lên trời nằm ngủ. Phân Thân Thật lập tức rảnh tay để cõng Hư Ảnh khác. Không ai bị chặn
+                (Non-blocking I/O) mà không cần code phức tạp."</p>
+            <p class="dialogue">"Với Hư Ảnh Phân Thân, ngươi có thể viết code theo kiểu tuần tự đơn giản (cách cũ),
+                nhưng lại đạt hiệu năng của bất đồng bộ siêu việt. Đây là cuộc cách mạng vĩ đại nhất của Java Tông trong
+                thập kỷ qua."</p>
+
+            <h2>Kết: Làm Chủ Thời Không</h2>
+            <p>Rời khỏi Tâm Cảnh Chi Giới, Minh Đức cảm thấy mình như người khổng lồ. Hắn không còn sợ những bài toán
+                chịu tải cao (High Concurrency) nữa. Hắn hiểu rõ cái giá của từng cái khóa, từng cái Thread được tạo ra.
+            </p>
+            <p>Hắn biết khi nào dùng <span class="technical-term">synchronized</span> đơn giản, khi nào cần <span
+                    class="technical-term">ThreadPool</span> tinh chỉnh, và khi nào nên triệu hồi <span
+                    class="technical-term">Virtual Thread</span> cho những trận chiến quy mô triệu quân.</p>
+            <p class="dialogue">Sư phụ Vân Cơ gật đầu mãn nguyện: "Khá lắm. Ngươi đã nắm được 'Nội Công' thâm hậu nhất.
+                Nhưng để xây dựng một Tông Môn trường tồn vạn đại, cần có một 'Kiến Trúc' vững chắc. Hãy đến Tàng Kinh
+                Các, tầng cao nhất, để học về Bí Kíp Trận Pháp (Design Pattern & Architecture)."</p>
+
+            <h2>Câu Hỏi Phỏng Vấn Senior</h2>
+            <p>(Minh Đức lại lôi cuốn sổ tay ra ghi chép. Những câu này chắc chắn sẽ phân loại ứng viên Senior và
+                Junior.)</p>
+
+            <p><strong>Câu 1: "Hãy giải thích quy tắc 'Happens-Before' trong Java Memory Model. Tại sao không có
+                    `volatile` thì đa luồng lại chạy sai?"</strong></p>
+            <p><em>Gợi ý trả lời:</em>
+                <br>
+                "Happens-Before" là cam kết của JVM về độ ưu tiên và tầm nhìn bộ nhớ. Nếu hành động A happens-before B,
+                thì kết quả của A đảm bảo được B nhìn thấy.
+                <br>
+                Không có <span class="technical-term">volatile</span>, CPU có quyền cache biến vào thanh ghi (Register)
+                hoặc L1/L2 Cache của riêng nó để tối ưu tốc độ. Luồng khác chạy trên CPU khác sẽ không thấy sự thay đổi
+                này (Visibility Issue). Ngoài ra, CPU có thể sắp xếp lại thứ tự lệnh (Reordering) gây sai lệch logic.
+                <span class="technical-term">volatile</span> ngăn chặn cả hai điều này nhờ Memory Barriers.
+            </p>
+
+            <p><strong>Câu 2: "Phân tích rủi ro của từng loại BlockingQueue trong ThreadPoolExecutor? Khi nào dùng
+                    LinkedBlockingQueue, khi nào dùng ArrayBlockingQueue?"</strong></p>
+            <p><em>Gợi ý trả lời:</em>
+                <br>
+                - <span class="technical-term">LinkedBlockingQueue</span>: Thường có kích thước mặc định là
+                `Integer.MAX_VALUE` (vô hạn). Rủi ro: Nếu consumer xử lý chậm hơn producer, hàng đợi phình to vô hạn gây
+                OutOfMemoryError. Dùng khi chắc chắn tải ổn định hoặc muốn chấp nhận tất cả request nhưng tài nguyên RAM
+                dồi dào.
+                <br>
+                - <span class="technical-term">ArrayBlockingQueue</span>: Kích thước cố định. An toàn cho bộ nhớ. Rủi
+                ro: Nếu đầy, request sẽ bị từ chối hoặc block. Dùng cho các hệ thống quan trọng cần kiểm soát tải
+                (Backpressure) và độ ổn định cao.
+                <br>
+                - <span class="technical-term">SynchronousQueue</span>: Kích thước bằng 0. Producer phải chờ consumer
+                lấy ngay. Dùng cho ứng dụng cần độ trễ cực thấp hoặc khi `maxPoolSize` rất lớn (như cache thread pool).
+            </p>
+
+            <p><strong>Câu 3: "Virtual Threads (Project Loom) khác gì với Platform Threads truyền thống? Nó giải quyết
+                    vấn đề gì?"</strong></p>
+            <p><em>Gợi ý trả lời:</em>
+                <br>
+                Platform Thread là 1:1 với OS Thread (nhân hệ điều hành), rất nặng (tốn ~2MB stack, context switch tốn
+                CPU).
+                <br>
+                Virtual Thread là M:N (Nhiều Virtual Thread chạy trên một vài OS Thread). Nó rất nhẹ, được quản lý bởi
+                JVM, không phải OS.
+                <br>
+                Nó giải quyết vấn đề "Throughput" cho các ứng dụng I/O tốn thời gian chờ (High-concurrency servers). Nó
+                giúp viết code đơn giản kiểu "Thread-per-request" mà vẫn đạt hiệu năng tương đương code Reactive phức
+                tạp.
+            </p>
+
+            <p>Minh Đức khép lại trang sách. Một chặng đường nữa đã qua. Chỉ còn thử thách cuối cùng.</p>
+            <p style="text-align: center; margin-top: 50px; font-weight: bold; font-size: 24px;">(Hết Chương 7)</p>
+        </section>
+
+        <footer class="chapter-footer">
+            <div class="key-takeaways">
+                <h3>🎯 Tâm Pháp Chương Này</h3>
+                <p><strong>Key Takeaways:</strong></p>
+                <p>Volatile: Ensures visibility & ordering.</p>
+                <p>ThreadPoolExecutor: Core vs Max params matter.</p>
+                <p>Lock Internals: Bias -> Light -> Heavy escalation.</p>
+                <p>Virtual Threads: Massive concurrency for I/O.</p>
+            </div>
+        </footer>
+    </article>
+
+    <nav class="chapter-nav bottom">
+        <a href="chuong-6.html">⬅ Chương Trước</a>
+        <a href="chuong-8.html">Chương Sau ➡</a>
+    </nav>
+</body>
+
+</html>

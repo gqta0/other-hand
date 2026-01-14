@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chương 6: Dòng Chảy Thăng Hoa - Java Tu Tiên Ký</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <nav class="chapter-nav">
+        <a href="chuong-5.html">⬅ Chương Trước</a>
+        <a href="chuong-7.html">Chương Sau ➡</a>
+    </nav>
+
+    <article class="chapter-content">
+        <header>
+            <h1>Chương 6: Dòng Chảy Thăng Hoa</h1>
+        </header>
+
+        <section class="story-content">
+            <h2>Mở Đầu: Vô Tận Lưu</h2>
+            <p>Thời gian thấm thoắt thoi đưa, Minh Đức đã tu luyện tại Java Tông được nửa năm. Hắn cứ ngỡ mình đã làm
+                chủ được Stream Giang sau khi học xong các chiêu thức cơ bản như <span
+                    class="technical-term">filter</span>, <span class="technical-term">map</span>, <span
+                    class="technical-term">reduce</span>. Hắn thường xuyên dùng Stream để xử lý danh sách đệ tử, cảm
+                thấy code của mình ngắn gọn và "ngầu" hơn hẳn đám sư huynh dùng vòng lặp <span
+                    class="technical-term">for</span>.</p>
+            <p>Nhưng sự tự mãn ấy không kéo dài lâu. Một hôm, Minh Đức nhận nhiệm vụ xử lý dữ liệu kiểm kê kho báu của
+                toàn bộ Tông Môn. Dữ liệu lên tới hàng tỷ vật phẩm, được lưu trữ trong những cấu trúc phức tạp chồng
+                chéo. Khi hắn hào hứng dùng <span class="technical-term">parallelStream</span> <span
+                    class="pronunciation">(đọc là pa-ra-leo-xtrim)</span> để chạy cho nhanh, hệ thống bỗng nhiên chậm
+                như rùa bò, thậm chí treo cứng. Minh Đức toát mồ hôi hột, không hiểu tại sao "Song Song Thần Công" lại
+                phản tác dụng.</p>
+            <p>Sư huynh Quang Hải xuất hiện, nhưng lần này không cười cợt trêu chọc như mọi khi. Khuôn mặt huynh ấy
+                nghiêm nghị lạ thường.</p>
+            <p class="dialogue">"Sư đệ, đệ mới chỉ học được phần 'Dụng' của dòng chảy, chưa hiểu được phần 'Thể'. Đệ mới
+                chỉ biết cưỡi thuyền trên mặt nước, chứ chưa biết cấu tạo của từng giọt nước và quy luật của dòng xoáy
+                ngầm. Hãy theo ta."</p>
+            <p>Quang Hải dẫn Minh Đức đi sâu vào bên trong động Stream Giang, đến một nơi gọi là "Vô Tận Lưu". Tại đây,
+                không gian biến đổi kỳ ảo. Những dòng suối không còn là nước thông thường, mà là những luồng năng lượng
+                phát sáng, chảy với tốc độ khủng khiếp. Có dòng chảy êm đềm trật tự, có dòng chảy hỗn loạn điên cuồng,
+                lại có những dòng chảy đứt đoạn rồi tự nối liền.</p>
+            <p class="dialogue">"Chào mừng đệ đến với thế giới của Master Stream. Tại đây, ta sẽ dạy đệ cách mổ xẻ dòng
+                chảy đến tận cùng tế bào."</p>
+
+            <h2>Cảnh 1: Phân Tách Kiếm - Spliterator</h2>
+            <p>Sư huynh chỉ vào một dòng thác dung nham khổng lồ đang đổ xuống từ vách núi.</p>
+            <p class="dialogue">"Đệ hãy nhìn dòng thác kia. Đó là một nguồn dữ liệu khổng lồ. Nếu đệ muốn xử lý nó nhanh
+                chóng bằng cách chia việc cho nhiều người, đệ sẽ làm thế nào?"</p>
+            <p class="dialogue">Minh Đức gãi đầu: "Thì... đệ sẽ chặt dòng thác ra làm nhiều khúc, mỗi người hứng một
+                khúc?"</p>
+            <p class="dialogue">"Chặt bằng cách nào? Dòng thác chảy liên tục, đâu phải là cái bánh trưng mà cầm dao cắt
+                là xong. Để chia nhỏ một dòng chảy vô tận hoặc cực lớn, Java Tông sử dụng một pháp bảo tối thượng gọi là
+                <span class="technical-term">Spliterator</span> <span class="pronunciation">(đọc là
+                    splít-tơ-rây-tơ)</span>, ta gọi là Phân Tách Kiếm."</p>
+            <p>Sư huynh rút ra một thanh kiếm ánh sáng, chém một nhát vào hư không. Dòng thác dung nham bỗng nhiên tách
+                đôi, chảy vào hai kênh dẫn riêng biệt một cách mượt mà.</p>
+            <p class="dialogue">"Cái tên <span class="technical-term">Spliterator</span> là sự kết hợp của 'Split' <span
+                    class="pronunciation">(đọc là splít)</span> nghĩa là chia tách, và 'Iterator' <span
+                    class="pronunciation">(đọc là i-tơ-rây-tơ)</span> nghĩa là duyệt. Nó có hai nhiệm vụ chính."</p>
+            <p class="dialogue">"Thứ nhất là <span class="technical-term">tryAdvance</span> <span
+                    class="pronunciation">(đọc là trai-át-van-xờ)</span>, tức Thử Bước Tới. Chiêu này dùng để xử lý từng
+                giọt nước một. Nếu còn nước, nó sẽ hứng lấy một giọt và đưa cho đệ xử lý, rồi trả về 'Đúng'. Nếu hết
+                nước, nó trả về 'Sai'. Đây là cách hoạt động khi đệ chạy Stream một mình (tuần tự)."</p>
+            <p class="dialogue">"Thứ hai, quan trọng hơn, là <span class="technical-term">trySplit</span> <span
+                    class="pronunciation">(đọc là trai-splít)</span>, tức Thử Chia Tách. Chiêu này dùng khi đệ muốn chạy
+                Song Song. Khi đệ gọi <span class="technical-term">trySplit</span>, thanh kiếm sẽ chém xuống dòng chảy
+                hiện tại. Nếu dòng chảy đủ lớn, nó sẽ ngắt ra một phần, gói lại thành một <span
+                    class="technical-term">Spliterator</span> mới và trả về cho đệ. Lúc này, đệ có hai dòng chảy độc
+                lập: dòng cũ và dòng vừa tách ra. Đệ có thể giao dòng mới này cho một phân thân (Thread) khác xử lý."
+            </p>
+            <p class="dialogue">Minh Đức trầm trồ: "Ra là vậy! Parallel Stream hoạt động được là nhờ thanh kiếm này liên
+                tục chém nhỏ dòng dữ liệu ra cho các luồng khác nhau!"</p>
+            <p class="dialogue">"Chưa hết," sư huynh tiếp tục, "Mỗi thanh Phân Tách Kiếm đều mang trong mình những đặc
+                tính riêng, gọi là <span class="technical-term">Characteristics</span> <span class="pronunciation">(đọc
+                    là ca-rác-tơ-rít-tíc)</span>. Đệ phải hiểu rõ đặc tính của dòng chảy để dùng kiếm cho đúng."</p>
+            <p>Sư huynh chỉ vào dòng dung nham: "Dòng này chảy theo rãnh, trước sau rõ ràng. Nó mang đặc tính <span
+                    class="technical-term">ORDERED</span> <span class="pronunciation">(đọc là o-đợt)</span>, tức Có Thứ
+                Tự. Khi chia tách, đệ phải cẩn thận để không làm đảo lộn thứ tự trước sau."</p>
+            <p>Rồi huynh chỉ sang một cơn mưa rào đang trút xuống bên cạnh: "Còn cơn mưa này, các giọt nước rơi lộn xộn,
+                không ai trước ai sau. Nó mang đặc tính <span class="technical-term">CONCURRENT</span> <span
+                    class="pronunciation">(đọc là con-cơ-rần)</span>, tức Đồng Thời, nhưng không có thứ tự. Việc chia
+                tách loại này dễ hơn và hiệu quả hơn nhiều vì không cần lo xếp hàng."</p>
+            <p class="dialogue">"Ngoài ra còn có <span class="technical-term">SIZED</span> <span
+                    class="pronunciation">(đọc là sai-zờ-đờ)</span> nghĩa là biết trước kích thước, <span
+                    class="technical-term">NONNULL</span> <span class="pronunciation">(đọc là non-nâu)</span> nghĩa là
+                không chứa rác rưởi, <span class="technical-term">IMMUTABLE</span> <span class="pronunciation">(đọc là
+                    im-miu-tờ-bồ)</span> nghĩa là nguồn dữ liệu không bị thay đổi trong lúc chảy."</p>
+            <p class="dialogue">"Tại sao hôm trước đệ dùng <span class="technical-term">parallelStream</span> lại chậm?
+                Có thể vì đệ đang dùng một nguồn dữ liệu dạng <span class="technical-term">LinkedList</span> <span
+                    class="pronunciation">(đọc là lin-kựt-lít)</span>. Thanh Phân Tách Kiếm chém vào LinkedList rất vất
+                vả vì không biết điểm giữa ở đâu, phải lần mò từng mắt xích. Ngược lại, nếu đệ dùng <span
+                    class="technical-term">ArrayList</span> <span class="pronunciation">(đọc là ơ-rây-lít)</span>, thanh
+                kiếm biết ngay điểm giữa, chém một phát đứt đôi ngay, hiệu suất phân tách cực cao."</p>
+            <p class="dialogue">Minh Đức như bừng tỉnh: "Thảo nào! Đệ cứ tưởng cứ bật Song Song lên là nhanh, hóa ra còn
+                phụ thuộc vào việc cái nguồn đó có dễ chia tách hay không!"</p>
+
+            <h2>Cảnh 2: Trần Trụi Thuật - Primitive Streams</h2>
+            <p>Đi tiếp một đoạn, Minh Đức thấy Tiểu Bảo đang ngồi hì hục đếm một núi tiền xu. Điều kỳ lạ là mỗi đồng xu
+                bé tí lại được Tiểu Bảo cẩn thận bỏ vào một cái hộp gỗ to đùng, rồi mới xếp vào kho.</p>
+            <p class="dialogue">"Tiểu Bảo, đệ làm gì mà khổ sở thế?" Minh Đức hỏi.</p>
+            <p class="dialogue">Tiểu Bảo quệt mồ hôi: "Đệ đang dùng <span
+                    class="technical-term">Stream&lt;Integer&gt;</span> <span class="pronunciation">(đọc là xtrim
+                    in-tê-gơ)</span> để đếm tiền ạ. Sư huynh bảo trong thế giới Hướng Đối Tượng, cái gì cũng phải là
+                Object, nên đệ phải bọc mỗi đồng xu (int) vào một cái hộp (Integer)."</p>
+            <p class="dialogue">Sư huynh Quang Hải lắc đầu ngao ngán: "Đây là sai lầm kinh điển. Đệ hãy nhìn xem, để đếm
+                một triệu đồng xu, đệ phải tạo ra một triệu cái hộp gỗ. Việc đóng hộp (Boxing) và mở hộp (Unboxing) tốn
+                bao nhiêu thời gian và công sức. Chưa kể đống hộp gỗ kia chiếm đầy kho chứa (Heap Memory), khiến cho bộ
+                phận dọn rác (Garbage Collector) phải chạy đứt hơi."</p>
+            <p class="dialogue">"Vậy phải làm sao ạ?"</p>
+            <p>Sư huynh phẩy tay, tất cả hộp gỗ biến mất, chỉ còn lại những đồng xu trần trụi sáng loáng bay thành một
+                dòng suối vào kho.</p>
+            <p class="dialogue">"Hãy dùng chiêu 'Trần Trụi Thuật'. Trong Java Stream, đó là các <span
+                    class="technical-term">Primitive Stream</span> <span class="pronunciation">(đọc là pri-mi-tiu
+                    xtrim)</span> như <span class="technical-term">IntStream</span>, <span
+                    class="technical-term">LongStream</span>, <span class="technical-term">DoubleStream</span>. Các dòng
+                chảy này được thiết kế riêng cho các kiểu dữ liệu nguyên thủy."</p>
+            <p class="dialogue">"Khi đệ dùng <span class="technical-term">mapToInt</span> <span
+                    class="pronunciation">(đọc là mép-tu-in)</span> thay vì <span class="technical-term">map</span>, đệ
+                đang bảo vệ dòng chảy vứt bỏ hết các lớp vỏ bọc Object nặng nề, chỉ giữ lại giá trị cốt lõi. Tốc độ xử
+                lý có thể tăng lên gấp chục lần, và bộ nhớ được giải phóng đáng kể."</p>
+            <p class="dialogue">"Để ta mở rộng nhãn giới cho đệ," Sư huynh nói tiếp. "Tại sao Stream lại nhanh? Ngoài
+                việc dùng Trần Trụi Thuật, nó còn có cơ chế 'Hợp Nhất Vòng Lặp' hay <span class="technical-term">Loop
+                    Fusion</span> <span class="pronunciation">(đọc là lúp fiu-giần)</span>."</p>
+            <p class="dialogue">"Giả sử đệ có một dây chuyền xử lý: Lọc các đồng xu giả -> Đánh bóng -> Đếm. Nếu dùng
+                cách thủ công, đệ sẽ nhặt hết xu giả ra (duyệt lần 1), rồi đánh bóng đống còn lại (duyệt lần 2), rồi mới
+                đếm (duyệt lần 3). Ba lần duyệt."</p>
+            <p class="dialogue">"Nhưng Stream thông minh hơn. Nó gộp cả ba việc đó lại. Nó cầm một đồng xu lên, soi xem
+                có giả không? Nếu thật thì đánh bóng luôn, rồi đếm luôn. Chỉ duyệt đúng một lần. Nó làm việc lười biếng
+                nhưng hiệu quả."</p>
+            <p class="dialogue">"Hơn nữa là cơ chế <span class="technical-term">Short-circuiting</span> <span
+                    class="pronunciation">(đọc là sọt-xơ-kít-tinh)</span> hay 'Đoản Mạch'. Nếu đệ dùng lệnh <span
+                    class="technical-term">findFirst</span> <span class="pronunciation">(đọc là phai-phớt)</span> - tìm
+                đồng xu thật đầu tiên. Ngay khi tìm thấy đồng đầu tiên, Stream sẽ dừng ngay lập tức dây chuyền, không
+                thèm nhìn đến tỷ đồng xu còn lại phía sau. Đó là đỉnh cao của sự lười biếng tạo nên tốc độ."</p>
+
+            <h2>Cảnh 3: Bí Mật Song Song - ForkJoinPool</h2>
+            <p>Minh Đức vẫn còn thắc mắc về thất bại khi dùng <span class="technical-term">parallelStream</span> hôm
+                trước. Sư huynh dẫn hắn đến một đại sảnh ồn ào náo nhiệt, nơi hàng ngàn phân thân đang làm việc.</p>
+            <p class="dialogue">"Đây là <span class="technical-term">ForkJoinPool</span> <span
+                    class="pronunciation">(đọc là phóc-gioi-phu)</span>, đại bản doanh quản lý các luồng song song của
+                Stream."</p>
+            <p>Minh Đức quan sát thấy một cơ chế làm việc rất lạ. Mỗi phân thân (Thread) có một danh sách công việc
+                riêng đặt trong một cái ống (Queue). Phân thân luôn lấy việc mới nhất từ đầu ống để làm (LIFO - Last In
+                First Out).</p>
+            <p>Điều thú vị là có những phân thân làm rất nhanh, loáng cái đã hết việc trong ống của mình. Thay vì ngồi
+                chơi xơi nước, nó lén lút chạy sang ống của phân thân bên cạnh (người đang ngập đầu trong công việc), và
+                móc trộm một công việc từ đáy ống (FIFO - First In First Out) để làm hộ.</p>
+            <p class="dialogue">"Đó là thuật toán <span class="technical-term">Work-Stealing</span> <span
+                    class="pronunciation">(đọc là guốc-tiu-linh)</span>, hay 'Trộm Công'," Sư huynh giải thích. "Nó đảm
+                bảo không có ai được rảnh rỗi trong khi đồng đội đang bận. Kẻ rảnh rỗi sẽ đi gánh đỡ cho kẻ bận rộn. Nhờ
+                vậy, <span class="technical-term">ForkJoinPool</span> tận dụng triệt để sức mạnh của các CPU."</p>
+            <p class="dialogue">Minh Đức gật gù: "Thông minh thật! Nhưng tại sao hôm nọ hệ thống của đệ lại bị treo?"
+            </p>
+            <p class="dialogue">Sư huynh nghiêm mặt: "Đó là vì đệ đã phạm phải điều cấm kỵ: Dùng <span
+                    class="technical-term">Common Pool</span> <span class="pronunciation">(đọc là com-mần phu)</span>
+                cho việc chờ đợi."</p>
+            <p class="dialogue">"Mặc định, tất cả các <span class="technical-term">parallelStream</span> trong toàn bộ
+                ứng dụng của đệ đều dùng chung một hồ bơi công cộng này (<span
+                    class="technical-term">CommonForkJoinPool</span>). Số lượng phân thân trong hồ này thường chỉ bằng
+                số lượng lõi CPU của máy tính (ví dụ 8 hoặc 16 người)."</p>
+            <p class="dialogue">"Hôm đó, đệ dùng <span class="technical-term">parallelStream</span> để gọi một API qua
+                mạng (Network Call) hoặc truy vấn cơ sở dữ liệu. Đó là những việc phải chờ đợi (Blocking). Khi một phân
+                thân đi gọi API, nó phải ngồi chờ kết quả trả về, không làm được gì khác."</p>
+            <p class="dialogue">"Hãy tưởng tượng, đệ tung ra 16 nhiệm vụ gọi API. Cả 16 phân thân trong hồ đều đi gọi và
+                ngồi chờ. Thế là hồ cạn sạch người! Lúc đó, một nhiệm vụ khác, dù rất nhẹ nhàng như tính tổng 1 cộng 1,
+                cũng phải xếp hàng chờ vĩnh viễn vì không còn ai rảnh để làm. Cả hệ thống tắc nghẽn, giống như kẹt xe
+                ngày Tết vậy."</p>
+            <p class="dialogue">"Bài học xương máu: Tuyệt đối không dùng <span
+                    class="technical-term">parallelStream</span> mặc định cho các tác vụ Blocking I/O (Đọc ghi file,
+                mạng). Chỉ dùng nó cho các tác vụ tính toán thuần túy trên CPU (In-memory computation). Nếu bắt buộc
+                phải chạy song song việc I/O, hãy tạo một <span class="technical-term">ThreadPool</span> <span
+                    class="pronunciation">(đọc là thret-phu)</span> riêng biệt và bắt Stream chạy trong hồ riêng đó,
+                đừng làm bẩn hồ chung."</p>
+
+            <h2>Cảnh 4: Chế Tạo Tụ Linh Trận - Custom Collector</h2>
+            <p>Sau khi hiểu về cách chia tách và xử lý song song, Minh Đức gặp một bài toán hóc búa khác. Hắn cần gom số
+                liệu từ hàng triệu đệ tử và báo cáo dưới một định dạng kỳ dị của Tông Môn: Một chuỗi JSON <span
+                    class="pronunciation">(đọc là dây-sơn)</span> đặc biệt, vừa nối tên, vừa tính tổng tuổi, vừa nhóm
+                theo quê quán.</p>
+            <p>Các pháp bảo có sẵn như <span class="technical-term">Collectors.toList()</span> hay <span
+                    class="technical-term">groupingBy</span> không thể đáp ứng định dạng quái đản này.</p>
+            <p class="dialogue">Sư huynh cười: "Đến lúc đệ phải tự tay rèn một Tụ Linh Trận cho riêng mình rồi. Hãy
+                implements Interface <span class="technical-term">Collector</span>."</p>
+            <p>Để rèn một Tụ Linh Trận, Minh Đức phải chế tạo 4 linh kiện:</p>
+            <p>1. <strong>Supplier</strong> <span class="pronunciation">(đọc là sơ-plai-ơ)</span> - Người Cung Cấp: Đầu
+                tiên, đệ cần một cái hũ rỗng để chứa kết quả. Đó có thể là một <span
+                    class="technical-term">ArrayList</span>, một <span class="technical-term">StringBuilder</span>, hay
+                một Class Kết Quả do đệ tự viết. (Ví dụ: <span class="technical-term">() -> new KetQuaHieuQua()</span>)
+            </p>
+            <p>2. <strong>Accumulator</strong> <span class="pronunciation">(đọc là ơ-kiu-miu-lây-tơ)</span> - Người Tích
+                Lũy: Đây là hành động nhặt từng phần tử của dòng chảy và bỏ vào cái hũ. (Ví dụ: <span
+                    class="technical-term">(hũ, đệ_tử) -> hũ.add(đệ_tử)</span>)</p>
+            <p>3. <strong>Combiner</strong> <span class="pronunciation">(đọc là com-bai-nơ)</span> - Người Hợp Nhất: Đây
+                là linh kiện quan trọng nhất khi chạy song song. Khi đệ chia dòng chảy thành nhiều nhánh, mỗi nhánh sẽ
+                có một cái hũ riêng. Khi xử lý xong, đệ phải có cách để đổ hai cái hũ con vào nhau thành một hũ lớn. (Ví
+                dụ: <span class="technical-term">(hũ_1, hũ_2) -> hũ_1.addAll(hũ_2); return hũ_1;</span>)</p>
+            <p>4. <strong>Finisher</strong> <span class="pronunciation">(đọc là phi-ni-sơ)</span> - Người Hoàn Thiện:
+                Sau khi đã gom tất cả vào một hũ lớn, đệ có muốn biến hình cái hũ đó lần cuối không? Ví dụ biến <span
+                    class="technical-term">StringBuilder</span> thành <span class="technical-term">String</span>. Nếu
+                không cần biến đổi gì, đệ có thể đánh dấu đặc tính <span class="technical-term">IDENTITY_FINISH</span>
+                <span class="pronunciation">(đọc là ai-đen-ti-ti phi-nít)</span>.</p>
+            <p>Minh Đức bắt tay vào rèn luyện. Hắn tạo ra một <span class="technical-term">Collector</span> tùy chỉnh,
+                gom dữ liệu vào một đối tượng <span class="technical-term">BaoCaoTongHop</span>. Hắn định nghĩa cách
+                cộng dồn điểm số, cách gộp hai báo cáo thành một. Kết quả thật mỹ mãn: Stream chạy mượt mà, gom hàng
+                triệu dòng dữ liệu về một kết quả phức tạp chỉ trong nháy mắt.</p>
+
+            <h2>Cảnh 5: Thiên Lý Nhãn - Debugging with Peek</h2>
+            <p>Trong quá trình tu luyện, không tránh khỏi sai sót. Có lần, Minh Đức viết một chuỗi Stream dài dằng dặc:
+                lọc, biến đổi, sắp xếp, rồi lại lọc. Kết quả cuối cùng bị sai, nhưng hắn không biết sai ở bước nào. Vì
+                Stream là một đường ống khép kín, hắn không thể chui vào giữa để đặt lệnh <span
+                    class="technical-term">System.out.println</span> như trong vòng lặp <span
+                    class="technical-term">for</span> được.</p>
+            <p class="dialogue">"Làm sao đệ biết chuyện gì xảy ra bên trong dòng chảy này?" Minh Đức vò đầu bứt tóc.</p>
+            <p class="dialogue">Sư huynh dạy hắn chiêu "Thiên Lý Nhãn", tên kỹ thuật là <span
+                    class="technical-term">peek</span> <span class="pronunciation">(đọc là píc)</span>.</p>
+            <p class="dialogue">"Chiêu này cho phép đệ nhòm vào dòng chảy mà không làm ảnh hưởng đến nó. Giống như đệ
+                đặt một cái camera quay chậm ở giữa dòng suối."</p>
+            <p class="dialogue">"Đệ có thể chèn <span class="technical-term">.peek(System.out::println)</span> vào bất
+                cứ đâu: sau bước <span class="technical-term">filter</span> để xem ai còn lại, sau bước <span
+                    class="technical-term">map</span> để xem hình dạng mới của dữ liệu. <span
+                    class="technical-term">peek</span> chỉ nhìn và thực hiện hành động phụ (side-effect), rồi trả lại
+                nguyên vẹn dòng chảy cho bước tiếp theo."</p>
+            <p>Minh Đức thử ngay. Hắn đặt <span class="technical-term">peek</span> sau bước lọc tuổi.
+                <br>
+                `Stream... filter(t > 18).peek(d -> in("Đã qua lọc tuổi: " + d)).map(...)`
+            </p>
+            <p>Ngay lập tức, màn hình hiện ra danh sách những kẻ đã vượt qua cửa ải lọc tuổi. Nhờ đó, Minh Đức phát hiện
+                ra logic lọc của mình bị sai ở một trường hợp biên.</p>
+            <p class="dialogue">Sư huynh nhắc nhở: "Hãy nhớ, <span class="technical-term">peek</span> chủ yếu dùng để gỡ
+                lỗi (debug). Đừng dùng nó để làm thay đổi trạng thái của dữ liệu bên ngoài quá nhiều, nếu không đệ sẽ vi
+                phạm nguyên tắc 'Không Tác Dụng Phụ' (Stateless) của Stream, và có thể gây lỗi khi chạy song song."</p>
+
+            <h2>Kết: Đỉnh Cao Của Dòng Chảy</h2>
+            <p>Rời khỏi Vô Tận Lưu, Minh Đức cảm thấy như mình vừa thoát xác. Hắn không còn nhìn Stream như một cú pháp
+                tiện lợi nữa, mà nhìn nó như một cỗ máy thủy lực phức tạp.</p>
+            <p>Hắn hiểu rằng đằng sau một câu lệnh đơn giản là cả một hệ thống <span
+                    class="technical-term">Spliterator</span> đang phân tách, <span
+                    class="technical-term">ForkJoinPool</span> đang trộm công, và <span
+                    class="technical-term">Collector</span> đang hợp nhất. Hắn biết khi nào nên dùng <span
+                    class="technical-term">IntStream</span> để tối ưu bộ nhớ, và khi nào phải tránh <span
+                    class="technical-term">parallelStream</span> để không làm sập hệ thống.</p>
+            <p class="dialogue">Sư huynh Quang Hải vỗ vai hắn: "Đệ đã nắm được Đại Đạo của dòng chảy. Nhưng dòng chảy
+                mới chỉ là tĩnh tại trong một thời điểm. Xử lý nhiều dòng chảy cùng lúc, trong những không gian thời
+                gian khác nhau, đó mới là cảnh giới tiếp theo. Hãy chuẩn bị cho 'Đa Phân Thân Chi Thuật' - nơi đệ sẽ học
+                cách điều khiển thời gian."</p>
+
+            <h2>Câu Hỏi Phỏng Vấn Senior</h2>
+            <p>(Màn đêm buông xuống, Minh Đức ngồi ôn lại bài dưới ánh trăng. Những câu hỏi hóc búa này chắc chắn sẽ
+                xuất hiện trong các kỳ thi thăng cấp Senior.)</p>
+
+            <p><strong>Câu 1: "Sự khác biệt cốt lõi giữa `Stream` và `ParallelStream` về mặt cài đặt bên trong là gì?
+                    Khi nào `ParallelStream` lại chậm hơn?"</strong></p>
+            <p><em>Gợi ý trả lời:</em>
+                <br>
+                Cốt lõi nằm ở <span class="technical-term">Spliterator</span> và <span
+                    class="technical-term">ForkJoinPool</span>. <span class="technical-term">ParallelStream</span> dùng
+                `trySplit()` của Spliterator để chia nhỏ tác vụ và đưa vào `CommonForkJoinPool`.
+                <br>
+                Nó chậm hơn khi:
+                <br>
+                1. <strong>Overhead quản lý</strong>: Chi phí chia nhỏ tác vụ và gộp kết quả (`Combiner`) lớn hơn thời
+                gian thực thi tác vụ. (Ví dụ: tính tổng 100 số).
+                <br>
+                2. <strong>Boxing/Unboxing</strong>: Dùng Wrapper Class (Integer) thay vì Primitive (int) gây tải bộ
+                nhớ.
+                <br>
+                3. <strong>Dữ liệu khó chia</strong>: Nguồn là `LinkedList` hoặc `iterate` (không biết kích thước, khó
+                chia đôi) tệ hơn nhiều so với `ArrayList` hoặc `range`.
+                <br>
+                4. <strong>Tắc nghẽn hồ chung</strong>: Các tác vụ chứa Blocking I/O làm cạn kiệt thread trong Common
+                Pool.
+            </p>
+
+            <p><strong>Câu 2: "Tại sao `IntStream` lại có hiệu năng tốt hơn `Stream&lt;Integer&gt;`? Cơ chế nào đứng
+                    sau?"</strong></p>
+            <p><em>Gợi ý trả lời:</em>
+                <br>
+                Hiệu năng tốt hơn nhờ tránh được chi phí Boxing/Unboxing và giảm tải cho Garbage Collector.
+                <br>
+                `Stream&lt;Integer&gt;` lưu trữ các tham chiếu đến đối tượng `Integer` trong Heap. Để truy cập giá trị,
+                CPU phải nhảy đến địa chỉ bộ nhớ đó (Pointer chasing), dễ gây Cache Miss.
+                <br>
+                `IntStream` xử lý trực tiếp các giá trị `int` nguyên thủy, thường được lưu liền kề trong bộ nhớ hoặc
+                thanh ghi CPU, tối ưu cho CPU Cache và tính toán số học.
+            </p>
+
+            <p><strong>Câu 3: "Hãy giải thích cơ chế 'Loop Fusion' và 'Short-circuiting' trong Stream?"</strong></p>
+            <p><em>Gợi ý trả lời:</em>
+                <br>
+                - <strong>Loop Fusion</strong>: Stream lười biếng, nó không thực thi ngay các bước trung gian (`filter`,
+                `map`). Nó gộp chứng lại thành một pipeline. Khi chạy, mỗi phần tử đi qua toàn bộ pipeline trong một lần
+                duyệt duy nhất, thay vì duyệt danh sách nhiều lần cho mỗi bước.
+                <br>
+                - <strong>Short-circuiting</strong>: Các phép toán như `findFirst`, `anyMatch`, `limit` có thể ngắt
+                pipeline sớm. Ngay khi điều kiện thỏa mãn, việc xử lý dừng lại, không cần duyệt hết phần còn lại của
+                nguồn dữ liệu. Điều này không thể làm được với `Iterable` thông thường nếu không code thủ công.
+            </p>
+
+            <p>Minh Đức gấp sách lại, lòng tràn đầy tự tin. Ngày mai, hắn sẽ bước vào thế giới của Đa Luồng, nơi những
+                rắc rối thực sự mới bắt đầu.</p>
+            <p style="text-align: center; margin-top: 50px; font-weight: bold; font-size: 24px;">(Hết Chương 6)</p>
+        </section>
+
+        <footer class="chapter-footer">
+            <div class="key-takeaways">
+                <h3>🎯 Tâm Pháp Chương Này</h3>
+                <p><strong>Key Takeaways:</strong></p>
+                <p>Spliterator: The engine behind Parallel Stream. trySplit & tryAdvance.</p>
+                <p>Parallel Pitfalls: Overhead, Boxing cost, Common Pool blocking.</p>
+                <p>Custom Collector: Supplier, Accumulator, Combiner, Finisher.</p>
+                <p>IntStream: Performance boost via unboxing.</p>
+            </div>
+        </footer>
+    </article>
+
+    <nav class="chapter-nav bottom">
+        <a href="chuong-5.html">⬅ Chương Trước</a>
+        <a href="chuong-7.html">Chương Sau ➡</a>
+    </nav>
+</body>
+
+</html>
